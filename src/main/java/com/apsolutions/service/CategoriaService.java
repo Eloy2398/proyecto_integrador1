@@ -7,7 +7,6 @@ import com.apsolutions.repository.CategoriaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -22,21 +21,15 @@ public class CategoriaService {
         this.categoriaMapper = categoriaMapper;
     }
 
-    public List<CategoriaDto> listarCategoriasActivas() {
-        List<Categoria> categoriaIterable = categoriaRepository.listarCategoriasActivas();
-
-        return categoriaMapper.toDto(categoriaIterable);
+    public List<CategoriaDto> listOnlyActive() {
+        return this.categoriaMapper.toDto(categoriaRepository.listOnlyActive());
     }
 
     public List<CategoriaDto> listAll() {
-        Iterable<Categoria> categoriaIterable = categoriaRepository.listAll();
+        return this.categoriaMapper.toDto(this.categoriaRepository.findAll());
+    }
 
-        List<CategoriaDto> listaCategoriaDto = new LinkedList<>();
-        categoriaIterable.forEach(categoria -> {
-            CategoriaDto categoriaDto = categoriaMapper.toDto(categoria);
-            listaCategoriaDto.add(categoriaDto);
-        });
-
-        return listaCategoriaDto;
+    public Categoria save(Categoria categoria) {
+        return this.categoriaRepository.save(categoria);
     }
 }

@@ -9,10 +9,7 @@ import java.util.List;
 
 @Repository
 public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
-    @Query(value = "SELECT c FROM Categoria c WHERE c.estado = true", nativeQuery = false)
-    List<Categoria> listarCategoriasActivas();
-
-    @Query(value = "SELECT c FROM Categoria c")
-    Iterable<Categoria> listAll();
+    @Query(value = "SELECT c FROM Categoria c WHERE c.estado = true")
+    List<Categoria> listOnlyActive();
 
 }

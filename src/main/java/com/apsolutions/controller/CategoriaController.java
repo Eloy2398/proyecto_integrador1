@@ -1,10 +1,9 @@
 package com.apsolutions.controller;
 
 import com.apsolutions.dto.CategoriaDto;
+import com.apsolutions.model.Categoria;
 import com.apsolutions.service.CategoriaService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,12 +18,17 @@ public class CategoriaController {
     }
 
     @GetMapping("/listar")
-    public List<CategoriaDto> listarCategoriasActivas() {
-        return  categoriaService.listarCategoriasActivas();
+    public List<CategoriaDto> listOnlyActive() {
+        return categoriaService.listOnlyActive();
     }
 
-    @GetMapping("/listAll")
-    public List<CategoriaDto> listAll() {
-        return  categoriaService.listAll();
+    @GetMapping("/listarTodo")
+    public List<CategoriaDto> list() {
+        return categoriaService.listAll();
+    }
+
+    @PostMapping("/guardar")
+    public Categoria save(@RequestBody Categoria categoria) {
+        return categoriaService.save(categoria);
     }
 }
