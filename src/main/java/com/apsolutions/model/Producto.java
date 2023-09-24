@@ -9,22 +9,25 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String codigo;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String nombre;
 
     @Column(length = 250)
     private String descripcion;
 
     @OneToOne
-    @JoinColumn(name = "idcategoria")
+    @JoinColumn(name = "idcategoria", nullable = false)
     private Categoria categoria;
 
     @OneToOne
-    @JoinColumn(name = "idmarca")
+    @JoinColumn(name = "idmarca", nullable = false)
     private Marca marca;
+
+    @Column(columnDefinition = "boolean default true", nullable = false)
+    private Boolean estado;
 
     public Integer getId() {
         return id;
@@ -72,5 +75,13 @@ public class Producto {
 
     public void setMarca(Marca marca) {
         this.marca = marca;
+    }
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
     }
 }

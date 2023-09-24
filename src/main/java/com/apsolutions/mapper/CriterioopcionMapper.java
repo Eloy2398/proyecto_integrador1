@@ -1,9 +1,7 @@
 package com.apsolutions.mapper;
 
-import com.apsolutions.dto.CategoriaDto;
 import com.apsolutions.dto.CriterioopcionDto;
 import com.apsolutions.mapperimpl.GenericMapper;
-import com.apsolutions.model.Categoria;
 import com.apsolutions.model.Criterioopcion;
 import org.mapstruct.Mapper;
 

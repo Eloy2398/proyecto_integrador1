@@ -8,9 +8,9 @@ public class Categoria {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String nombre;
-    @Column
+    @Column(columnDefinition = "boolean default true", nullable = false)
     private Boolean estado;
 
     public Integer getId() {

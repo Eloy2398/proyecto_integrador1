@@ -1,10 +1,7 @@
 package com.apsolutions.controller;
 
-import com.apsolutions.dto.CategoriaDto;
 import com.apsolutions.dto.CriterioDto;
-import com.apsolutions.dto.CriterioopcionDto;
-import com.apsolutions.model.Categoria;
-import com.apsolutions.service.CategoriaService;
+import com.apsolutions.model.Criterio;
 import com.apsolutions.service.CriterioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +16,11 @@ public class CriterioController {
 
     @GetMapping("/listar")
     public List<CriterioDto> list() {
-        return criterioService.findAll();
+        return criterioService.list();
     }
 
-
+    @PostMapping("/guardar")
+    public Criterio save(@RequestBody CriterioDto criterioDto) {
+        return criterioService.save(criterioDto);
+    }
 }

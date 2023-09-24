@@ -1,8 +1,5 @@
 package com.apsolutions.dto;
 
-import com.apsolutions.model.Criterio;
-import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +11,7 @@ public class CriterioDto {
 
     private Boolean estado;
 
-    private List<CriterioopcionDto> criterioopcionDtoList = new ArrayList<>();
+    private List<CriterioopcionDto> criterioopcionList = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -40,11 +37,11 @@ public class CriterioDto {
         this.estado = estado;
     }
 
-    public List<CriterioopcionDto> getCriterioopcionDtoList() {
-        return criterioopcionDtoList;
+    public List<CriterioopcionDto> getCriterioopcionList() {
+        return criterioopcionList;
     }
 
-    public void setCriterioopcionDtoList(List<CriterioopcionDto> criterioopcionDtoList) {
-        this.criterioopcionDtoList = criterioopcionDtoList;
+    public void setCriterioopcionList(List<CriterioopcionDto> criterioopcionList) {
+        this.criterioopcionList = criterioopcionList;
     }
 }

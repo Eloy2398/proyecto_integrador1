@@ -2,8 +2,6 @@ package com.apsolutions.model;
 
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
 public class Criterio {
 
@@ -11,10 +9,10 @@ public class Criterio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String nombre;
 
-    @Column
+    @Column(columnDefinition = "boolean default true", nullable = false)
     private Boolean estado;
 
     public Integer getId() {

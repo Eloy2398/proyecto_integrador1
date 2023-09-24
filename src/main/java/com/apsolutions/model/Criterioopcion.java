@@ -9,11 +9,15 @@ public class Criterioopcion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String descripcion;
 
     @ManyToOne
-    private Criterio criterio; // Muchos criterios de opcion pueden estar en un criterio
+    @JoinColumn(name = "idcriterio", nullable = false)
+    private Criterio criterio;
+
+    @Column(columnDefinition = "boolean default true", nullable = false)
+    private Boolean estado;
 
     public Integer getId() {
         return id;
@@ -37,5 +41,13 @@ public class Criterioopcion {
 
     public void setCriterio(Criterio criterio) {
         this.criterio = criterio;
+    }
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
     }
 }
