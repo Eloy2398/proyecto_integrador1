@@ -1,16 +1,9 @@
-package com.apsolutions.model;
+package com.apsolutions.dto;
 
-import jakarta.persistence.*;
 
-@Entity
-public class Categoria {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class MarcaDto {
     private Integer id;
-
-    @Column(length = 50)
     private String nombre;
-    @Column
     private Boolean estado;
 
     public Integer getId() {

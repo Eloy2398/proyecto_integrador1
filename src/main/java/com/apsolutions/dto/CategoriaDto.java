@@ -5,6 +5,9 @@ public class CategoriaDto {
     private Integer id;
     private String nombre;
 
+    private Boolean estado;
+
+
     public Integer getId() {
         return id;
     }
@@ -19,5 +22,13 @@ public class CategoriaDto {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
     }
 }
