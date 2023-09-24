@@ -1,25 +1,21 @@
 package com.apsolutions.dto;
 
+import com.apsolutions.model.Categoria;
+import com.apsolutions.model.Marca;
+
 public class ProductoDto {
 
     private Integer id;
+
     private String codigo;
+
     private String nombre;
+
     private String descripcion;
-    private String categoria;
-    private String marca;
 
-    public ProductoDto() {
-    }
+    private Categoria categoria;
 
-    public ProductoDto(Integer id, String codigo, String nombre, String descripcion, String categoria, String marca) {
-        this.id = id;
-        this.codigo = codigo;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.categoria = categoria;
-        this.marca = marca;
-    }
+    private Marca marca;
 
     public Integer getId() {
         return id;
@@ -53,19 +49,19 @@ public class ProductoDto {
         this.descripcion = descripcion;
     }
 
-    public String getCategoria() {
+    public Categoria getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
 
-    public String getMarca() {
+    public Marca getMarca() {
         return marca;
     }
 
-    public void setMarca(String marca) {
+    public void setMarca(Marca marca) {
         this.marca = marca;
     }
 }

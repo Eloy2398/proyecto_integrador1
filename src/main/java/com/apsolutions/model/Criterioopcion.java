@@ -13,7 +13,7 @@ public class Criterioopcion {
     private String descripcion;
 
     @ManyToOne
-    private Criterio criterio;
+    private Criterio criterio; // Muchos criterios de opcion pueden estar en un criterio
 
     public Integer getId() {
         return id;
