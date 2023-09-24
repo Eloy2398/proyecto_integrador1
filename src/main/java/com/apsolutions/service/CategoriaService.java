@@ -32,4 +32,10 @@ public class CategoriaService {
     public Categoria save(Categoria categoria) {
         return this.categoriaRepository.save(categoria);
     }
+
+    public Categoria edit(Integer id, Categoria categoria) {
+        categoria.setId(id);
+        return this.categoriaRepository.save(categoria);
+    }
+
 }

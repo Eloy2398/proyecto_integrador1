@@ -18,17 +18,22 @@ public class CategoriaController {
     }
 
     @GetMapping("/listar")
-    public List<CategoriaDto> listOnlyActive() {
-        return categoriaService.listOnlyActive();
-    }
-
-    @GetMapping("/listarTodo")
     public List<CategoriaDto> list() {
         return categoriaService.listAll();
+    }
+
+    @GetMapping("/listarMostrar")
+    public List<CategoriaDto> listOnlyActive() {
+        return categoriaService.listOnlyActive();
     }
 
     @PostMapping("/guardar")
     public Categoria save(@RequestBody Categoria categoria) {
         return categoriaService.save(categoria);
+    }
+
+    @PostMapping("/editar/{id}")
+    public  Categoria edit(@PathVariable("id") Integer id, @RequestBody Categoria categoria) {
+        return  categoriaService.edit(id, categoria);
     }
 }

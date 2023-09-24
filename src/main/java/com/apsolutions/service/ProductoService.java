@@ -17,7 +17,9 @@ public class ProductoService {
         this.productoRepository = productoRepository;
     }
 
-    public List<ProductoDto> listAll() {
+    public List<ProductoDto> list() {
         return this.productoRepository.list();
     }
+
+    //public Produ
 }

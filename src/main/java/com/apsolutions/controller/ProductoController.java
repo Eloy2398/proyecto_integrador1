@@ -19,7 +19,7 @@ public class ProductoController {
     }
 
     @GetMapping("/listar")
-    public List<ProductoDto> listAll() {
-        return this.productoService.listAll();
+    public List<ProductoDto> list() {
+        return this.productoService.list();
     }
 }
