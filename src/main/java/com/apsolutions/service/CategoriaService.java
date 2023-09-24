@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -30,12 +31,17 @@ public class CategoriaService {
     }
 
     public Categoria save(Categoria categoria) {
+        Optional<Categoria> optionalCategoria = categoriaRepository.existsByName(categoria.getNombre(), categoria.getId());
+        if (optionalCategoria.isPresent()) {
+            //return
+        }
+
         return this.categoriaRepository.save(categoria);
     }
 
     public Categoria edit(Integer id, Categoria categoria) {
         categoria.setId(id);
-        return this.categoriaRepository.save(categoria);
+        return save(categoria);
     }
 
 }
