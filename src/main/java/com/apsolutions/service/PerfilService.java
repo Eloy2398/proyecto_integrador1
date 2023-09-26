@@ -36,4 +36,19 @@ public class PerfilService {
         return new ApiResponse<>(true, "Registrado correctamente.");
     }
 
+    public ApiResponse<String> edit(Integer id, Perfil perfil) {
+        perfil.setId(id);
+        checkValidations(perfil.getNombre(), perfil.getId());
+        perfilRepository.save(perfil);
+        return new ApiResponse<>(true, "Se modificó correctamente.");
+    }
+
+    public ApiResponse<String> delete(Integer id) {
+        if (!perfilRepository.existsById(id)) {
+            throw new CsException("No se encontro el registro.");
+        }
+        perfilRepository.updateStatus(false, id);
+        return new ApiResponse<>(true, "Se eliminó correctamente.");
+    }
+
 }
