@@ -18,7 +18,7 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public ApiResponse<List<UsuarioDto>> list(){
+    public ApiResponse<List<UsuarioDto>> list() {
         return new ApiResponse<>(true, "OK", usuarioRepository.list());
     }
 }
