@@ -19,7 +19,7 @@ public class CategoriaController {
     }
 
     @GetMapping("/listar")
-    public ApiResponse<List<CategoriaDto>> list() {
+    public ApiResponse<List<Categoria>> list() {
         return categoriaService.list();
     }
 

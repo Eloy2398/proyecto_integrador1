@@ -44,8 +44,8 @@ public class CategoriaService {
         }
     }
 
-    public ApiResponse<List<CategoriaDto>> list() {
-        return new ApiResponse<>(true, "OK", categoriaMapper.toDto(categoriaRepository.list()));
+    public ApiResponse<List<Categoria>> list() {
+        return new ApiResponse<>(true, "OK", categoriaRepository.list());
     }
 
     public ApiResponse<String> delete(Integer id) {
