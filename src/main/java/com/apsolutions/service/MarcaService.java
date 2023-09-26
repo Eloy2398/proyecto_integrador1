@@ -45,7 +45,7 @@ public class MarcaService {
 
     public ApiResponse<String> delete(Integer id) {
         if (!marcaRepository.existsById(id)) {
-            throw new CsException("No se encontró registro");
+            throw new CsException("No se encontro registro");
         }
 
         marcaRepository.updateStatus(false, id);
