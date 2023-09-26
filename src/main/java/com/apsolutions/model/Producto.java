@@ -2,6 +2,8 @@ package com.apsolutions.model;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 public class Producto {
 
@@ -18,13 +20,22 @@ public class Producto {
     @Column(length = 250)
     private String descripcion;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "idcategoria", nullable = false)
     private Categoria categoria;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "idmarca", nullable = false)
     private Marca marca;
+
+    @Column(precision = 8, scale = 2, nullable = false)
+    private BigDecimal precio;
+
+    @Column(nullable = false)
+    private Short stock;
+
+    @Column(length = 150)
+    private String imagen;
 
     @Column(columnDefinition = "boolean default true", nullable = false)
     private Boolean estado;
@@ -75,6 +86,30 @@ public class Producto {
 
     public void setMarca(Marca marca) {
         this.marca = marca;
+    }
+
+    public BigDecimal getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(BigDecimal precio) {
+        this.precio = precio;
+    }
+
+    public Short getStock() {
+        return stock;
+    }
+
+    public void setStock(Short stock) {
+        this.stock = stock;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 
     public Boolean getEstado() {
