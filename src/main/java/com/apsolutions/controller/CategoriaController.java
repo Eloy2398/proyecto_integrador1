@@ -3,6 +3,7 @@ package com.apsolutions.controller;
 import com.apsolutions.dto.CategoriaDto;
 import com.apsolutions.model.Categoria;
 import com.apsolutions.service.CategoriaService;
+import com.apsolutions.util.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,22 +19,22 @@ public class CategoriaController {
     }
 
     @GetMapping("/listar")
-    public List<CategoriaDto> list() {
-        return categoriaService.listAll();
-    }
-
-    @GetMapping("/listarMostrar")
-    public List<CategoriaDto> listOnlyActive() {
-        return categoriaService.listOnlyActive();
+    public ApiResponse<List<CategoriaDto>> list() {
+        return categoriaService.list();
     }
 
     @PostMapping("/guardar")
-    public Categoria save(@RequestBody Categoria categoria) {
+    public ApiResponse<String> save(@RequestBody Categoria categoria) {
         return categoriaService.save(categoria);
     }
 
-    @PostMapping("/editar/{id}")
-    public  Categoria edit(@PathVariable("id") Integer id, @RequestBody Categoria categoria) {
-        return  categoriaService.edit(id, categoria);
+    @PutMapping("/editar/{id}")
+    public ApiResponse<String> edit(@PathVariable("id") Integer id, @RequestBody Categoria categoria) {
+        return categoriaService.edit(id, categoria);
+    }
+
+    @PutMapping("/eliminar/{id}")
+    public ApiResponse<String> delete(@PathVariable("id") Integer id) {
+        return categoriaService.delete(id);
     }
 }

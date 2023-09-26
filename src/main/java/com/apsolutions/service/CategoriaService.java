@@ -1,9 +1,11 @@
 package com.apsolutions.service;
 
 import com.apsolutions.dto.CategoriaDto;
+import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.CategoriaMapper;
 import com.apsolutions.model.Categoria;
 import com.apsolutions.repository.CategoriaRepository;
+import com.apsolutions.util.ApiResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -22,26 +24,37 @@ public class CategoriaService {
         this.categoriaMapper = categoriaMapper;
     }
 
-    public List<CategoriaDto> listOnlyActive() {
-        return this.categoriaMapper.toDto(categoriaRepository.listOnlyActive());
+    public ApiResponse<String> save(Categoria categoria) {
+        checkValidations(categoria.getNombre(), 0);
+        categoriaRepository.save(categoria);
+        return new ApiResponse<>(true, "Se registró correctamente");
     }
 
-    public List<CategoriaDto> listAll() {
-        return this.categoriaMapper.toDto(this.categoriaRepository.findAll());
+    public ApiResponse<String> edit(Integer id, Categoria categoria) {
+        categoria.setId(id);
+        checkValidations(categoria.getNombre(), categoria.getId());
+        categoriaRepository.save(categoria);
+        return new ApiResponse<>(true, "Se modificó correctamente");
     }
 
-    public Categoria save(Categoria categoria) {
-        Optional<Categoria> optionalCategoria = categoriaRepository.existsByName(categoria.getNombre(), categoria.getId());
+    private void checkValidations(String name, int id) {
+        Optional<Categoria> optionalCategoria = categoriaRepository.existsByName(name, id);
         if (optionalCategoria.isPresent()) {
-            //return
+            throw new CsException("La categoría " + name + " ya se encuentra registrada");
+        }
+    }
+
+    public ApiResponse<List<CategoriaDto>> list() {
+        return new ApiResponse<>(true, "OK", categoriaMapper.toDto(categoriaRepository.list()));
+    }
+
+    public ApiResponse<String> delete(Integer id) {
+        if (!categoriaRepository.existsById(id)) {
+            throw new CsException("No se encontró registro");
         }
 
-        return this.categoriaRepository.save(categoria);
-    }
+        categoriaRepository.updateStatus(false, id);
 
-    public Categoria edit(Integer id, Categoria categoria) {
-        categoria.setId(id);
-        return save(categoria);
+        return new ApiResponse<>(true, "Se eliminó correctamente");
     }
-
 }

@@ -1,9 +1,9 @@
 package com.apsolutions.service;
 
 import com.apsolutions.dto.ProductoDto;
-import com.apsolutions.mapper.ProductoMapper;
 import com.apsolutions.model.Producto;
 import com.apsolutions.repository.ProductoRepository;
+import com.apsolutions.util.ApiResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -14,18 +14,17 @@ import java.util.List;
 public class ProductoService {
 
     private final ProductoRepository productoRepository;
-    private final ProductoMapper productoMapper;
 
-    public ProductoService(ProductoRepository productoRepository, ProductoMapper productoMapper) {
+    public ProductoService(ProductoRepository productoRepository) {
         this.productoRepository = productoRepository;
-        this.productoMapper = productoMapper;
     }
 
-    public List<ProductoDto> list() {
-        List<Producto> producto = productoRepository.findAll();
-        List<ProductoDto> productoDtoList = productoMapper.toDto(producto);
-        return productoDtoList;
-        //return productoMapper.toDto(producto);
+    public ApiResponse<String> save(Producto producto) {
+        productoRepository.save(producto);
+        return new ApiResponse<>(true, "Se registró correctamente");
+    }
 
+    public ApiResponse<List<ProductoDto>> list() {
+        return new ApiResponse<>(true, "OK", productoRepository.list());
     }
 }

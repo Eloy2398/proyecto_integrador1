@@ -2,6 +2,7 @@ package com.apsolutions.controller;
 
 import com.apsolutions.model.Marca;
 import com.apsolutions.service.MarcaService;
+import com.apsolutions.util.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +18,22 @@ public class MarcaController {
     }
 
     @GetMapping("/listar")
-    public List<Marca> list() {
+    public ApiResponse<List<Marca>> list() {
         return marcaService.list();
     }
 
     @PostMapping("/guardar")
-    public Marca save(@RequestBody Marca marca) {
+    public ApiResponse<String> save(@RequestBody Marca marca) {
         return marcaService.save(marca);
     }
 
-    @PostMapping("/editar/{id}")
-    public Marca edit(@PathVariable("id") Integer id, @RequestBody Marca marca) {
+    @PutMapping("/editar/{id}")
+    public ApiResponse<String> edit(@PathVariable("id") Integer id, @RequestBody Marca marca) {
         return marcaService.edit(id, marca);
+    }
+
+    @PutMapping("/eliminar/{id}")
+    public ApiResponse<String> edit(@PathVariable("id") Integer id) {
+        return marcaService.delete(id);
     }
 }

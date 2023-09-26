@@ -8,6 +8,7 @@ import com.apsolutions.model.Criterio;
 import com.apsolutions.model.Criterioopcion;
 import com.apsolutions.repository.CriterioRepository;
 import com.apsolutions.repository.CriterioopcionRepository;
+import com.apsolutions.util.ApiResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
