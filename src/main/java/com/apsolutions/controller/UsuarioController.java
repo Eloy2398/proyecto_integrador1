@@ -1,11 +1,10 @@
 package com.apsolutions.controller;
 
 import com.apsolutions.dto.UsuarioDto;
+import com.apsolutions.model.Usuario;
 import com.apsolutions.service.UsuarioService;
 import com.apsolutions.util.ApiResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,5 +21,20 @@ public class UsuarioController {
     @GetMapping("/listar")
     public ApiResponse<List<UsuarioDto>> list(){
         return usuarioService.list();
+    }
+
+    @PostMapping("/guardar")
+    public ApiResponse<String> save(@RequestBody Usuario usuario){
+        return usuarioService.save(usuario);
+    }
+
+    @PutMapping("/editar/{id}")
+    public ApiResponse<String> edit(@PathVariable("id") Integer id, @RequestBody Usuario usuario){
+        return usuarioService.edit(id, usuario);
+    }
+
+    @PutMapping("/eliminar/{id}")
+    public ApiResponse<String> delete(@PathVariable("id") Integer id){
+        return usuarioService.delete(id);
     }
 }
