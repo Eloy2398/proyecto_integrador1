@@ -21,7 +21,7 @@ public class Usuario {
     @Column(columnDefinition = "boolean default true", nullable = false)
     private Boolean estado;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "idperfil", nullable = false)
     private Perfil perfil;
 
