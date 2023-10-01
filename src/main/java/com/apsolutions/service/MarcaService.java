@@ -4,14 +4,12 @@ import com.apsolutions.exception.CsException;
 import com.apsolutions.model.Marca;
 import com.apsolutions.repository.MarcaRepository;
 import com.apsolutions.util.ApiResponse;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class MarcaService {
     private final MarcaRepository marcaRepository;
 

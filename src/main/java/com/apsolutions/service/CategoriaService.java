@@ -1,19 +1,16 @@
 package com.apsolutions.service;
 
-import com.apsolutions.dto.CategoriaDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.CategoriaMapper;
 import com.apsolutions.model.Categoria;
 import com.apsolutions.repository.CategoriaRepository;
 import com.apsolutions.util.ApiResponse;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;

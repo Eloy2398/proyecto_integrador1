@@ -10,9 +10,9 @@ import java.util.List;
 @Repository
 public interface CriterioopcionRepository extends JpaRepository<Criterioopcion, Integer> {
 
-    @Query(value = "SELECT co FROM Criterioopcion co WHERE co.estado=true AND co.criterio.id=:idCriterio")
+    @Query(value = "SELECT co FROM Criterioopcion co WHERE co.estado = true AND co.criterio.id = :idCriterio")
     List<Criterioopcion> listByIdCriterio(Integer idCriterio);
 
-    @Query(value = "SELECT co FROM Criterioopcion co WHERE co.criterio.id=:idCriterio")
+    @Query(value = "SELECT co FROM Criterioopcion co WHERE co.criterio.id = :idCriterio")
     List<Criterioopcion> listFullByIdCriterio(Integer idCriterio);
 }

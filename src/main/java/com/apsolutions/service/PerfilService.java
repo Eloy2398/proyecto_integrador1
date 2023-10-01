@@ -4,14 +4,12 @@ import com.apsolutions.exception.CsException;
 import com.apsolutions.model.Perfil;
 import com.apsolutions.repository.PerfilRepository;
 import com.apsolutions.util.ApiResponse;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class PerfilService {
     private final PerfilRepository perfilRepository;
 
@@ -47,6 +45,7 @@ public class PerfilService {
         if (!perfilRepository.existsById(id)) {
             throw new CsException("No se encontro el registro.");
         }
+
         perfilRepository.updateStatus(false, id);
         return new ApiResponse<>(true, "Se eliminó correctamente.");
     }

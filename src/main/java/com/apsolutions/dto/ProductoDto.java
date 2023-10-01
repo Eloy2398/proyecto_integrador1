@@ -1,27 +1,24 @@
 package com.apsolutions.dto;
 
+import com.apsolutions.model.Categoria;
+import com.apsolutions.model.Marca;
+import com.apsolutions.model.ProductoCriterioopcion;
+
+import java.math.BigDecimal;
+import java.util.List;
+
 public class ProductoDto {
-
     private Integer id;
-
     private String codigo;
-
     private String nombre;
-
     private String descripcion;
-
-    private String categoriaNombre;
-
-    private String marcaNombre;
-
-    public ProductoDto(Integer id, String codigo, String nombre, String descripcion, String categoriaNombre, String marcaNombre) {
-        this.id = id;
-        this.codigo = codigo;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.categoriaNombre = categoriaNombre;
-        this.marcaNombre = marcaNombre;
-    }
+    private Categoria categoria;
+    private Marca marca;
+    private BigDecimal precio;
+    private Short stock;
+    private String imagen;
+    private Boolean estado;
+    private List<ProductoCriterioopcion> productoCriterioopcionList;
 
     public Integer getId() {
         return id;
@@ -55,19 +52,59 @@ public class ProductoDto {
         this.descripcion = descripcion;
     }
 
-    public String getCategoriaNombre() {
-        return categoriaNombre;
+    public Categoria getCategoria() {
+        return categoria;
     }
 
-    public void setCategoriaNombre(String categoriaNombre) {
-        this.categoriaNombre = categoriaNombre;
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 
-    public String getMarcaNombre() {
-        return marcaNombre;
+    public Marca getMarca() {
+        return marca;
     }
 
-    public void setMarcaNombre(String marcaNombre) {
-        this.marcaNombre = marcaNombre;
+    public void setMarca(Marca marca) {
+        this.marca = marca;
+    }
+
+    public BigDecimal getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(BigDecimal precio) {
+        this.precio = precio;
+    }
+
+    public Short getStock() {
+        return stock;
+    }
+
+    public void setStock(Short stock) {
+        this.stock = stock;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
+    }
+
+    public List<ProductoCriterioopcion> getProductoCriterioopcionList() {
+        return productoCriterioopcionList;
+    }
+
+    public void setProductoCriterioopcionList(List<ProductoCriterioopcion> productoCriterioopcionList) {
+        this.productoCriterioopcionList = productoCriterioopcionList;
     }
 }

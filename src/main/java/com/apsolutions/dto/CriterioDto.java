@@ -1,6 +1,7 @@
 package com.apsolutions.dto;
 
-import java.util.ArrayList;
+import com.apsolutions.model.Criterioopcion;
+
 import java.util.List;
 
 public class CriterioDto {
@@ -11,7 +12,7 @@ public class CriterioDto {
 
     private Boolean estado;
 
-    private List<CriterioopcionDto> criterioopcionList = new ArrayList<>();
+    private List<Criterioopcion> criterioopcionList;
 
     public Integer getId() {
         return id;
@@ -37,11 +38,11 @@ public class CriterioDto {
         this.estado = estado;
     }
 
-    public List<CriterioopcionDto> getCriterioopcionList() {
+    public List<Criterioopcion> getCriterioopcionList() {
         return criterioopcionList;
     }
 
-    public void setCriterioopcionList(List<CriterioopcionDto> criterioopcionList) {
+    public void setCriterioopcionList(List<Criterioopcion> criterioopcionList) {
         this.criterioopcionList = criterioopcionList;
     }
 }

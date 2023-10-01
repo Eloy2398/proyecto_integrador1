@@ -12,5 +12,5 @@ public interface ProductoMapper extends GenericMapper<ProductoDto, Producto> {
     ProductoDto toDto(Producto producto);
 
     @Override
-    Producto toEntity(ProductoDto productoDto);
+    Producto toEntity(ProductoDto productoListDto);
 }
