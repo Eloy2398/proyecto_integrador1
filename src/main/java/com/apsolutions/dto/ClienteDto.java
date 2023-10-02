@@ -1,6 +1,6 @@
 package com.apsolutions.dto;
 
-import com.apsolutions.model.Cliente;
+import com.apsolutions.model.Persona;
 
 public class ClienteDto {
     private Integer id;
@@ -10,7 +10,7 @@ public class ClienteDto {
     private String telefono;
     private String direccion;
     private String email;
-    private Cliente cliente;
+    private Persona persona;
 
     public Integer getId() {
         return id;
@@ -68,11 +68,11 @@ public class ClienteDto {
         this.email = email;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public Persona getPersona() {
+        return persona;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setPersona(Persona persona) {
+        this.persona = persona;
     }
 }

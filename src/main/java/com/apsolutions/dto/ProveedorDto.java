@@ -1,6 +1,6 @@
 package com.apsolutions.dto;
 
-import com.apsolutions.model.Proveedor;
+import com.apsolutions.model.Persona;
 
 public class ProveedorDto {
     private Integer id;
@@ -10,7 +10,7 @@ public class ProveedorDto {
     private String telefono;
     private String direccion;
     private String email;
-    private Proveedor proveedor;
+    private Persona persona;
 
     public Integer getId() {
         return id;
@@ -68,11 +68,11 @@ public class ProveedorDto {
         this.email = email;
     }
 
-    public Proveedor getProveedor() {
-        return proveedor;
+    public Persona getPersona() {
+        return persona;
     }
 
-    public void setProveedor(Proveedor proveedor) {
-        this.proveedor = proveedor;
+    public void setPersona(Persona persona) {
+        this.persona = persona;
     }
 }
