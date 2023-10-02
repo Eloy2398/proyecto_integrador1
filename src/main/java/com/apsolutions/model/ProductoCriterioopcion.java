@@ -16,6 +16,9 @@ public class ProductoCriterioopcion {
     @JoinColumn(name = "idcriterioopcion", nullable = false)
     private Criterioopcion criterioopcion;
 
+    @Column(columnDefinition = "boolean default true", nullable = false)
+    private Boolean estado;
+
     public Integer getId() {
         return id;
     }
@@ -38,5 +41,13 @@ public class ProductoCriterioopcion {
 
     public void setCriterioopcion(Criterioopcion criterioopcion) {
         this.criterioopcion = criterioopcion;
+    }
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
     }
 }

@@ -4,11 +4,17 @@ import com.apsolutions.dto.ProductoDto;
 import com.apsolutions.dto.ProductoListDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.ProductoMapper;
+import com.apsolutions.model.Caracteristica;
 import com.apsolutions.model.Producto;
+import com.apsolutions.model.ProductoCaracteristicaPK;
+import com.apsolutions.model.ProductoCriterioopcion;
+import com.apsolutions.repository.CaracteristicaRepository;
+import com.apsolutions.repository.ProductoCaracteristicaRepository;
 import com.apsolutions.repository.ProductoCriterioopcionRepository;
 import com.apsolutions.repository.ProductoRepository;
 import com.apsolutions.util.ApiResponse;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
@@ -20,13 +26,17 @@ import java.util.Optional;
 public class ProductoService {
 
     private final ProductoRepository productoRepository;
-    private final ProductoMapper productoMapper;
-    private final ProductoCriterioopcionRepository productoCriterioopcionRepository;
+    @Autowired
+    private ProductoMapper productoMapper;
+    @Autowired
+    private CaracteristicaRepository caracteristicaRepository;
+    @Autowired
+    private ProductoCriterioopcionRepository productoCriterioopcionRepository;
+    @Autowired
+    private ProductoCaracteristicaRepository productoCaracteristicaRepository;
 
-    public ProductoService(ProductoRepository productoRepository, ProductoMapper productoMapper, ProductoCriterioopcionRepository productoCriterioopcionRepository) {
+    public ProductoService(ProductoRepository productoRepository) {
         this.productoRepository = productoRepository;
-        this.productoMapper = productoMapper;
-        this.productoCriterioopcionRepository = productoCriterioopcionRepository;
     }
 
     @Transactional
@@ -45,12 +55,40 @@ public class ProductoService {
 
     private void processSaved(ProductoDto productoDto) {
         try {
-            checkValidations(productoDto.getNombre(), productoDto.getMarca().getId(), productoDto.getId());
+            checkValidations(productoDto);
+
+            if (productoDto.getId() > 0) {
+                productoCriterioopcionRepository.updateStatusByIdProducto(false, productoDto.getId());
+                productoCaracteristicaRepository.deleteByIdProducto(productoDto.getId());
+            }
+
             Producto producto = productoRepository.save(productoMapper.toEntity(productoDto));
 
             productoDto.getProductoCriterioopcionList().forEach(productoCriterioopcion -> {
-                productoCriterioopcion.setProducto(producto);
-                productoCriterioopcionRepository.save(productoCriterioopcion);
+                Optional<ProductoCriterioopcion> optionalProductoCriterioopcion = productoCriterioopcionRepository.existsByIdProductoAndIdCriterioopcion(producto.getId(), productoCriterioopcion.getCriterioopcion().getId());
+                if (optionalProductoCriterioopcion.isPresent()) {
+                    productoCriterioopcionRepository.updateStatus(true, optionalProductoCriterioopcion.get().getId());
+                } else {
+                    productoCriterioopcion.setProducto(producto);
+                    productoCriterioopcion.setEstado(true);
+                    productoCriterioopcionRepository.save(productoCriterioopcion);
+                }
+            });
+
+            productoDto.getProductoCaracteristicaList().forEach(productoCaracteristica -> {
+                ProductoCaracteristicaPK pk = new ProductoCaracteristicaPK();
+                pk.setIdProducto(producto.getId());
+
+                Optional<Caracteristica> optionalCaracteristica = caracteristicaRepository.existsByName(productoCaracteristica.getCaracteristica().getNombre());
+                if (optionalCaracteristica.isPresent()) {
+                    productoCaracteristica.setCaracteristica(optionalCaracteristica.get());
+                    pk.setIdCaracteristica(productoCaracteristica.getCaracteristica().getId());
+                } else {
+                    pk.setIdCaracteristica(caracteristicaRepository.save(productoCaracteristica.getCaracteristica()).getId());
+                }
+
+                productoCaracteristica.setId(pk);
+                productoCaracteristicaRepository.save(productoCaracteristica);
             });
 
         } catch (DataIntegrityViolationException | JpaObjectRetrievalFailureException e) {
@@ -58,10 +96,19 @@ public class ProductoService {
         }
     }
 
-    private void checkValidations(String nombre, int idmarca, int id) {
-        Optional<Producto> optionalProduct = productoRepository.existsByNameAndBrand(nombre, idmarca, id);
+    private void checkValidations(ProductoDto productoDto) {
+        Optional<Producto> optionalProduct;
+
+        optionalProduct = productoRepository.existsByNameAndBrand(productoDto.getNombre(), productoDto.getMarca().getId(), productoDto.getId());
         if (optionalProduct.isPresent()) {
-            throw new CsException("El producto " + nombre + " ya se encuentro registrado");
+            throw new CsException("El producto " + productoDto.getNombre() + " ya se encuentro registrado");
+        }
+
+        if (!productoDto.getCodigo().isEmpty()) {
+            optionalProduct = productoRepository.existsByCode(productoDto.getCodigo(), productoDto.getId());
+            if (optionalProduct.isPresent()) {
+                throw new CsException("El código " + productoDto.getCodigo() + " ya se encuentro registrado");
+            }
         }
     }
 

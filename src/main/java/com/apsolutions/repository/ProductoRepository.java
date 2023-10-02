@@ -23,6 +23,9 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     @Query("SELECT p FROM Producto p WHERE p.estado = true AND p.nombre LIKE :nombre AND p.marca.id = :idmarca AND p.id <> :id")
     Optional<Producto> existsByNameAndBrand(String nombre, Integer idmarca, Integer id);
 
+    @Query("SELECT p FROM Producto p WHERE p.estado = true AND p.codigo LIKE :codigo AND p.id <> :id")
+    Optional<Producto> existsByCode(String codigo, Integer id);
+
     @Query("SELECT p.stock FROM Producto p WHERE p.id = :id")
     Integer getStock(Integer id);
 
