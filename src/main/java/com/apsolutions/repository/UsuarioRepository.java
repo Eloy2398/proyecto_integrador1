@@ -23,4 +23,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Modifying
     @Query("UPDATE Usuario u SET u.estado = :estado WHERE u.id = :id")
     void updateStatus(Boolean estado, Integer id);
+
+    @Query("SELECT u FROM Usuario u WHERE u.estado = true AND u.usuario LIKE :usuario")
+    Optional<Usuario> findByUsername(String usuario);
 }

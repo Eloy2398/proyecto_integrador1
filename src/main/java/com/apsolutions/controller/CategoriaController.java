@@ -1,6 +1,5 @@
 package com.apsolutions.controller;
 
-import com.apsolutions.dto.CategoriaDto;
 import com.apsolutions.model.Categoria;
 import com.apsolutions.service.CategoriaService;
 import com.apsolutions.util.ApiResponse;

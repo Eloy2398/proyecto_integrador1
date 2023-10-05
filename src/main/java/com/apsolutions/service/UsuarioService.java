@@ -6,6 +6,8 @@ import com.apsolutions.model.Usuario;
 import com.apsolutions.repository.UsuarioRepository;
 import com.apsolutions.util.ApiResponse;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,9 @@ import java.util.Optional;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UsuarioService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
@@ -34,6 +39,7 @@ public class UsuarioService {
 
     public ApiResponse<String> save(Usuario usuario) {
         checkValidations(usuario.getUsuario(), 0);
+        usuario.setClave(passwordEncoder.encode(usuario.getClave()));
         usuarioRepository.save(usuario);
         return new ApiResponse<>(true, "Se registro correctamente.");
     }
@@ -45,8 +51,8 @@ public class UsuarioService {
         return new ApiResponse<>(true, "Se modificó correctamente.");
     }
 
-    public ApiResponse<String> delete(Integer id){
-        if (!usuarioRepository.existsById(id)){
+    public ApiResponse<String> delete(Integer id) {
+        if (!usuarioRepository.existsById(id)) {
             throw new CsException("No se encontró registro.");
         }
 

@@ -1,7 +1,6 @@
 package com.apsolutions.service;
 
 import com.apsolutions.exception.CsException;
-import com.apsolutions.mapper.CategoriaMapper;
 import com.apsolutions.model.Categoria;
 import com.apsolutions.repository.CategoriaRepository;
 import com.apsolutions.util.ApiResponse;
@@ -14,11 +13,9 @@ import java.util.Optional;
 public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
-    private final CategoriaMapper categoriaMapper;
 
-    public CategoriaService(CategoriaRepository categoriaRepository, CategoriaMapper categoriaMapper) {
+    public CategoriaService(CategoriaRepository categoriaRepository) {
         this.categoriaRepository = categoriaRepository;
-        this.categoriaMapper = categoriaMapper;
     }
 
     public ApiResponse<String> save(Categoria categoria) {
