@@ -1,11 +1,11 @@
 package com.apsolutions.service;
 
-import com.apsolutions.dto.ClienteDto;
+import com.apsolutions.dto.ProveedorDto;
 import com.apsolutions.exception.CsException;
-import com.apsolutions.model.Cliente;
 import com.apsolutions.model.Persona;
-import com.apsolutions.repository.ClienteRepository;
+import com.apsolutions.model.Proveedor;
 import com.apsolutions.repository.PersonaRepository;
+import com.apsolutions.repository.ProveedorRepository;
 import com.apsolutions.util.ApiResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,47 +15,48 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ClienteService {
+public class ProveedorService {
     private final PersonaRepository personaRepository;
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    private ProveedorRepository proveedorRepository;
 
-    public ClienteService(PersonaRepository personaRepository) {
+    public ProveedorService(PersonaRepository personaRepository) {
         this.personaRepository = personaRepository;
     }
 
     private void checkValidation(String documento, Integer id){
         Optional<Persona> optionalPersona = personaRepository.existsByDocument(documento, id);
+
         if (optionalPersona.isPresent()){
-            throw new CsException("El cliente con número de documento "+documento+" existe.");
+            throw new CsException("El número de documento "+documento+" existe.");
         }
     }
 
     @Transactional
     public ApiResponse<String> save(Persona persona){
-        Optional<Cliente> optionalCliente = clienteRepository.existsByDocument(persona.getDocumento(), 0);
-        if (optionalCliente.isPresent()){
+        Optional<Proveedor> proveedorOptional = proveedorRepository.existsByDocument(persona.getDocumento(),0);
+        if (proveedorOptional.isPresent()){
             throw new CsException("El cliente con número de documento "+persona.getDocumento()+" existe.");
         }
 
         Optional<Persona> optionalPersona = personaRepository.existsByDocument(persona.getDocumento(), 0);
-        if (optionalPersona.isPresent()) {
+        if (optionalPersona.isPresent()){
             persona = optionalPersona.get();
-            Cliente cliente = new Cliente();
-            cliente.setPersona(persona);
-            cliente.setEstado(true);
-
-            clienteRepository.save(cliente);
-            return new ApiResponse<>(true, "Se registro correctamente");
+            Proveedor proveedor = new Proveedor();
+            proveedor.setPersona(persona);
+            proveedor.setEstado(true);
+            proveedorRepository.save(proveedor);
+            return new ApiResponse<>(true, "Se registro correctamente.");
         }else{
             persona = personaRepository.save(persona);
 
-            Cliente cliente = new Cliente();
-            cliente.setPersona(persona);
-            cliente.setEstado(true);
-            clienteRepository.save(cliente);
-            return new ApiResponse<>(true, "Se registro correctamente");
+            Proveedor proveedor = new Proveedor();
+            proveedor.setPersona(persona);
+            proveedor.setEstado(true);
+            proveedorRepository.save(proveedor);
+
+            return new ApiResponse<>(true, "Se registro correctamente.");
         }
     }
 
@@ -67,16 +68,17 @@ public class ClienteService {
         return new ApiResponse<>(true, "Se modificó correctamente");
     }
 
-    public ApiResponse<List<ClienteDto>> list(){
-        return new ApiResponse<>(true, "OK", clienteRepository.list());
+    public ApiResponse<List<ProveedorDto>> list(){
+        return new ApiResponse<>(true, "OK", proveedorRepository.list());
     }
 
     @Transactional
-    public ApiResponse<String> delete(Integer id) {
-        if (!clienteRepository.existsById(id)){
+    public ApiResponse<String> delete(Integer id){
+        if (!proveedorRepository.existsById(id)){
             throw new CsException("No se encontró registro.");
         }
-        clienteRepository.updateStatus(false, id);
+
+        proveedorRepository.updateStatus(false, id);
 
         return new ApiResponse<>(true, "Se eliminó correctamente.");
     }

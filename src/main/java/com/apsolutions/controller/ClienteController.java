@@ -1,5 +1,6 @@
 package com.apsolutions.controller;
 
+import com.apsolutions.dto.ClienteDto;
 import com.apsolutions.dto.PersonaDto;
 import com.apsolutions.model.Cliente;
 import com.apsolutions.model.Persona;
@@ -29,7 +30,12 @@ public class ClienteController {
     }
 
     @GetMapping("/listar")
-    public ApiResponse<List<Cliente>> list(){
+    public ApiResponse<List<ClienteDto>> list(){
         return clienteService.list();
+    }
+
+    @PutMapping("/eliminar/{id}")
+    public ApiResponse<String> delete(@PathVariable("id") Integer id){
+        return clienteService.delete(id);
     }
 }

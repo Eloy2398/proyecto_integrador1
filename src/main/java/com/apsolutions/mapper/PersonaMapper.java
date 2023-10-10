@@ -7,6 +7,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "string")
 public interface PersonaMapper extends GenericMapper<PersonaDto, Persona> {
-    @Override
-    Persona toEntity(PersonaDto personaDto);
+
 }

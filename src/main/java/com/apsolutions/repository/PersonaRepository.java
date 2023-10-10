@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface PersonaRepository extends JpaRepository<Persona, Integer> {
-    @Query("SELECT c FROM Cliente c WHERE c.estado = true AND c.persona.documento = :documento AND c.id <> :id")
+    @Query("SELECT p FROM Persona p WHERE p.documento = :documento AND p.id <> :id")
     Optional<Persona> existsByDocument(String documento, Integer id);
 }
