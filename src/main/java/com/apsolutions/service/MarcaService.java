@@ -18,12 +18,14 @@ public class MarcaService {
     }
 
     public ApiResponse<String> save(Marca marca) {
+        marca.setEstado(true);
         checkValidations(marca.getNombre(), 0);
         marcaRepository.save(marca);
         return new ApiResponse<>(true, "Se registró correctamente");
     }
 
     public ApiResponse<String> edit(Integer id, Marca marca) {
+        marca.setEstado(true);
         marca.setId(id);
         checkValidations(marca.getNombre(), marca.getId());
         marcaRepository.save(marca);

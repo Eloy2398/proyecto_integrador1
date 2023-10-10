@@ -8,13 +8,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication
 public class ApSolutionsApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ApSolutionsApplication.class, args);
-		//crearClave();
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ApSolutionsApplication.class, args);
+        // createPasswordEncoder();
+    }
 
-	public static void crearClave(){
-		ApplicationConfig applicationConfig = new ApplicationConfig();
-		System.out.println(applicationConfig.passwordEncoder().encode("admin123"));
-	}
+    public static void createPasswordEncoder() {
+        ApplicationConfig applicationConfig = new ApplicationConfig();
+        System.out.println(applicationConfig.passwordEncoder().encode("admin123"));
+    }
 }

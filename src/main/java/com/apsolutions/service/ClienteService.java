@@ -25,18 +25,18 @@ public class ClienteService {
         this.personaRepository = personaRepository;
     }
 
-    private void checkValidation(String documento, Integer id){
+    private void checkValidation(String documento, Integer id) {
         Optional<Persona> optionalPersona = personaRepository.existsByDocument(documento, id);
-        if (optionalPersona.isPresent()){
-            throw new CsException("El cliente con número de documento "+documento+" existe.");
+        if (optionalPersona.isPresent()) {
+            throw new CsException("El cliente con número de documento " + documento + " existe.");
         }
     }
 
     @Transactional
-    public ApiResponse<String> save(Persona persona){
+    public ApiResponse<String> save(Persona persona) {
         Optional<Cliente> optionalCliente = clienteRepository.existsByDocument(persona.getDocumento(), 0);
-        if (optionalCliente.isPresent()){
-            throw new CsException("El cliente con número de documento "+persona.getDocumento()+" existe.");
+        if (optionalCliente.isPresent()) {
+            throw new CsException("El cliente con número de documento " + persona.getDocumento() + " existe.");
         }
 
         Optional<Persona> optionalPersona = personaRepository.existsByDocument(persona.getDocumento(), 0);
@@ -48,7 +48,7 @@ public class ClienteService {
 
             clienteRepository.save(cliente);
             return new ApiResponse<>(true, "Se registro correctamente");
-        }else{
+        } else {
             persona = personaRepository.save(persona);
 
             Cliente cliente = new Cliente();
@@ -60,20 +60,20 @@ public class ClienteService {
     }
 
     @Transactional
-    public ApiResponse<String> edit(Integer id, Persona persona){
+    public ApiResponse<String> edit(Integer id, Persona persona) {
         persona.setId(id);
         checkValidation(persona.getDocumento(), persona.getId());
         personaRepository.save(persona);
         return new ApiResponse<>(true, "Se modificó correctamente");
     }
 
-    public ApiResponse<List<ClienteDto>> list(){
+    public ApiResponse<List<ClienteDto>> list() {
         return new ApiResponse<>(true, "OK", clienteRepository.list());
     }
 
     @Transactional
     public ApiResponse<String> delete(Integer id) {
-        if (!clienteRepository.existsById(id)){
+        if (!clienteRepository.existsById(id)) {
             throw new CsException("No se encontró registro.");
         }
         clienteRepository.updateStatus(false, id);
