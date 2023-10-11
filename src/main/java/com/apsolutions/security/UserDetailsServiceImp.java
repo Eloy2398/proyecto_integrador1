@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImp implements UserDetailsService {
 
     private final UsuarioRepository usuarioRepository;
+    private Usuario usuario;
 
     public UserDetailsServiceImp(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
@@ -18,7 +19,11 @@ public class UserDetailsServiceImp implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("El usuario " + username + " no existe"));
+        usuario = usuarioRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("El usuario " + username + " no existe"));
         return new UserDetailsImp(usuario);
+    }
+
+    public Usuario getUserEntity() {
+        return usuario;
     }
 }

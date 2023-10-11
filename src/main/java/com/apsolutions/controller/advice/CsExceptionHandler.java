@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.security.SignatureException;
+
 @ControllerAdvice
 public class CsExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -25,6 +27,8 @@ public class CsExceptionHandler extends ResponseEntityExceptionHandler {
 
         if (ex instanceof BadCredentialsException) {
             response = new ApiResponse<>(false, "Bad credentials");
+        } else if (ex instanceof SignatureException) {
+            response = new ApiResponse<>(false, "JWT not valid");
         } else {
             response = new ApiResponse<>(false, "Don't have permission");
         }

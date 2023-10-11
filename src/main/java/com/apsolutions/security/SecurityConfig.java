@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .authenticationProvider(provider)
                 .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exc -> exc.authenticationEntryPoint(authenticationEntryPoint))
+                // .logout(log -> log.logoutUrl("/api/auth/logout").invalidateHttpSession(true).clearAuthentication(true))
                 .build();
     }
 }
