@@ -32,7 +32,7 @@ public class AuthService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authCredentials.getUsername(), authCredentials.getPassword()));
         AuthResponse authResponse = new AuthResponse();
         UserDetails userDetails = userDetailsServiceImp.loadUserByUsername(authCredentials.getUsername());
-        authResponse.setToken(jwtTokenProvider.createToken(userDetails));
+        authResponse.setToken(jwtTokenProvider.createToken(userDetails, userDetailsServiceImp.getUserEntity().getPerfil().getId()));
         tokenService.save(userDetailsServiceImp.getUserEntity(), authResponse.getToken());
 
         return new ApiResponse<>(true, "Usuario autenticado correctamente", authResponse);

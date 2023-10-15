@@ -4,6 +4,7 @@ import com.apsolutions.exception.CsException;
 import com.apsolutions.model.Perfil;
 import com.apsolutions.repository.PerfilRepository;
 import com.apsolutions.util.ApiResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class PerfilService {
         return new ApiResponse<>(true, "Se modificó correctamente.");
     }
 
+    @Transactional
     public ApiResponse<String> delete(Integer id) {
         if (!perfilRepository.existsById(id)) {
             throw new CsException("No se encontro el registro.");

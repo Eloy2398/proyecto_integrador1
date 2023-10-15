@@ -4,6 +4,7 @@ import com.apsolutions.exception.CsException;
 import com.apsolutions.model.Marca;
 import com.apsolutions.repository.MarcaRepository;
 import com.apsolutions.util.ApiResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,24 +19,21 @@ public class MarcaService {
     }
 
     public ApiResponse<String> save(Marca marca) {
+        if (marca.getId() == null) {
+            marca.setId(0);
+        }
+
         marca.setEstado(true);
-        checkValidations(marca.getNombre(), 0);
+        checkValidations(marca);
         marcaRepository.save(marca);
-        return new ApiResponse<>(true, "Se registró correctamente");
+
+        return new ApiResponse<>(true, "Se " + (marca.getId() > 0 ? "modificó" : "registró") + " correctamente");
     }
 
-    public ApiResponse<String> edit(Integer id, Marca marca) {
-        marca.setEstado(true);
-        marca.setId(id);
-        checkValidations(marca.getNombre(), marca.getId());
-        marcaRepository.save(marca);
-        return new ApiResponse<>(true, "se modificó correctamente");
-    }
-
-    private void checkValidations(String name, Integer id) {
-        Optional<Marca> optionalMarca = marcaRepository.existsByName(name, id);
+    private void checkValidations(Marca marca) {
+        Optional<Marca> optionalMarca = marcaRepository.existsByName(marca.getNombre(), marca.getId());
         if (optionalMarca.isPresent()) {
-            throw new CsException("La marca " + name + " ya se encuentra registrada");
+            throw new CsException("La marca " + marca.getNombre() + " ya se encuentra registrada");
         }
     }
 
@@ -43,9 +41,14 @@ public class MarcaService {
         return new ApiResponse<>(true, "OK", marcaRepository.list());
     }
 
+    public ApiResponse<Marca> read(Integer id) {
+        return new ApiResponse<>(true, "OK", marcaRepository.findById(id).orElse(null));
+    }
+
+    @Transactional
     public ApiResponse<String> delete(Integer id) {
         if (!marcaRepository.existsById(id)) {
-            throw new CsException("No se encontro registro");
+            throw new CsException("No se encontró registro");
         }
 
         marcaRepository.updateStatus(false, id);

@@ -1,6 +1,5 @@
 package com.apsolutions.service;
 
-import com.apsolutions.exception.CsException;
 import com.apsolutions.model.Token;
 import com.apsolutions.model.Usuario;
 import com.apsolutions.repository.TokenRepository;

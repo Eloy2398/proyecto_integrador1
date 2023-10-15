@@ -4,6 +4,7 @@ import com.apsolutions.exception.CsException;
 import com.apsolutions.model.Categoria;
 import com.apsolutions.repository.CategoriaRepository;
 import com.apsolutions.util.ApiResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class CategoriaService {
         return new ApiResponse<>(true, "OK", categoriaRepository.list());
     }
 
+    @Transactional
     public ApiResponse<String> delete(Integer id) {
         if (!categoriaRepository.existsById(id)) {
             throw new CsException("No se encontró registro");

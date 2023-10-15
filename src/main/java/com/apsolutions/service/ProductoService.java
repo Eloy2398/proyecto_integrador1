@@ -112,6 +112,7 @@ public class ProductoService {
         }
     }
 
+    @Transactional
     public ApiResponse<String> delete(Integer id) {
         if (!productoRepository.existsById(id)) {
             throw new CsException("No se encontró registro");

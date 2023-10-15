@@ -2,11 +2,13 @@ package com.apsolutions.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,11 +19,14 @@ import java.util.function.Function;
 public class JwtTokenProvider {
 
     private static final String ACCESS_TOKEN_SECRET = "586E3272357538782F413F4428472B4B6250655368566B597033733676397924";
+
     private static final Long ACCESS_TOKEN_VALIDITY_SECONDS = 2_592_000L;
 
-    private String createToken(Map<String, Object> extra, UserDetails user) {
+    private String createToken(Map<String, Object> extra, UserDetails user, Integer id_profile) {
         long expirationTime = ACCESS_TOKEN_VALIDITY_SECONDS * 1_000;
         Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
+
+        extra.put("id_profile", id_profile);
 
         return Jwts
                 .builder()
@@ -29,12 +34,13 @@ public class JwtTokenProvider {
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(expirationDate)
-                .signWith(getKey())
+                .signWith(getKey(), SignatureAlgorithm.HS384)
+                .setHeaderParam("typ", "JWT")
                 .compact();
     }
 
     private Key getKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(ACCESS_TOKEN_SECRET);
+        byte[] keyBytes = ACCESS_TOKEN_SECRET.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -51,8 +57,8 @@ public class JwtTokenProvider {
         return getClaim(token, Claims::getExpiration).before(new Date());
     }
 
-    public String createToken(UserDetails user) {
-        return createToken(new HashMap<>(), user);
+    public String createToken(UserDetails user, Integer id_profile) {
+        return createToken(new HashMap<>(), user, id_profile);
     }
 
     public <T> T getClaim(String token, Function<Claims, T> claimsTFunction) {

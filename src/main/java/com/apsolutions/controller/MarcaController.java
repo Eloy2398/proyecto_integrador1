@@ -22,14 +22,14 @@ public class MarcaController {
         return marcaService.list();
     }
 
+    @GetMapping("/leer/{id}")
+    public ApiResponse<Marca> list(@PathVariable("id") Integer id) {
+        return marcaService.read(id);
+    }
+
     @PostMapping("/guardar")
     public ApiResponse<String> save(@RequestBody Marca marca) {
         return marcaService.save(marca);
-    }
-
-    @PutMapping("/editar/{id}")
-    public ApiResponse<String> edit(@PathVariable("id") Integer id, @RequestBody Marca marca) {
-        return marcaService.edit(id, marca);
     }
 
     @PutMapping("/eliminar/{id}")
