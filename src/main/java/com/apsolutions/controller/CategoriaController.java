@@ -22,15 +22,16 @@ public class CategoriaController {
         return categoriaService.list();
     }
 
+    @GetMapping("/leer/{id}")
+    public ApiResponse<Categoria> list(@PathVariable("id") Integer id) {
+        return categoriaService.read(id);
+    }
+
     @PostMapping("/guardar")
     public ApiResponse<String> save(@RequestBody Categoria categoria) {
         return categoriaService.save(categoria);
     }
 
-    @PutMapping("/editar/{id}")
-    public ApiResponse<String> edit(@PathVariable("id") Integer id, @RequestBody Categoria categoria) {
-        return categoriaService.edit(id, categoria);
-    }
 
     @PutMapping("/eliminar/{id}")
     public ApiResponse<String> delete(@PathVariable("id") Integer id) {

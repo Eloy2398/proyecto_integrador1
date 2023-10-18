@@ -3,7 +3,6 @@ package com.apsolutions.controller;
 import com.apsolutions.model.Perfil;
 import com.apsolutions.service.PerfilService;
 import com.apsolutions.util.ApiResponse;
-import jdk.jfr.Frequency;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,14 +21,14 @@ public class PerfilController {
         return perfilService.list();
     }
 
+    @GetMapping("/leer/{id}")
+    public ApiResponse<Perfil> list(@PathVariable("id") Integer id) {
+        return perfilService.read(id);
+    }
+
     @PostMapping("/guardar")
     public ApiResponse<String> save(@RequestBody Perfil perfil) {
         return perfilService.save(perfil);
-    }
-
-    @PutMapping("/editar/{id}")
-    public ApiResponse<String> edit(@PathVariable("id") Integer id, @RequestBody Perfil perfil) {
-        return perfilService.edit(id, perfil);
     }
 
     @PutMapping("/eliminar/{id}")

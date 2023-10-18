@@ -1,6 +1,7 @@
 package com.apsolutions.service;
 
 import com.apsolutions.exception.CsException;
+import com.apsolutions.model.Categoria;
 import com.apsolutions.model.Perfil;
 import com.apsolutions.repository.PerfilRepository;
 import com.apsolutions.util.ApiResponse;
@@ -22,24 +23,26 @@ public class PerfilService {
         return new ApiResponse<>(true, "OK", perfilRepository.list());
     }
 
-    public void checkValidations(String name, int id) {
-        Optional<Perfil> optionalPerfil = perfilRepository.existsByName(name, id);
+    public void checkValidations(Perfil perfil) {
+        Optional<Perfil> optionalPerfil = perfilRepository.existsByName(perfil.getNombre(), perfil.getId());
         if (optionalPerfil.isPresent()) {
-            throw new CsException("El perfil " + name + " ya se encuentra registro.");
+            throw new CsException("El perfil " + perfil.getNombre() + " ya se encuentra registro.");
         }
     }
 
     public ApiResponse<String> save(Perfil perfil) {
-        checkValidations(perfil.getNombre(), 0);
+        if (perfil.getId() == null) {
+            perfil.setId(0);
+        }
+
+        perfil.setEstado(true);
+        checkValidations(perfil);
         perfilRepository.save(perfil);
-        return new ApiResponse<>(true, "Registrado correctamente.");
+        return new ApiResponse<>(true, "Se " + (perfil.getId() > 0 ? "modificó" : "registró") + " correctamente");
     }
 
-    public ApiResponse<String> edit(Integer id, Perfil perfil) {
-        perfil.setId(id);
-        checkValidations(perfil.getNombre(), perfil.getId());
-        perfilRepository.save(perfil);
-        return new ApiResponse<>(true, "Se modificó correctamente.");
+    public ApiResponse<Perfil> read(Integer id) {
+        return new ApiResponse<>(true, "OK", perfilRepository.findById(id).orElse(null));
     }
 
     @Transactional

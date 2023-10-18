@@ -20,27 +20,29 @@ public class CategoriaService {
     }
 
     public ApiResponse<String> save(Categoria categoria) {
-        checkValidations(categoria.getNombre(), 0);
+        if (categoria.getId() == null) {
+            categoria.setId(0);
+        }
+
+        categoria.setEstado(true);
+        checkValidations(categoria);
         categoriaRepository.save(categoria);
-        return new ApiResponse<>(true, "Se registró correctamente");
+        return new ApiResponse<>(true, "Se " + (categoria.getId() > 0 ? "modificó" : "registró") + " correctamente");
     }
 
-    public ApiResponse<String> edit(Integer id, Categoria categoria) {
-        categoria.setId(id);
-        checkValidations(categoria.getNombre(), categoria.getId());
-        categoriaRepository.save(categoria);
-        return new ApiResponse<>(true, "Se modificó correctamente");
-    }
-
-    private void checkValidations(String name, int id) {
-        Optional<Categoria> optionalCategoria = categoriaRepository.existsByName(name, id);
+    private void checkValidations(Categoria categoria) {
+        Optional<Categoria> optionalCategoria = categoriaRepository.existsByName(categoria.getNombre(), categoria.getId());
         if (optionalCategoria.isPresent()) {
-            throw new CsException("La categoría " + name + " ya se encuentra registrada");
+            throw new CsException("La categoría " + categoria.getNombre() + " ya se encuentra registrada");
         }
     }
 
     public ApiResponse<List<Categoria>> list() {
         return new ApiResponse<>(true, "OK", categoriaRepository.list());
+    }
+
+    public ApiResponse<Categoria> read(Integer id) {
+        return new ApiResponse<>(true, "OK", categoriaRepository.findById(id).orElse(null));
     }
 
     @Transactional
