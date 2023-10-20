@@ -23,9 +23,9 @@ public class ProveedorController {
         return proveedorService.save(persona);
     }
 
-    @PutMapping("/editar/{id}")
-    public ApiResponse<String> edit(@PathVariable("id") Integer id, @RequestBody Persona persona){
-        return proveedorService.edit(id, persona);
+    @GetMapping("/leer/{id}")
+    public ApiResponse<Persona> list(@PathVariable("id") Integer id) {
+        return proveedorService.read(id);
     }
 
     @GetMapping("/listar")

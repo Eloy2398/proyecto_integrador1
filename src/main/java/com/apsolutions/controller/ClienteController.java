@@ -2,6 +2,7 @@ package com.apsolutions.controller;
 
 import com.apsolutions.dto.ClienteDto;
 import com.apsolutions.dto.PersonaDto;
+import com.apsolutions.model.Categoria;
 import com.apsolutions.model.Cliente;
 import com.apsolutions.model.Persona;
 import com.apsolutions.service.ClienteService;
@@ -24,9 +25,9 @@ public class ClienteController {
         return clienteService.save(persona);
     }
 
-    @PutMapping("/editar/{id}")
-    public ApiResponse<String> edit(@PathVariable("id") Integer id, @RequestBody Persona persona){
-        return clienteService.edit(id, persona);
+    @GetMapping("/leer/{id}")
+    public ApiResponse<Persona> list(@PathVariable("id") Integer id) {
+        return clienteService.read(id);
     }
 
     @GetMapping("/listar")

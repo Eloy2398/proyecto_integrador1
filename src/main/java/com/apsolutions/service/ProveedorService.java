@@ -2,6 +2,7 @@ package com.apsolutions.service;
 
 import com.apsolutions.dto.ProveedorDto;
 import com.apsolutions.exception.CsException;
+import com.apsolutions.model.Cliente;
 import com.apsolutions.model.Persona;
 import com.apsolutions.model.Proveedor;
 import com.apsolutions.repository.PersonaRepository;
@@ -35,28 +36,38 @@ public class ProveedorService {
 
     @Transactional
     public ApiResponse<String> save(Persona persona) {
-        Optional<Proveedor> proveedorOptional = proveedorRepository.existsByDocument(persona.getDocumento(), 0);
-        if (proveedorOptional.isPresent()) {
-            throw new CsException("El cliente con número de documento " + persona.getDocumento() + " existe.");
+        if (persona.getId() == null) {
+            persona.setId(0);
         }
 
-        Optional<Persona> optionalPersona = personaRepository.existsByDocument(persona.getDocumento(), 0);
-        if (optionalPersona.isPresent()) {
-            persona = optionalPersona.get();
-            Proveedor proveedor = new Proveedor();
-            proveedor.setPersona(persona);
-            proveedor.setEstado(true);
-            proveedorRepository.save(proveedor);
-            return new ApiResponse<>(true, "Se registro correctamente.");
+        if (persona.getId() > 0) {
+            checkValidation(persona.getDocumento(), persona.getId());
+            personaRepository.save(persona);
+            return new ApiResponse<>(true, "Se modificó correctamente");
         } else {
-            persona = personaRepository.save(persona);
+            Optional<Proveedor> proveedorOptional = proveedorRepository.existsByDocument(persona.getDocumento(), 0);
+            if (proveedorOptional.isPresent()) {
+                throw new CsException("El cliente con número de documento " + persona.getDocumento() + " existe.");
+            }
 
-            Proveedor proveedor = new Proveedor();
-            proveedor.setPersona(persona);
-            proveedor.setEstado(true);
-            proveedorRepository.save(proveedor);
+            Optional<Persona> optionalPersona = personaRepository.existsByDocument(persona.getDocumento(), 0);
+            if (optionalPersona.isPresent()) {
+                persona = optionalPersona.get();
+                Proveedor proveedor = new Proveedor();
+                proveedor.setPersona(persona);
+                proveedor.setEstado(true);
+                proveedorRepository.save(proveedor);
+                return new ApiResponse<>(true, "Se registro correctamente.");
+            } else {
+                persona = personaRepository.save(persona);
 
-            return new ApiResponse<>(true, "Se registro correctamente.");
+                Proveedor proveedor = new Proveedor();
+                proveedor.setPersona(persona);
+                proveedor.setEstado(true);
+                proveedorRepository.save(proveedor);
+
+                return new ApiResponse<>(true, "Se registro correctamente.");
+            }
         }
     }
 
@@ -68,12 +79,24 @@ public class ProveedorService {
         return new ApiResponse<>(true, "Se modificó correctamente");
     }
 
+    public ApiResponse<Persona> read(Integer id) {
+        return new ApiResponse<>(true, "OK", personaRepository.findById(id).orElse(null));
+    }
+
     public ApiResponse<List<ProveedorDto>> list() {
         return new ApiResponse<>(true, "OK", proveedorRepository.list());
     }
 
     @Transactional
     public ApiResponse<String> delete(Integer id) {
+        Optional<Proveedor> optionalProveedor = proveedorRepository.obtenerById(id);
+        if (optionalProveedor.isPresent()) {
+            Proveedor proveedor = new Proveedor();
+            proveedor = optionalProveedor.get();
+            id = proveedor.getId();
+        }else{
+            id = 0;
+        }
         if (!proveedorRepository.existsById(id)) {
             throw new CsException("No se encontró registro.");
         }

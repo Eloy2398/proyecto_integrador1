@@ -4,6 +4,7 @@ import com.apsolutions.dto.ClienteDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.model.Cliente;
 import com.apsolutions.model.Persona;
+import com.apsolutions.model.Proveedor;
 import com.apsolutions.repository.ClienteRepository;
 import com.apsolutions.repository.PersonaRepository;
 import com.apsolutions.util.ApiResponse;
@@ -34,28 +35,38 @@ public class ClienteService {
 
     @Transactional
     public ApiResponse<String> save(Persona persona) {
-        Optional<Cliente> optionalCliente = clienteRepository.existsByDocument(persona.getDocumento(), 0);
-        if (optionalCliente.isPresent()) {
-            throw new CsException("El cliente con número de documento " + persona.getDocumento() + " existe.");
+        if (persona.getId() == null) {
+            persona.setId(0);
         }
 
-        Optional<Persona> optionalPersona = personaRepository.existsByDocument(persona.getDocumento(), 0);
-        if (optionalPersona.isPresent()) {
-            persona = optionalPersona.get();
-            Cliente cliente = new Cliente();
-            cliente.setPersona(persona);
-            cliente.setEstado(true);
-
-            clienteRepository.save(cliente);
-            return new ApiResponse<>(true, "Se registro correctamente");
+        if (persona.getId() > 0) {
+            checkValidation(persona.getDocumento(), persona.getId());
+            personaRepository.save(persona);
+            return new ApiResponse<>(true, "Se modificó correctamente");
         } else {
-            persona = personaRepository.save(persona);
+            Optional<Cliente> optionalCliente = clienteRepository.existsByDocument(persona.getDocumento(), 0);
+            if (optionalCliente.isPresent()) {
+                throw new CsException("El cliente con número de documento " + persona.getDocumento() + " existe.");
+            }
 
-            Cliente cliente = new Cliente();
-            cliente.setPersona(persona);
-            cliente.setEstado(true);
-            clienteRepository.save(cliente);
-            return new ApiResponse<>(true, "Se registro correctamente");
+            Optional<Persona> optionalPersona = personaRepository.existsByDocument(persona.getDocumento(), 0);
+            if (optionalPersona.isPresent()) {
+                persona = optionalPersona.get();
+                Cliente cliente = new Cliente();
+                cliente.setPersona(persona);
+                cliente.setEstado(true);
+
+                clienteRepository.save(cliente);
+                return new ApiResponse<>(true, "Se registro correctamente");
+            } else {
+                persona = personaRepository.save(persona);
+
+                Cliente cliente = new Cliente();
+                cliente.setPersona(persona);
+                cliente.setEstado(true);
+                clienteRepository.save(cliente);
+                return new ApiResponse<>(true, "Se registro correctamente");
+            }
         }
     }
 
@@ -67,12 +78,25 @@ public class ClienteService {
         return new ApiResponse<>(true, "Se modificó correctamente");
     }
 
+    public ApiResponse<Persona> read(Integer id) {
+        return new ApiResponse<>(true, "OK", personaRepository.findById(id).orElse(null));
+    }
+
     public ApiResponse<List<ClienteDto>> list() {
         return new ApiResponse<>(true, "OK", clienteRepository.list());
     }
 
     @Transactional
     public ApiResponse<String> delete(Integer id) {
+        Optional<Cliente> optionalCliente = clienteRepository.obtenerById(id);
+        if (optionalCliente.isPresent()) {
+            Cliente cliente = new Cliente();
+            cliente = optionalCliente.get();
+            id = cliente.getId();
+        }else{
+            id = 0;
+        }
+
         if (!clienteRepository.existsById(id)) {
             throw new CsException("No se encontró registro.");
         }
