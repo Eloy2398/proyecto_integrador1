@@ -14,8 +14,8 @@ public class Persona {
     @Column(length = 15, nullable = false)
     private String documento;
 
-    @Column(length = 20, nullable = false)
-    private String tipodocumento;
+    @Column(columnDefinition = "tinyint(1)", nullable = false)
+    private Byte tipodocumento;
 
     @Column(length = 11, nullable = false)
     private String telefono;
@@ -50,11 +50,11 @@ public class Persona {
         this.documento = documento;
     }
 
-    public String getTipodocumento() {
+    public Byte getTipodocumento() {
         return tipodocumento;
     }
 
-    public void setTipodocumento(String tipodocumento) {
+    public void setTipodocumento(Byte tipodocumento) {
         this.tipodocumento = tipodocumento;
     }
 

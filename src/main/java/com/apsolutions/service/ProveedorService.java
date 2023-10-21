@@ -2,7 +2,6 @@ package com.apsolutions.service;
 
 import com.apsolutions.dto.ProveedorDto;
 import com.apsolutions.exception.CsException;
-import com.apsolutions.model.Cliente;
 import com.apsolutions.model.Persona;
 import com.apsolutions.model.Proveedor;
 import com.apsolutions.repository.PersonaRepository;
@@ -47,7 +46,7 @@ public class ProveedorService {
         } else {
             Optional<Proveedor> proveedorOptional = proveedorRepository.existsByDocument(persona.getDocumento(), 0);
             if (proveedorOptional.isPresent()) {
-                throw new CsException("El cliente con número de documento " + persona.getDocumento() + " existe.");
+                throw new CsException("El proveedor con número de documento " + persona.getDocumento() + " existe.");
             }
 
             Optional<Persona> optionalPersona = personaRepository.existsByDocument(persona.getDocumento(), 0);

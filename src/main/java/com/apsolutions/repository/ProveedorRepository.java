@@ -12,7 +12,9 @@ import java.util.Optional;
 
 @Repository
 public interface ProveedorRepository extends JpaRepository<Proveedor, Integer> {
-    @Query("SELECT new com.apsolutions.dto.ProveedorDto(p.id, p.nombre, p.documento, p.tipodocumento, p.telefono, p.direccion, p.email, pv.id, pv.estado) " +
+    @Query("SELECT new com.apsolutions.dto.ProveedorDto(p.id, p.nombre, p.documento, " +
+            "CASE WHEN p.tipodocumento = 1 THEN 'DNI' ELSE 'RUC' END, " +
+            "p.telefono, p.direccion, p.email, pv.id, pv.estado) " +
             "FROM Proveedor pv INNER JOIN pv.persona p WHERE pv.estado = true")
     List<ProveedorDto> list();
 

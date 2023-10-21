@@ -16,7 +16,9 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
             "WHERE p.documento = :documento AND p.id <> :id")
     Optional<Cliente> existsByDocument(String documento, Integer id);
 
-    @Query("SELECT new com.apsolutions.dto.ClienteDto(p.id, p.nombre, p.documento, p.tipodocumento, p.telefono, p.direccion, p.email, c.id, c.estado) " +
+    @Query("SELECT new com.apsolutions.dto.ClienteDto(p.id, p.nombre, p.documento, " +
+            "CASE WHEN p.tipodocumento = 1 THEN 'DNI' ELSE 'RUC' END, " +
+            "p.telefono, p.direccion, p.email, c.id, c.estado) " +
             "FROM Cliente c INNER JOIN c.persona p WHERE c.estado = true")
     List<ClienteDto> list();
 

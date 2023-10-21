@@ -7,7 +7,7 @@ public class PersonaDto {
     private Integer id;
     private String nombre;
     private String documento;
-    private String tipodocumento;
+    private Byte tipodocumento;
     private String telefono;
     private String direccion;
     private String email;
@@ -38,11 +38,11 @@ public class PersonaDto {
         this.documento = documento;
     }
 
-    public String getTipodocumento() {
+    public Byte getTipodocumento() {
         return tipodocumento;
     }
 
-    public void setTipodocumento(String tipodocumento) {
+    public void setTipodocumento(Byte tipodocumento) {
         this.tipodocumento = tipodocumento;
     }
 

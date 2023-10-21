@@ -4,7 +4,6 @@ import com.apsolutions.dto.ClienteDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.model.Cliente;
 import com.apsolutions.model.Persona;
-import com.apsolutions.model.Proveedor;
 import com.apsolutions.repository.ClienteRepository;
 import com.apsolutions.repository.PersonaRepository;
 import com.apsolutions.util.ApiResponse;
