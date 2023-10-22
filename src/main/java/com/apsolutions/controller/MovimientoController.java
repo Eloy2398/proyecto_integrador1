@@ -1,12 +1,13 @@
 package com.apsolutions.controller;
 
+import com.apsolutions.dto.MovimientoDto;
+import com.apsolutions.dto.MovimientoListDto;
 import com.apsolutions.model.Movimiento;
 import com.apsolutions.service.MovimientoService;
 import com.apsolutions.util.ApiResponse;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/movimiento")
@@ -19,7 +20,17 @@ public class MovimientoController {
     }
 
     @PostMapping("/guardar")
-    public ApiResponse<String> save(@RequestBody Movimiento movimiento) {
-        return movimientoService.save(movimiento);
+    public ApiResponse<String> save(@RequestBody MovimientoDto movimientoDto) {
+        return movimientoService.save(movimientoDto);
+    }
+
+    @GetMapping("/listar")
+    public ApiResponse<List<MovimientoListDto>> list() {
+        return movimientoService.list();
+    }
+
+    @PutMapping("/anular/{id}")
+    public ApiResponse<String> unregister(@PathVariable("id") Integer id) {
+        return movimientoService.unregister(id);
     }
 }
