@@ -15,7 +15,7 @@ public class ProductoCaracteristica {
     @JoinColumn(name = "idcaracteristica", insertable = false, updatable = false)
     private Caracteristica caracteristica;
 
-    @Column(length = 30)
+    @Column(length = 50)
     private String valor;
 
     public ProductoCaracteristicaPK getId() {

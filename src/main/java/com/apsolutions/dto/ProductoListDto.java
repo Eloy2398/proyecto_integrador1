@@ -1,5 +1,7 @@
 package com.apsolutions.dto;
 
+import java.math.BigDecimal;
+
 public class ProductoListDto {
 
     private Integer id;
@@ -14,13 +16,19 @@ public class ProductoListDto {
 
     private String marcaNombre;
 
-    public ProductoListDto(Integer id, String codigo, String nombre, String descripcion, String categoriaNombre, String marcaNombre) {
+    private BigDecimal precio;
+
+    private Short stock;
+
+    public ProductoListDto(Integer id, String codigo, String nombre, String descripcion, String categoriaNombre, String marcaNombre, BigDecimal precio, Short stock) {
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.categoriaNombre = categoriaNombre;
         this.marcaNombre = marcaNombre;
+        this.precio = precio;
+        this.stock = stock;
     }
 
     public Integer getId() {
@@ -69,5 +77,21 @@ public class ProductoListDto {
 
     public void setMarcaNombre(String marcaNombre) {
         this.marcaNombre = marcaNombre;
+    }
+
+    public BigDecimal getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(BigDecimal precio) {
+        this.precio = precio;
+    }
+
+    public Short getStock() {
+        return stock;
+    }
+
+    public void setStock(Short stock) {
+        this.stock = stock;
     }
 }

@@ -1,17 +1,12 @@
 package com.apsolutions.service;
 
+import com.apsolutions.dto.MovimientoDto;
 import com.apsolutions.dto.ProductoDto;
 import com.apsolutions.dto.ProductoListDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.ProductoMapper;
-import com.apsolutions.model.Caracteristica;
-import com.apsolutions.model.Producto;
-import com.apsolutions.model.ProductoCaracteristicaPK;
-import com.apsolutions.model.ProductoCriterioopcion;
-import com.apsolutions.repository.CaracteristicaRepository;
-import com.apsolutions.repository.ProductoCaracteristicaRepository;
-import com.apsolutions.repository.ProductoCriterioopcionRepository;
-import com.apsolutions.repository.ProductoRepository;
+import com.apsolutions.model.*;
+import com.apsolutions.repository.*;
 import com.apsolutions.util.ApiResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +14,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class ProductoService {
@@ -34,6 +29,12 @@ public class ProductoService {
     private ProductoCriterioopcionRepository productoCriterioopcionRepository;
     @Autowired
     private ProductoCaracteristicaRepository productoCaracteristicaRepository;
+    @Autowired
+    private MarcaRepository marcaRepository;
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+    @Autowired
+    private MovimientoService movimientoService;
 
     public ProductoService(ProductoRepository productoRepository) {
         this.productoRepository = productoRepository;
@@ -41,16 +42,13 @@ public class ProductoService {
 
     @Transactional
     public ApiResponse<String> save(ProductoDto productoDto) {
-        productoDto.setId(0);
-        processSaved(productoDto);
-        return new ApiResponse<>(true, "Se registró correctamente");
-    }
+        if (productoDto.getId() == null) {
+            productoDto.setId(0);
+        }
 
-    @Transactional
-    public ApiResponse<String> edit(Integer id, ProductoDto productoDto) {
-        productoDto.setId(id);
         processSaved(productoDto);
-        return new ApiResponse<>(true, "Se modificó correctamente");
+
+        return new ApiResponse<>(true, "Se " + (productoDto.getId() > 0 ? "modificó" : "registró") + " correctamente");
     }
 
     private void processSaved(ProductoDto productoDto) {
@@ -62,6 +60,7 @@ public class ProductoService {
                 productoCaracteristicaRepository.deleteByIdProducto(productoDto.getId());
             }
 
+            productoDto.setEstado(true);
             Producto producto = productoRepository.save(productoMapper.toEntity(productoDto));
 
             productoDto.getProductoCriterioopcionList().forEach(productoCriterioopcion -> {
@@ -75,21 +74,43 @@ public class ProductoService {
                 }
             });
 
-            productoDto.getProductoCaracteristicaList().forEach(productoCaracteristica -> {
+            productoDto.getProductoCaracteristicaList().forEach(productoCaracteristicaDto -> {
+                ProductoCaracteristica productoCaracteristica = new ProductoCaracteristica();
+                productoCaracteristica.setValor(productoCaracteristicaDto.getValor());
+
                 ProductoCaracteristicaPK pk = new ProductoCaracteristicaPK();
                 pk.setIdProducto(producto.getId());
 
-                Optional<Caracteristica> optionalCaracteristica = caracteristicaRepository.existsByName(productoCaracteristica.getCaracteristica().getNombre());
+                Optional<Caracteristica> optionalCaracteristica = caracteristicaRepository.existsByName(productoCaracteristicaDto.getNombre());
                 if (optionalCaracteristica.isPresent()) {
                     productoCaracteristica.setCaracteristica(optionalCaracteristica.get());
                     pk.setIdCaracteristica(productoCaracteristica.getCaracteristica().getId());
                 } else {
+                    productoCaracteristica.setCaracteristica(new Caracteristica());
+                    productoCaracteristica.getCaracteristica().setNombre(productoCaracteristicaDto.getNombre());
                     pk.setIdCaracteristica(caracteristicaRepository.save(productoCaracteristica.getCaracteristica()).getId());
                 }
 
                 productoCaracteristica.setId(pk);
                 productoCaracteristicaRepository.save(productoCaracteristica);
             });
+
+            if (producto.getStock() > 0 && !(productoDto.getId() > 0)) {
+                MovimientoDto movimientoDto = new MovimientoDto();
+                movimientoDto.setFecha(new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
+                movimientoDto.setTipo((byte) 1);
+                movimientoDto.setDescripcion("Inventario inicial");
+
+                Movimientodetalle movimientodetalle = new Movimientodetalle();
+                movimientodetalle.setProducto(producto);
+                movimientodetalle.setPrecio(producto.getPrecio());
+                movimientodetalle.setCantidad(producto.getStock());
+                List<Movimientodetalle> list = new ArrayList<>();
+                list.add(movimientodetalle);
+
+                movimientoDto.setMovimientodetalleList(list);
+                movimientoService.save(movimientoDto);
+            }
 
         } catch (DataIntegrityViolationException | JpaObjectRetrievalFailureException e) {
             throw new CsException("Error de integridad de datos " + e.getMessage());
@@ -128,5 +149,19 @@ public class ProductoService {
 
     public ApiResponse<List<ProductoListDto>> list() {
         return new ApiResponse<>(true, "OK", productoRepository.list());
+    }
+
+    public ApiResponse<Map<String, Object>> loadExtraData() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("categoriaList", categoriaRepository.list());
+        data.put("marcaList", marcaRepository.list());
+        return new ApiResponse<>(true, "Ok", data);
+    }
+
+    public ApiResponse<ProductoDto> read(Integer id) {
+        ProductoDto productoDto = productoMapper.toDto(productoRepository.findById(id).orElse(null));
+        productoDto.setProductoCaracteristicaList(productoCaracteristicaRepository.findByIdProducto(id));
+
+        return new ApiResponse<>(true, "Ok", productoDto);
     }
 }

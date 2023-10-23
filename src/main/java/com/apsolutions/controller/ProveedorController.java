@@ -24,7 +24,7 @@ public class ProveedorController {
     }
 
     @GetMapping("/leer/{id}")
-    public ApiResponse<Persona> list(@PathVariable("id") Integer id) {
+    public ApiResponse<Persona> read(@PathVariable("id") Integer id) {
         return proveedorService.read(id);
     }
 

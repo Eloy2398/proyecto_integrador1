@@ -7,6 +7,7 @@ import com.apsolutions.util.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/producto")
@@ -28,13 +29,18 @@ public class ProductoController {
         return productoService.save(productoDto);
     }
 
-    @PutMapping("/editar/{id}")
-    public ApiResponse<String> save(@PathVariable("id") Integer id, @RequestBody ProductoDto productoDto) {
-        return productoService.edit(id, productoDto);
+    @GetMapping("/leer/{id}")
+    public ApiResponse<ProductoDto> read(@PathVariable("id") Integer id) {
+        return productoService.read(id);
     }
 
     @PutMapping("/eliminar/{id}")
     public ApiResponse<String> delete(@PathVariable("id") Integer id) {
         return productoService.delete(id);
+    }
+
+    @GetMapping("/cargarDatosExtra")
+    public ApiResponse<Map<String, Object>> loadExtraData() {
+        return productoService.loadExtraData();
     }
 }

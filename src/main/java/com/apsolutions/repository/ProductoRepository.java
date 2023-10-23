@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Integer> {
 
-    @Query("SELECT new com.apsolutions.dto.ProductoListDto(p.id, p.codigo, p.nombre, p.descripcion, c.nombre, m.nombre) FROM Producto p INNER JOIN p.categoria c INNER JOIN p.marca m")
+    @Query("SELECT new com.apsolutions.dto.ProductoListDto(p.id, p.codigo, p.nombre, p.descripcion, c.nombre, m.nombre, p.precio, p.stock) FROM Producto p INNER JOIN p.categoria c INNER JOIN p.marca m")
     List<ProductoListDto> list();
 
     @Query(value = "SELECT p.id, p.codigo, p.nombre, p.descripcion, c.nombre AS categoriaNombre, m.nombre AS marcaNombre " +

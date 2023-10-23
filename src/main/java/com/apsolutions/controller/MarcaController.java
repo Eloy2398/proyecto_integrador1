@@ -23,7 +23,7 @@ public class MarcaController {
     }
 
     @GetMapping("/leer/{id}")
-    public ApiResponse<Marca> list(@PathVariable("id") Integer id) {
+    public ApiResponse<Marca> read(@PathVariable("id") Integer id) {
         return marcaService.read(id);
     }
 
@@ -33,7 +33,7 @@ public class MarcaController {
     }
 
     @PutMapping("/eliminar/{id}")
-    public ApiResponse<String> edit(@PathVariable("id") Integer id) {
+    public ApiResponse<String> delete(@PathVariable("id") Integer id) {
         return marcaService.delete(id);
     }
 }

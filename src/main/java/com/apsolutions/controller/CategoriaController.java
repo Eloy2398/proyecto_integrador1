@@ -23,7 +23,7 @@ public class CategoriaController {
     }
 
     @GetMapping("/leer/{id}")
-    public ApiResponse<Categoria> list(@PathVariable("id") Integer id) {
+    public ApiResponse<Categoria> read(@PathVariable("id") Integer id) {
         return categoriaService.read(id);
     }
 
