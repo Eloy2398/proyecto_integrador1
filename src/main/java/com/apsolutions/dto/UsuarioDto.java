@@ -8,12 +8,15 @@ public class UsuarioDto {
 
     private String usuario;
 
+    private Byte bloqueado;
+
     private String perfilNombre;
 
-    public UsuarioDto(Integer id, String nombre, String usuario, String perfilNombre) {
+    public UsuarioDto(Integer id, String nombre, String usuario, Byte bloqueado, String perfilNombre) {
         this.id = id;
         this.nombre = nombre;
         this.usuario = usuario;
+        this.bloqueado = bloqueado;
         this.perfilNombre = perfilNombre;
     }
 
@@ -39,6 +42,14 @@ public class UsuarioDto {
 
     public void setUsuario(String usuario) {
         this.usuario = usuario;
+    }
+
+    public Byte getBloqueado() {
+        return bloqueado;
+    }
+
+    public void setBloqueado(Byte bloqueado) {
+        this.bloqueado = bloqueado;
     }
 
     public String getPerfilNombre() {

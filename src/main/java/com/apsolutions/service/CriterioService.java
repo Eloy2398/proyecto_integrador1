@@ -34,7 +34,9 @@ public class CriterioService {
 
     @Transactional
     public ApiResponse<String> save(CriterioDto criterioDto) {
-        criterioDto.setId(0);
+        if (criterioDto.getId() == null) {
+            criterioDto.setId(0);
+        }
         processSaved(criterioDto);
         return new ApiResponse<>(true, "Se registró correctamente");
     }
@@ -49,7 +51,7 @@ public class CriterioService {
     private void processSaved(CriterioDto criterioDto) {
         Optional<Criterio> optionalCriterio = criterioRepository.existsByName(criterioDto.getNombre(), criterioDto.getId());
         if (optionalCriterio.isPresent()) {
-            throw new CsException("El criterio " + criterioDto.getNombre() + " ya se encuentra registrado");
+            throw new CsException("El criterio " + criterioDto.getNombre() + " ya se encuentra registrado.");
         }
 
         Criterio criterio = criterioRepository.save(criterioMapper.toEntity(criterioDto));
@@ -57,7 +59,13 @@ public class CriterioService {
         criterioDto.getCriterioopcionList().forEach(criterioopcion -> {
             criterioopcion.setEstado(true);
             criterioopcion.setCriterio(criterio);
-            criterioopcionRepository.save(criterioopcion);
+            Optional<Criterioopcion> optionalCriterioopcion = criterioopcionRepository.obtenerByDescripcion(criterioDto.getId(), criterioopcion.getDescripcion());
+            if (optionalCriterioopcion.isPresent()){
+                criterioopcionRepository.updateStatus(true, optionalCriterioopcion.get().getId());
+                System.out.println("Id del criterio opcion: "+optionalCriterioopcion.get().getId());
+            }else{
+                criterioopcionRepository.save(criterioopcion);
+            }
         });
     }
 
@@ -77,6 +85,24 @@ public class CriterioService {
     public List<CriterioopcionDto> listCriterioOpcionByIdCriterio(Integer idCriterio) {
         List<Criterioopcion> criterioopcionList = criterioopcionRepository.listFullByIdCriterio(idCriterio);
         return criterioopcionMapper.toDto(criterioopcionList);
+    }
+
+    public ApiResponse<CriterioDto> read(Integer id){
+        CriterioDto criterioDto = criterioMapper.toDto(criterioRepository.findById(id).orElse(null));
+        criterioDto.setCriterioopcionList(criterioopcionRepository.findByIdCriterio(id));
+
+        return new ApiResponse<>(true, "Ok", criterioDto);
+    }
+
+    @Transactional
+    public ApiResponse<String> delete(Integer id) {
+        if (!criterioRepository.existsById(id)) {
+            throw new CsException("No se encontró registro");
+        }
+
+        criterioRepository.updateStatus(false, id);
+
+        return new ApiResponse<>(true, "Se eliminó correctamente");
     }
 
 }

@@ -40,6 +40,7 @@ public class UsuarioService {
     public ApiResponse<String> save(Usuario usuario) {
         checkValidations(usuario.getUsuario(), 0);
         usuario.setClave(passwordEncoder.encode(usuario.getClave()));
+        usuario.setEstado(true);
         usuarioRepository.save(usuario);
         return new ApiResponse<>(true, "Se registro correctamente.");
     }

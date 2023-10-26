@@ -21,6 +21,9 @@ public class Usuario {
     @Column(columnDefinition = "boolean default true", nullable = false)
     private Boolean estado;
 
+    @Column(columnDefinition = "tinyint(1) DEFAULT 0", nullable = false)
+    private Byte bloqueado;
+
     @ManyToOne
     @JoinColumn(name = "idperfil", nullable = false)
     private Perfil perfil;
@@ -63,6 +66,14 @@ public class Usuario {
 
     public void setEstado(Boolean estado) {
         this.estado = estado;
+    }
+
+    public Byte getBloqueado() {
+        return bloqueado;
+    }
+
+    public void setBloqueado(Byte bloqueado) {
+        this.bloqueado = bloqueado;
     }
 
     public Perfil getPerfil() {

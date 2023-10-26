@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     //@Query(value = "SELECT u.id, u.nombre, u.usuario, p.nombre FROM Usuario u INNER JOIN Perfil p ON u.idperfil = p.id", nativeQuery = true)
-    @Query("SELECT new com.apsolutions.dto.UsuarioDto(u.id, u.nombre, u.usuario, p.nombre) FROM Usuario u INNER JOIN u.perfil p")
+    @Query("SELECT new com.apsolutions.dto.UsuarioDto(u.id, u.nombre, u.usuario, u.bloqueado, p.nombre) FROM Usuario u INNER JOIN u.perfil p")
     List<UsuarioDto> list();
 
     @Query("SELECT u FROM Usuario u WHERE u.estado = true AND u.usuario = :usuario AND u.id <> :id")
