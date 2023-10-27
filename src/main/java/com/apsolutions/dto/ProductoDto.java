@@ -2,7 +2,6 @@ package com.apsolutions.dto;
 
 import com.apsolutions.model.Categoria;
 import com.apsolutions.model.Marca;
-import com.apsolutions.model.ProductoCriterioopcion;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,7 +17,7 @@ public class ProductoDto {
     private Short stock;
     private String imagen;
     private Boolean estado;
-    private List<ProductoCriterioopcion> productoCriterioopcionList;
+    private List<Integer> productoCriterioopcionList;
 
     private List<ProductoCaracteristicaDto> productoCaracteristicaList;
 
@@ -102,11 +101,11 @@ public class ProductoDto {
         this.estado = estado;
     }
 
-    public List<ProductoCriterioopcion> getProductoCriterioopcionList() {
+    public List<Integer> getProductoCriterioopcionList() {
         return productoCriterioopcionList;
     }
 
-    public void setProductoCriterioopcionList(List<ProductoCriterioopcion> productoCriterioopcionList) {
+    public void setProductoCriterioopcionList(List<Integer> productoCriterioopcionList) {
         this.productoCriterioopcionList = productoCriterioopcionList;
     }
 

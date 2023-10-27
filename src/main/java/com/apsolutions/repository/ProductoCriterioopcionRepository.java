@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProductoCriterioopcionRepository extends JpaRepository<ProductoCriterioopcion, Integer> {
@@ -19,4 +20,7 @@ public interface ProductoCriterioopcionRepository extends JpaRepository<Producto
 
     @Query("SELECT pc FROM ProductoCriterioopcion pc WHERE pc.producto.id = :idProducto AND pc.criterioopcion.id = :idCriterioopcion")
     Optional<ProductoCriterioopcion> existsByIdProductoAndIdCriterioopcion(Integer idProducto, Integer idCriterioopcion);
+
+    @Query("SELECT pc.criterioopcion.id FROM ProductoCriterioopcion pc WHERE pc.estado = true AND pc.producto.id = :idProducto")
+    List<Integer> listIdCriterioopcionByIdProducto(Integer idProducto);
 }

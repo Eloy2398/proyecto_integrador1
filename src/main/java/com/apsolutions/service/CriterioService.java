@@ -1,12 +1,9 @@
 package com.apsolutions.service;
 
 import com.apsolutions.dto.CriterioDto;
-import com.apsolutions.dto.CriterioopcionDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.CriterioMapper;
-import com.apsolutions.mapper.CriterioopcionMapper;
 import com.apsolutions.model.Criterio;
-import com.apsolutions.model.Criterioopcion;
 import com.apsolutions.repository.CriterioRepository;
 import com.apsolutions.repository.CriterioopcionRepository;
 import com.apsolutions.util.ApiResponse;
@@ -23,13 +20,11 @@ public class CriterioService {
     private final CriterioRepository criterioRepository;
     private final CriterioopcionRepository criterioopcionRepository;
     private final CriterioMapper criterioMapper;
-    private final CriterioopcionMapper criterioopcionMapper;
 
-    public CriterioService(CriterioRepository criterioRepository, CriterioopcionRepository criterioopcionRepository, CriterioMapper criterioMapper, CriterioopcionMapper criterioopcionMapper) {
+    public CriterioService(CriterioRepository criterioRepository, CriterioopcionRepository criterioopcionRepository, CriterioMapper criterioMapper) {
         this.criterioRepository = criterioRepository;
         this.criterioopcionRepository = criterioopcionRepository;
         this.criterioMapper = criterioMapper;
-        this.criterioopcionMapper = criterioopcionMapper;
     }
 
     @Transactional
@@ -73,10 +68,4 @@ public class CriterioService {
 
         return new ApiResponse<>(true, "OK", criterioDtoList);
     }
-
-    public List<CriterioopcionDto> listCriterioOpcionByIdCriterio(Integer idCriterio) {
-        List<Criterioopcion> criterioopcionList = criterioopcionRepository.listFullByIdCriterio(idCriterio);
-        return criterioopcionMapper.toDto(criterioopcionList);
-    }
-
 }

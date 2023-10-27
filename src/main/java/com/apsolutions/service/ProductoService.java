@@ -1,9 +1,11 @@
 package com.apsolutions.service;
 
+import com.apsolutions.dto.CriterioDto;
 import com.apsolutions.dto.MovimientoDto;
 import com.apsolutions.dto.ProductoDto;
 import com.apsolutions.dto.ProductoListDto;
 import com.apsolutions.exception.CsException;
+import com.apsolutions.mapper.CriterioMapper;
 import com.apsolutions.mapper.ProductoMapper;
 import com.apsolutions.model.*;
 import com.apsolutions.repository.*;
@@ -24,9 +26,9 @@ public class ProductoService {
     @Autowired
     private ProductoMapper productoMapper;
     @Autowired
-    private CaracteristicaRepository caracteristicaRepository;
+    private CriterioMapper criterioMapper;
     @Autowired
-    private ProductoCriterioopcionRepository productoCriterioopcionRepository;
+    private CaracteristicaRepository caracteristicaRepository;
     @Autowired
     private ProductoCaracteristicaRepository productoCaracteristicaRepository;
     @Autowired
@@ -35,6 +37,12 @@ public class ProductoService {
     private CategoriaRepository categoriaRepository;
     @Autowired
     private MovimientoService movimientoService;
+    @Autowired
+    private CriterioRepository criterioRepository;
+    @Autowired
+    private CriterioopcionRepository criterioopcionRepository;
+    @Autowired
+    private ProductoCriterioopcionRepository productoCriterioopcionRepository;
 
     public ProductoService(ProductoRepository productoRepository) {
         this.productoRepository = productoRepository;
@@ -63,11 +71,14 @@ public class ProductoService {
             productoDto.setEstado(true);
             Producto producto = productoRepository.save(productoMapper.toEntity(productoDto));
 
-            productoDto.getProductoCriterioopcionList().forEach(productoCriterioopcion -> {
-                Optional<ProductoCriterioopcion> optionalProductoCriterioopcion = productoCriterioopcionRepository.existsByIdProductoAndIdCriterioopcion(producto.getId(), productoCriterioopcion.getCriterioopcion().getId());
+            productoDto.getProductoCriterioopcionList().forEach(idCriterioopcion -> {
+                Optional<ProductoCriterioopcion> optionalProductoCriterioopcion = productoCriterioopcionRepository.existsByIdProductoAndIdCriterioopcion(producto.getId(), idCriterioopcion);
                 if (optionalProductoCriterioopcion.isPresent()) {
                     productoCriterioopcionRepository.updateStatus(true, optionalProductoCriterioopcion.get().getId());
                 } else {
+                    ProductoCriterioopcion productoCriterioopcion = new ProductoCriterioopcion();
+                    productoCriterioopcion.setCriterioopcion(new Criterioopcion());
+                    productoCriterioopcion.getCriterioopcion().setId(idCriterioopcion);
                     productoCriterioopcion.setProducto(producto);
                     productoCriterioopcion.setEstado(true);
                     productoCriterioopcionRepository.save(productoCriterioopcion);
@@ -155,12 +166,21 @@ public class ProductoService {
         Map<String, Object> data = new HashMap<>();
         data.put("categoriaList", categoriaRepository.list());
         data.put("marcaList", marcaRepository.list());
+
+        List<CriterioDto> criterioDtoList = criterioMapper.toDto(criterioRepository.list());
+        criterioDtoList.forEach(criterioDto -> {
+            criterioDto.setCriterioopcionList(criterioopcionRepository.listByIdCriterio(criterioDto.getId()));
+        });
+
+        data.put("criterioopcionList", criterioDtoList);
+
         return new ApiResponse<>(true, "Ok", data);
     }
 
     public ApiResponse<ProductoDto> read(Integer id) {
         ProductoDto productoDto = productoMapper.toDto(productoRepository.findById(id).orElse(null));
         productoDto.setProductoCaracteristicaList(productoCaracteristicaRepository.findByIdProducto(id));
+        productoDto.setProductoCriterioopcionList(productoCriterioopcionRepository.listIdCriterioopcionByIdProducto(id));
 
         return new ApiResponse<>(true, "Ok", productoDto);
     }
