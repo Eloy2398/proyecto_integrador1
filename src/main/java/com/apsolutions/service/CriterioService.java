@@ -62,7 +62,6 @@ public class CriterioService {
             Optional<Criterioopcion> optionalCriterioopcion = criterioopcionRepository.obtenerByDescripcion(criterioDto.getId(), criterioopcion.getDescripcion());
             if (optionalCriterioopcion.isPresent()){
                 criterioopcionRepository.updateStatus(true, optionalCriterioopcion.get().getId());
-                System.out.println("Id del criterio opcion: "+optionalCriterioopcion.get().getId());
             }else{
                 criterioopcionRepository.save(criterioopcion);
             }

@@ -41,6 +41,7 @@ public class UsuarioService {
         checkValidations(usuario.getUsuario(), 0);
         usuario.setClave(passwordEncoder.encode(usuario.getClave()));
         usuario.setEstado(true);
+        usuario.setBloqueado(Byte.parseByte("0"));
         usuarioRepository.save(usuario);
         return new ApiResponse<>(true, "Se registro correctamente.");
     }
@@ -52,13 +53,33 @@ public class UsuarioService {
         return new ApiResponse<>(true, "Se modificó correctamente.");
     }
 
-    public ApiResponse<String> delete(Integer id) {
+    public ApiResponse<String> delete(Integer id, Integer perfil_id, String username) {
         if (!usuarioRepository.existsById(id)) {
             throw new CsException("No se encontró registro.");
+        }
+
+        Optional<Usuario> optionalUsuario = usuarioRepository.existsByUsername(username, 0);
+        if (optionalUsuario.get().getId() == id) {
+            throw new CsException("No es posible eliminar el usuario con el que esta logeado.");
+        } else if (perfil_id == 1) {
+            throw new CsException("No es posible eliminar al usuario por ser administrador.");
         }
 
         usuarioRepository.updateStatus(false, id);
 
         return new ApiResponse<>(true, "Se eliminó correctamente.");
+    }
+
+    public ApiResponse<String> bloquear(Integer id, Byte bloqueo, String username) {
+        if (!usuarioRepository.existsById(id)) {
+            throw new CsException("No se encontró registro.");
+        }
+
+        Optional<Usuario> optionalUsuario = usuarioRepository.existsByUsername(username, 0);
+        if (optionalUsuario.get().getId() == id) {
+            throw new CsException("No es posible bloquear el usuario con el que esta logeado.");
+        }
+        usuarioRepository.updateBloqueo(id, bloqueo);
+        return new ApiResponse<>(true, "Se " + (bloqueo == 1 ? "bloqueó" : "desbloqueo") + " correctamente.");
     }
 }

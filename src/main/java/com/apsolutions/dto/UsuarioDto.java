@@ -1,5 +1,7 @@
 package com.apsolutions.dto;
 
+import org.springframework.core.SpringVersion;
+
 public class UsuarioDto {
 
     private Integer id;
@@ -12,12 +14,15 @@ public class UsuarioDto {
 
     private String perfilNombre;
 
-    public UsuarioDto(Integer id, String nombre, String usuario, Byte bloqueado, String perfilNombre) {
+    private Integer perfilId;
+
+    public UsuarioDto(Integer id, String nombre, String usuario, Byte bloqueado, String perfilNombre, Integer perfilId) {
         this.id = id;
         this.nombre = nombre;
         this.usuario = usuario;
         this.bloqueado = bloqueado;
         this.perfilNombre = perfilNombre;
+        this.perfilId = perfilId;
     }
 
     public Integer getId() {
@@ -58,5 +63,13 @@ public class UsuarioDto {
 
     public void setPerfilNombre(String perfilNombre) {
         this.perfilNombre = perfilNombre;
+    }
+
+    public Integer getPerfilId() {
+        return perfilId;
+    }
+
+    public void setPerfilId(Integer perfilId) {
+        this.perfilId = perfilId;
     }
 }
