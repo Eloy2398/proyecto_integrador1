@@ -1,10 +1,8 @@
 package com.apsolutions.service;
 
 import com.apsolutions.dto.CriterioDto;
-import com.apsolutions.dto.CriterioopcionDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.CriterioMapper;
-import com.apsolutions.mapper.CriterioopcionMapper;
 import com.apsolutions.model.Criterio;
 import com.apsolutions.model.Criterioopcion;
 import com.apsolutions.repository.CriterioRepository;
@@ -23,13 +21,11 @@ public class CriterioService {
     private final CriterioRepository criterioRepository;
     private final CriterioopcionRepository criterioopcionRepository;
     private final CriterioMapper criterioMapper;
-    private final CriterioopcionMapper criterioopcionMapper;
 
-    public CriterioService(CriterioRepository criterioRepository, CriterioopcionRepository criterioopcionRepository, CriterioMapper criterioMapper, CriterioopcionMapper criterioopcionMapper) {
+    public CriterioService(CriterioRepository criterioRepository, CriterioopcionRepository criterioopcionRepository, CriterioMapper criterioMapper) {
         this.criterioRepository = criterioRepository;
         this.criterioopcionRepository = criterioopcionRepository;
         this.criterioMapper = criterioMapper;
-        this.criterioopcionMapper = criterioopcionMapper;
     }
 
     @Transactional
@@ -37,15 +33,11 @@ public class CriterioService {
         if (criterioDto.getId() == null) {
             criterioDto.setId(0);
         }
-        processSaved(criterioDto);
-        return new ApiResponse<>(true, "Se registró correctamente");
-    }
 
-    @Transactional
-    public ApiResponse<String> edit(Integer id, CriterioDto criterioDto) {
-        criterioDto.setId(id);
+        criterioDto.setEstado(true);
         processSaved(criterioDto);
-        return new ApiResponse<>(true, "Se modificó correctamente");
+
+        return new ApiResponse<>(true, "Se " + (criterioDto.getId() > 0 ? "modificó" : "registró") + " correctamente");
     }
 
     private void processSaved(CriterioDto criterioDto) {
@@ -60,9 +52,9 @@ public class CriterioService {
             criterioopcion.setEstado(true);
             criterioopcion.setCriterio(criterio);
             Optional<Criterioopcion> optionalCriterioopcion = criterioopcionRepository.obtenerByDescripcion(criterioDto.getId(), criterioopcion.getDescripcion());
-            if (optionalCriterioopcion.isPresent()){
+            if (optionalCriterioopcion.isPresent()) {
                 criterioopcionRepository.updateStatus(true, optionalCriterioopcion.get().getId());
-            }else{
+            } else {
                 criterioopcionRepository.save(criterioopcion);
             }
         });
@@ -81,12 +73,7 @@ public class CriterioService {
         return new ApiResponse<>(true, "OK", criterioDtoList);
     }
 
-    public List<CriterioopcionDto> listCriterioOpcionByIdCriterio(Integer idCriterio) {
-        List<Criterioopcion> criterioopcionList = criterioopcionRepository.listFullByIdCriterio(idCriterio);
-        return criterioopcionMapper.toDto(criterioopcionList);
-    }
-
-    public ApiResponse<CriterioDto> read(Integer id){
+    public ApiResponse<CriterioDto> read(Integer id) {
         CriterioDto criterioDto = criterioMapper.toDto(criterioRepository.findById(id).orElse(null));
         criterioDto.setCriterioopcionList(criterioopcionRepository.findByIdCriterio(id));
 

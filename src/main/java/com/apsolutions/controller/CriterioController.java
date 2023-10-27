@@ -26,11 +26,6 @@ public class CriterioController {
         return criterioService.save(criterioDto);
     }
 
-    @PutMapping("/editar/{id}")
-    public ApiResponse<String> edit(@PathVariable("id") Integer id, @RequestBody CriterioDto criterioDto) {
-        return criterioService.edit(id, criterioDto);
-    }
-
     @GetMapping("/leer/{id}")
     public ApiResponse<CriterioDto> read(@PathVariable("id") Integer id) {
         return criterioService.read(id);

@@ -15,9 +15,6 @@ public interface CriterioopcionRepository extends JpaRepository<Criterioopcion, 
     @Query(value = "SELECT co FROM Criterioopcion co WHERE co.estado = true AND co.criterio.id = :idCriterio")
     List<Criterioopcion> listByIdCriterio(Integer idCriterio);
 
-    @Query(value = "SELECT co FROM Criterioopcion co WHERE co.criterio.id = :idCriterio")
-    List<Criterioopcion> listFullByIdCriterio(Integer idCriterio);
-
     @Query("SELECT co FROM Criterioopcion co WHERE co.criterio.id = :idCriterio")
     List<Criterioopcion> findByIdCriterio(Integer idCriterio);
 
