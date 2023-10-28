@@ -7,6 +7,7 @@ import com.apsolutions.model.Usuario;
 import com.apsolutions.service.PerfilService;
 import com.apsolutions.service.UsuarioService;
 import com.apsolutions.util.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +40,11 @@ public class UsuarioController {
     @PutMapping("/editar/{id}")
     public ApiResponse<String> edit(@PathVariable("id") Integer id, @RequestBody Usuario usuario) {
         return usuarioService.edit(id, usuario);
+    }
+
+    @GetMapping("/getAuthenticatedUser")
+    public ApiResponse<UsuarioDto> getAuthenticatedUser(HttpServletRequest request) {
+        return usuarioService.getAuthenticatedUser(request);
     }
 
     @PutMapping("/eliminar/{id}")

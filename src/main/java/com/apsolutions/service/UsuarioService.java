@@ -5,8 +5,10 @@ import com.apsolutions.exception.CsException;
 import com.apsolutions.model.Usuario;
 import com.apsolutions.repository.UsuarioRepository;
 import com.apsolutions.util.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,9 @@ public class UsuarioService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private TokenService tokenService;
 
     public UsuarioService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
@@ -81,5 +86,11 @@ public class UsuarioService {
         }
         usuarioRepository.updateBloqueo(id, bloqueo);
         return new ApiResponse<>(true, "Se " + (bloqueo == 1 ? "bloqueó" : "desbloqueo") + " correctamente.");
+    }
+
+    public ApiResponse<UsuarioDto> getAuthenticatedUser(HttpServletRequest request) {
+        Usuario usuario = tokenService.getUserByToken(request.getHeader(HttpHeaders.AUTHORIZATION));
+        UsuarioDto usuarioDto = new UsuarioDto(usuario.getId(), usuario.getNombre(), usuario.getUsuario(), usuario.getBloqueado(), usuario.getPerfil().getNombre(), usuario.getPerfil().getId());
+        return new ApiResponse<>(true, "Ok", usuarioDto);
     }
 }

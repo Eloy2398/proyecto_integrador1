@@ -32,7 +32,7 @@ public class SecurityConfig {
         return http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(requests -> requests.requestMatchers("/api/auth/**").permitAll().anyRequest().permitAll())
+                .authorizeHttpRequests(requests -> requests.requestMatchers("/api/auth/**").permitAll().anyRequest().authenticated())
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(provider)
                 .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)

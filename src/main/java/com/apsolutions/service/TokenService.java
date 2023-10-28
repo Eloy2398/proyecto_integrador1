@@ -1,5 +1,6 @@
 package com.apsolutions.service;
 
+import com.apsolutions.exception.CsException;
 import com.apsolutions.model.Token;
 import com.apsolutions.model.Usuario;
 import com.apsolutions.repository.TokenRepository;
@@ -39,6 +40,18 @@ public class TokenService {
             token.get().setCaducado(true);
             tokenRepository.save(token.get());
         }
+    }
+
+    public Usuario getUserByToken(String headerAuthorizationToken) {
+        String jwt = getTokenFromRequest(headerAuthorizationToken);
+        if (jwt == null) return null;
+
+        Optional<Usuario> userOptional = tokenRepository.getUserByToken(jwt);
+        if (userOptional.isEmpty()) {
+            throw new CsException("User not found");
+        }
+
+        return userOptional.get();
     }
 
     public String getTokenFromRequest(String headerAuthorizationToken) {

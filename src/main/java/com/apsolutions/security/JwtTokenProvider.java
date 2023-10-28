@@ -3,7 +3,6 @@ package com.apsolutions.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -22,11 +21,9 @@ public class JwtTokenProvider {
 
     private static final Long ACCESS_TOKEN_VALIDITY_SECONDS = 2_592_000L;
 
-    private String createToken(Map<String, Object> extra, UserDetails user, Integer id_profile) {
+    private String createToken(Map<String, Object> extra, UserDetails user) {
         long expirationTime = ACCESS_TOKEN_VALIDITY_SECONDS * 1_000;
         Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
-
-        extra.put("id_profile", id_profile);
 
         return Jwts
                 .builder()
@@ -57,8 +54,8 @@ public class JwtTokenProvider {
         return getClaim(token, Claims::getExpiration).before(new Date());
     }
 
-    public String createToken(UserDetails user, Integer id_profile) {
-        return createToken(new HashMap<>(), user, id_profile);
+    public String createToken(UserDetails user) {
+        return createToken(new HashMap<>(), user);
     }
 
     public <T> T getClaim(String token, Function<Claims, T> claimsTFunction) {

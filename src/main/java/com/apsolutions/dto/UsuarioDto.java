@@ -1,7 +1,5 @@
 package com.apsolutions.dto;
 
-import org.springframework.core.SpringVersion;
-
 public class UsuarioDto {
 
     private Integer id;

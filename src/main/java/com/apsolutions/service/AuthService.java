@@ -9,7 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +30,7 @@ public class AuthService {
     public ApiResponse<AuthResponse> login(AuthCredentials authCredentials) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authCredentials.getUsername(), authCredentials.getPassword()));
         AuthResponse authResponse = new AuthResponse();
-        UserDetails userDetails = userDetailsServiceImp.loadUserByUsername(authCredentials.getUsername());
-        authResponse.setToken(jwtTokenProvider.createToken(userDetails, userDetailsServiceImp.getUserEntity().getPerfil().getId()));
+        authResponse.setToken(jwtTokenProvider.createToken(userDetailsServiceImp.loadUserByUsername(authCredentials.getUsername())));
         tokenService.save(userDetailsServiceImp.getUserEntity(), authResponse.getToken());
 
         return new ApiResponse<>(true, "Usuario autenticado correctamente", authResponse);
