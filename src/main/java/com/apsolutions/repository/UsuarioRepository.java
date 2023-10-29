@@ -20,6 +20,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Query("SELECT u FROM Usuario u WHERE u.estado = true AND u.usuario = :usuario AND u.id <> :id")
     Optional<Usuario> existsByUsername(String usuario, Integer id);
 
+    @Query("SELECT u FROM Usuario u WHERE u.estado = true AND u.id = :id")
+    Optional<Usuario> searchById(Integer id);
+
     @Modifying
     @Query("UPDATE Usuario u SET u.estado = :estado WHERE u.id = :id")
     void updateStatus(Boolean estado, Integer id);

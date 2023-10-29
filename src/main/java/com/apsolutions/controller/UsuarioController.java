@@ -55,22 +55,8 @@ public class UsuarioController {
     }
 
     @PutMapping("/bloquear/{id}")
-    public ApiResponse<String> bloqueo(@PathVariable("id") Integer id, @RequestBody Map<String, Object> requestBody) {
-        Byte bloqueo = null;
-        String username = null;
-
-        if (requestBody.containsKey("bloqueo")) {
-            try {
-                bloqueo = Byte.parseByte(requestBody.get("bloqueo").toString());
-            } catch (NumberFormatException e) {
-                throw new CsException("Error: "+e.getMessage());
-            }
-        }
-
-        if (requestBody.containsKey("username")) {
-            username = requestBody.get("username").toString();
-        }
-        return usuarioService.bloquear(id, bloqueo, username);
+    public ApiResponse<String> bloqueo(@PathVariable("id") Integer id, HttpServletRequest request) {
+        return usuarioService.bloquear(id, request);
     }
 
     @GetMapping("/cargarPerfil")

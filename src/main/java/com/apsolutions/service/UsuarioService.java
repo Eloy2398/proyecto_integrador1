@@ -75,14 +75,24 @@ public class UsuarioService {
         return new ApiResponse<>(true, "Se eliminó correctamente.");
     }
 
-    public ApiResponse<String> bloquear(Integer id, Byte bloqueo, String username) {
+    public ApiResponse<String> bloquear(Integer id, HttpServletRequest request) {
         if (!usuarioRepository.existsById(id)) {
             throw new CsException("No se encontró registro.");
         }
 
-        Optional<Usuario> optionalUsuario = usuarioRepository.existsByUsername(username, 0);
-        if (optionalUsuario.get().getId() == id) {
+        Usuario usuario = tokenService.getUserByToken(request.getHeader(HttpHeaders.AUTHORIZATION));
+        if (usuario.getId() == id) {
             throw new CsException("No es posible bloquear el usuario con el que esta logeado.");
+        }
+
+        Byte bloqueo = 0;
+        Optional<Usuario> optionalUsuario = usuarioRepository.searchById(id);
+        if (optionalUsuario.isPresent()){
+            if (optionalUsuario.get().getBloqueado()==1){
+                bloqueo = 0;
+            }else{
+                bloqueo = 1;
+            }
         }
         usuarioRepository.updateBloqueo(id, bloqueo);
         return new ApiResponse<>(true, "Se " + (bloqueo == 1 ? "bloqueó" : "desbloqueo") + " correctamente.");
