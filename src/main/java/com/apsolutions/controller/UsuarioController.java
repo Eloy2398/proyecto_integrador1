@@ -1,7 +1,6 @@
 package com.apsolutions.controller;
 
 import com.apsolutions.dto.UsuarioDto;
-import com.apsolutions.exception.CsException;
 import com.apsolutions.model.Perfil;
 import com.apsolutions.model.Usuario;
 import com.apsolutions.service.PerfilService;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("api/usuario")

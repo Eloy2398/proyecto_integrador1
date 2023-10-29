@@ -86,7 +86,7 @@ public class UsuarioService {
         }
 
         Usuario usuario = tokenService.getUserByToken(request.getHeader(HttpHeaders.AUTHORIZATION));
-        if (usuario.getId() == id) {
+        if (usuario.getId().equals(id)) {
             throw new CsException("No es posible bloquear el usuario con el que esta logeado.");
         }
 
