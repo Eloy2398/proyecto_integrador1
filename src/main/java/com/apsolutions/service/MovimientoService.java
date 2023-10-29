@@ -2,11 +2,14 @@ package com.apsolutions.service;
 
 import com.apsolutions.dto.MovimientoDto;
 import com.apsolutions.dto.MovimientoListDto;
+import com.apsolutions.dto.PersonaBusquedaDto;
+import com.apsolutions.dto.ProductoBusquedaDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.MovimientoMapper;
 import com.apsolutions.model.Movimiento;
 import com.apsolutions.repository.MovimientoRepository;
 import com.apsolutions.repository.MovimientodetalleRepository;
+import com.apsolutions.repository.PersonaRepository;
 import com.apsolutions.repository.ProductoRepository;
 import com.apsolutions.util.ApiResponse;
 import jakarta.transaction.Transactional;
@@ -32,6 +35,9 @@ public class MovimientoService {
 
     @Autowired
     private MovimientoMapper movimientoMapper;
+
+    @Autowired
+    private PersonaRepository personaRepository;
 
     public MovimientoService(MovimientoRepository movimientoRepository) {
         this.movimientoRepository = movimientoRepository;
@@ -95,5 +101,13 @@ public class MovimientoService {
         } else {
             throw new CsException("Movimiento no encontrado");
         }
+    }
+
+    public ApiResponse<List<PersonaBusquedaDto>> searchPerson(String query) {
+        return new ApiResponse<>(true, "Ok", personaRepository.search(query + "%"));
+    }
+
+    public ApiResponse<List<ProductoBusquedaDto>> searchProduct(String query) {
+        return new ApiResponse<>(true, "Ok", productoRepository.search(query + "%"));
     }
 }
