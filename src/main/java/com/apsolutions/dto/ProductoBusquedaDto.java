@@ -1,27 +1,30 @@
 package com.apsolutions.dto;
 
-public class PersonaBusquedaDto {
+import java.math.BigDecimal;
+
+public class ProductoBusquedaDto {
+
     private Integer id;
-    private String documento;
     private String nombre;
+    private BigDecimal precio;
     private String value;
 
-    public PersonaBusquedaDto(Integer id, String documento, String nombre) {
+    public ProductoBusquedaDto(Integer id, String nombre, BigDecimal precio) {
         this.id = id;
-        this.documento = documento;
         this.nombre = nombre;
+        this.precio = precio;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public String getDocumento() {
-        return documento;
-    }
-
     public String getNombre() {
         return nombre;
+    }
+
+    public BigDecimal getPrecio() {
+        return precio;
     }
 
     public String getValue() {
