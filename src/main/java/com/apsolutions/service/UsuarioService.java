@@ -69,7 +69,7 @@ public class UsuarioService {
             throw new CsException("No es posible eliminar el usuario con el que esta logeado.");
         }
         Optional<Usuario> optionalUsuario = usuarioRepository.searchById(id);
-        if (optionalUsuario.isPresent()){
+        if (optionalUsuario.isPresent()) {
             if (optionalUsuario.get().getPerfil().getId() == 1) {
                 throw new CsException("No es posible eliminar al usuario por ser administrador.");
             }
@@ -92,10 +92,10 @@ public class UsuarioService {
 
         Byte bloqueo = 0;
         Optional<Usuario> optionalUsuario = usuarioRepository.searchById(id);
-        if (optionalUsuario.isPresent()){
-            if (optionalUsuario.get().getBloqueado()==1){
+        if (optionalUsuario.isPresent()) {
+            if (optionalUsuario.get().getBloqueado() == 1) {
                 bloqueo = 0;
-            }else{
+            } else {
                 bloqueo = 1;
             }
         }
