@@ -58,16 +58,21 @@ public class UsuarioService {
         return new ApiResponse<>(true, "Se modificó correctamente.");
     }
 
-    public ApiResponse<String> delete(Integer id, Integer perfil_id, String username) {
+    public ApiResponse<String> delete(Integer id, HttpServletRequest request) {
         if (!usuarioRepository.existsById(id)) {
             throw new CsException("No se encontró registro.");
         }
 
-        Optional<Usuario> optionalUsuario = usuarioRepository.existsByUsername(username, 0);
-        if (optionalUsuario.get().getId() == id) {
+        Usuario usuario = tokenService.getUserByToken(request.getHeader(HttpHeaders.AUTHORIZATION));
+
+        if (usuario.getId().equals(id)) {
             throw new CsException("No es posible eliminar el usuario con el que esta logeado.");
-        } else if (perfil_id == 1) {
-            throw new CsException("No es posible eliminar al usuario por ser administrador.");
+        }
+        Optional<Usuario> optionalUsuario = usuarioRepository.searchById(id);
+        if (optionalUsuario.isPresent()){
+            if (optionalUsuario.get().getPerfil().getId() == 1) {
+                throw new CsException("No es posible eliminar al usuario por ser administrador.");
+            }
         }
 
         usuarioRepository.updateStatus(false, id);

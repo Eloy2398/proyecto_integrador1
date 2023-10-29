@@ -15,7 +15,7 @@ public interface CriterioopcionRepository extends JpaRepository<Criterioopcion, 
     @Query(value = "SELECT co FROM Criterioopcion co WHERE co.estado = true AND co.criterio.id = :idCriterio")
     List<Criterioopcion> listByIdCriterio(Integer idCriterio);
 
-    @Query("SELECT co FROM Criterioopcion co WHERE co.criterio.id = :idCriterio")
+    @Query("SELECT co FROM Criterioopcion co WHERE co.criterio.id = :idCriterio AND co.estado = true")
     List<Criterioopcion> findByIdCriterio(Integer idCriterio);
 
     @Query("SELECT co FROM Criterioopcion co WHERE co.criterio.id = :idCriterio AND co.descripcion = :descripcion")
@@ -24,4 +24,8 @@ public interface CriterioopcionRepository extends JpaRepository<Criterioopcion, 
     @Modifying
     @Query("UPDATE Criterioopcion co SET co.estado = :estado WHERE co.id = :id")
     void updateStatus(Boolean estado, Integer id);
+
+    @Modifying
+    @Query("UPDATE Criterioopcion co SET co.estado = :estado WHERE co.criterio.id = :idCriterio")
+    void updateStatusByCriterio(Boolean estado, Integer idCriterio);
 }

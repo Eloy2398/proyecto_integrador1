@@ -48,10 +48,8 @@ public class UsuarioController {
     }
 
     @PutMapping("/eliminar/{id}")
-    public ApiResponse<String> delete(@PathVariable("id") Integer id, @RequestBody Map<String, Object> requestBody) {
-        String username = requestBody.get("username").toString();
-        Integer perfil_id = Integer.parseInt(requestBody.get("perfil_id").toString());
-        return usuarioService.delete(id, perfil_id, username);
+    public ApiResponse<String> delete(@PathVariable("id") Integer id, HttpServletRequest request) {
+        return usuarioService.delete(id, request);
     }
 
     @PutMapping("/bloquear/{id}")

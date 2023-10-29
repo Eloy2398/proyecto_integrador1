@@ -46,6 +46,10 @@ public class CriterioService {
             throw new CsException("El criterio " + criterioDto.getNombre() + " ya se encuentra registrado.");
         }
 
+        if (criterioDto.getId()>0){
+            criterioopcionRepository.updateStatusByCriterio(false, criterioDto.getId());
+        }
+
         Criterio criterio = criterioRepository.save(criterioMapper.toEntity(criterioDto));
 
         criterioDto.getCriterioopcionList().forEach(criterioopcion -> {
