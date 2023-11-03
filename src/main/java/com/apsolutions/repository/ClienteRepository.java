@@ -22,8 +22,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
             "FROM Cliente c INNER JOIN c.persona p WHERE c.estado = true")
     List<ClienteDto> list();
 
-    @Query("SELECT c FROM Cliente c INNER JOIN c.persona p " +
-            "WHERE p.id = :id")
+    @Query("SELECT c FROM Cliente c INNER JOIN c.persona p WHERE p.id = :id")
     Optional<Cliente> obtenerById(Integer id);
 
     @Modifying

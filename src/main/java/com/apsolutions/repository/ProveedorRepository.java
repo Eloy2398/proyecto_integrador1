@@ -22,8 +22,7 @@ public interface ProveedorRepository extends JpaRepository<Proveedor, Integer> {
             "WHERE p.documento = :documento AND pv.id <> :id")
     Optional<Proveedor> existsByDocument(String documento, Integer id);
 
-    @Query("SELECT pv FROM Proveedor pv INNER JOIN pv.persona p " +
-            "WHERE p.id = :id")
+    @Query("SELECT pv FROM Proveedor pv INNER JOIN pv.persona p WHERE p.id = :id")
     Optional<Proveedor> obtenerById(Integer id);
 
     @Modifying

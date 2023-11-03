@@ -10,11 +10,14 @@ import com.apsolutions.mapper.ProductoMapper;
 import com.apsolutions.model.*;
 import com.apsolutions.repository.*;
 import com.apsolutions.util.ApiResponse;
+import com.apsolutions.util.FileStorage;
+import com.apsolutions.util.Global;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -44,6 +47,9 @@ public class ProductoService {
     @Autowired
     private ProductoCriterioopcionRepository productoCriterioopcionRepository;
 
+    @Autowired
+    private FileStorage fileStorage;
+
     public ProductoService(ProductoRepository productoRepository) {
         this.productoRepository = productoRepository;
     }
@@ -56,7 +62,7 @@ public class ProductoService {
 
         processSaved(productoDto);
 
-        return new ApiResponse<>(true, "Se " + (productoDto.getId() > 0 ? "modificó" : "registró") + " correctamente");
+        return new ApiResponse<>(true, productoDto.getId() > 0 ? Global.SUCCESSFUL_UPDATE_MESSAGE : Global.SUCCESSFUL_INSERT_MESSAGE);
     }
 
     private void processSaved(ProductoDto productoDto) {
@@ -69,7 +75,9 @@ public class ProductoService {
             }
 
             productoDto.setEstado(true);
-            Producto producto = productoRepository.save(productoMapper.toEntity(productoDto));
+            Producto productTmp = productoMapper.toEntity(productoDto);
+            productTmp.setImagen(fileStorage.upload(productoDto.getFile(), Global.DIR_PRODUCTS));
+            Producto producto = productoRepository.save(productTmp);
 
             productoDto.getProductoCriterioopcionList().forEach(idCriterioopcion -> {
                 Optional<ProductoCriterioopcion> optionalProductoCriterioopcion = productoCriterioopcionRepository.existsByIdProductoAndIdCriterioopcion(producto.getId(), idCriterioopcion);
@@ -124,7 +132,7 @@ public class ProductoService {
             }
 
         } catch (DataIntegrityViolationException | JpaObjectRetrievalFailureException e) {
-            throw new CsException("Error de integridad de datos " + e.getMessage());
+            throw new CsException(Global.DATA_INTEGRITY_ERROR + e.getMessage());
         }
     }
 
@@ -147,7 +155,7 @@ public class ProductoService {
     @Transactional
     public ApiResponse<String> delete(Integer id) {
         if (!productoRepository.existsById(id)) {
-            throw new CsException("No se encontró registro");
+            throw new CsException(Global.REGISTER_NOT_FOUND);
         }
 
         if (productoRepository.getStock(id) > 0) {
@@ -155,7 +163,7 @@ public class ProductoService {
         }
 
         productoRepository.updateStatus(false, id);
-        return new ApiResponse<>(true, "Se eliminó correctamente");
+        return new ApiResponse<>(true, Global.SUCCESSFUL_DELETE_MESSAGE);
     }
 
     public ApiResponse<List<ProductoListDto>> list() {
@@ -178,10 +186,16 @@ public class ProductoService {
     }
 
     public ApiResponse<ProductoDto> read(Integer id) {
-        ProductoDto productoDto = productoMapper.toDto(productoRepository.findById(id).orElse(null));
+        Producto producto = productoRepository.findById(id).orElse(new Producto());
+        ProductoDto productoDto = productoMapper.toDto(producto);
         productoDto.setProductoCaracteristicaList(productoCaracteristicaRepository.findByIdProducto(id));
         productoDto.setProductoCriterioopcionList(productoCriterioopcionRepository.listIdCriterioopcionByIdProducto(id));
 
         return new ApiResponse<>(true, "Ok", productoDto);
+    }
+
+    public ApiResponse<String> upload(MultipartFile file) {
+        String uploadedFilename = fileStorage.upload(file, Global.DIR_PRODUCTS);
+        return new ApiResponse<>(true, "File " + uploadedFilename + " uploaded successfully");
     }
 }

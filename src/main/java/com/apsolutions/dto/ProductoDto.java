@@ -2,6 +2,8 @@ package com.apsolutions.dto;
 
 import com.apsolutions.model.Categoria;
 import com.apsolutions.model.Marca;
+import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,6 +17,7 @@ public class ProductoDto {
     private Marca marca;
     private BigDecimal precio;
     private Short stock;
+    private MultipartFile file;
     private String imagen;
     private Boolean estado;
     private List<Integer> productoCriterioopcionList;
@@ -83,6 +86,14 @@ public class ProductoDto {
 
     public void setStock(Short stock) {
         this.stock = stock;
+    }
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
     }
 
     public String getImagen() {

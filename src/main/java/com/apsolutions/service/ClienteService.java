@@ -7,6 +7,7 @@ import com.apsolutions.model.Persona;
 import com.apsolutions.repository.ClienteRepository;
 import com.apsolutions.repository.PersonaRepository;
 import com.apsolutions.util.ApiResponse;
+import com.apsolutions.util.Global;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class ClienteService {
         if (persona.getId() > 0) {
             checkValidation(persona.getDocumento(), persona.getId());
             personaRepository.save(persona);
-            return new ApiResponse<>(true, "Se modificó correctamente");
+            return new ApiResponse<>(true, Global.SUCCESSFUL_UPDATE_MESSAGE);
         } else {
             Optional<Cliente> optionalCliente = clienteRepository.existsByDocument(persona.getDocumento(), 0);
             if (optionalCliente.isPresent()) {
@@ -51,30 +52,17 @@ public class ClienteService {
             Optional<Persona> optionalPersona = personaRepository.existsByDocument(persona.getDocumento(), 0);
             if (optionalPersona.isPresent()) {
                 persona = optionalPersona.get();
-                Cliente cliente = new Cliente();
-                cliente.setPersona(persona);
-                cliente.setEstado(true);
-
-                clienteRepository.save(cliente);
-                return new ApiResponse<>(true, "Se registro correctamente");
             } else {
                 persona = personaRepository.save(persona);
-
-                Cliente cliente = new Cliente();
-                cliente.setPersona(persona);
-                cliente.setEstado(true);
-                clienteRepository.save(cliente);
-                return new ApiResponse<>(true, "Se registro correctamente");
             }
-        }
-    }
 
-    @Transactional
-    public ApiResponse<String> edit(Integer id, Persona persona) {
-        persona.setId(id);
-        checkValidation(persona.getDocumento(), persona.getId());
-        personaRepository.save(persona);
-        return new ApiResponse<>(true, "Se modificó correctamente");
+            Cliente cliente = new Cliente();
+            cliente.setPersona(persona);
+            cliente.setEstado(true);
+
+            clienteRepository.save(cliente);
+            return new ApiResponse<>(true, Global.SUCCESSFUL_INSERT_MESSAGE);
+        }
     }
 
     public ApiResponse<Persona> read(Integer id) {
@@ -89,18 +77,10 @@ public class ClienteService {
     public ApiResponse<String> delete(Integer id) {
         Optional<Cliente> optionalCliente = clienteRepository.obtenerById(id);
         if (optionalCliente.isPresent()) {
-            Cliente cliente = new Cliente();
-            cliente = optionalCliente.get();
-            id = cliente.getId();
-        }else{
-            id = 0;
+            clienteRepository.updateStatus(false, optionalCliente.get().getId());
+            return new ApiResponse<>(true, Global.SUCCESSFUL_DELETE_MESSAGE);
+        } else {
+            throw new CsException(Global.REGISTER_NOT_FOUND);
         }
-
-        if (!clienteRepository.existsById(id)) {
-            throw new CsException("No se encontró registro.");
-        }
-        clienteRepository.updateStatus(false, id);
-
-        return new ApiResponse<>(true, "Se eliminó correctamente.");
     }
 }

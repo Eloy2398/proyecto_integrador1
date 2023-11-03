@@ -4,6 +4,7 @@ import com.apsolutions.exception.CsException;
 import com.apsolutions.model.Categoria;
 import com.apsolutions.repository.CategoriaRepository;
 import com.apsolutions.util.ApiResponse;
+import com.apsolutions.util.Global;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class CategoriaService {
         categoria.setEstado(true);
         checkValidations(categoria);
         categoriaRepository.save(categoria);
-        return new ApiResponse<>(true, "Se " + (categoria.getId() > 0 ? "modificó" : "registró") + " correctamente");
+        return new ApiResponse<>(true, categoria.getId() > 0 ? Global.SUCCESSFUL_UPDATE_MESSAGE : Global.SUCCESSFUL_INSERT_MESSAGE);
     }
 
     private void checkValidations(Categoria categoria) {
@@ -48,11 +49,11 @@ public class CategoriaService {
     @Transactional
     public ApiResponse<String> delete(Integer id) {
         if (!categoriaRepository.existsById(id)) {
-            throw new CsException("No se encontró registro");
+            throw new CsException(Global.REGISTER_NOT_FOUND);
         }
 
         categoriaRepository.updateStatus(false, id);
 
-        return new ApiResponse<>(true, "Se eliminó correctamente");
+        return new ApiResponse<>(true, Global.SUCCESSFUL_DELETE_MESSAGE);
     }
 }

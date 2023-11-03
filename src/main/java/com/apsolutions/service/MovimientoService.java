@@ -7,20 +7,20 @@ import com.apsolutions.dto.ProductoBusquedaDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.MovimientoMapper;
 import com.apsolutions.model.Movimiento;
+import com.apsolutions.model.Movimientodetalle;
 import com.apsolutions.repository.MovimientoRepository;
 import com.apsolutions.repository.MovimientodetalleRepository;
 import com.apsolutions.repository.PersonaRepository;
 import com.apsolutions.repository.ProductoRepository;
 import com.apsolutions.util.ApiResponse;
+import com.apsolutions.util.Global;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class MovimientoService {
@@ -46,6 +46,10 @@ public class MovimientoService {
     @Transactional
     public ApiResponse<String> save(MovimientoDto movimientoDto) {
         try {
+            if (movimientoDto.getTipo() == Global.OUTPUT_TYPE) {
+                checkStockProducts(movimientoDto.getMovimientodetalleList());
+            }
+
             Movimiento movimiento = movimientoMapper.toEntity(movimientoDto);
             movimiento.setEstado(true);
             movimiento.setFecharegistro(new Date());
@@ -57,7 +61,7 @@ public class MovimientoService {
                 movimientodetalleRepository.save(movimientodetalle);
 
                 int stock = productoRepository.getStock(movimientodetalle.getProducto().getId());
-                if (movimientoSaved.getTipo() == 1) {
+                if (movimientoSaved.getTipo() == Global.INPUT_TYPE) {
                     stock += movimientodetalle.getCantidad();
                 } else {
                     stock -= movimientodetalle.getCantidad();
@@ -65,9 +69,23 @@ public class MovimientoService {
                 productoRepository.updateStock(stock, movimientodetalle.getProducto().getId());
             });
 
-            return new ApiResponse<>(true, "Se registró correctamente");
+            return new ApiResponse<>(true, Global.SUCCESSFUL_INSERT_MESSAGE);
         } catch (DataIntegrityViolationException | JpaObjectRetrievalFailureException e) {
-            throw new CsException("Error de integridad de datos " + e.getMessage());
+            throw new CsException(Global.DATA_INTEGRITY_ERROR + e.getMessage());
+        }
+    }
+
+    private void checkStockProducts(List<Movimientodetalle> movimientodetalleList) {
+        List<String> strProductList = new ArrayList<>();
+
+        movimientodetalleList.forEach(movimientodetalle -> {
+            if (productoRepository.getStock(movimientodetalle.getProducto().getId()) < movimientodetalle.getCantidad()) {
+                strProductList.add(movimientodetalle.getProducto().getNombre());
+            }
+        });
+
+        if (!strProductList.isEmpty()) {
+            throw new CsException("Los productos " + strProductList + " no cuentan con stock suficiente");
         }
     }
 
@@ -87,7 +105,7 @@ public class MovimientoService {
 
             movimientodetalleRepository.listByIdMovimiento(id).forEach(movimientodetalle -> {
                 int stock = productoRepository.getStock(movimientodetalle.getProducto().getId());
-                if (type == 1) {
+                if (type == Global.INPUT_TYPE) {
                     stock -= movimientodetalle.getCantidad();
                 } else {
                     stock += movimientodetalle.getCantidad();
@@ -97,7 +115,7 @@ public class MovimientoService {
 
             movimientoRepository.updateStatus(false, id);
 
-            return new ApiResponse<>(true, "Se anuló correctamente");
+            return new ApiResponse<>(true, Global.SUCCESSFUL_DEREGISTER_MESSAGE);
         } else {
             throw new CsException("Movimiento no encontrado");
         }

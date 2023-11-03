@@ -5,6 +5,7 @@ import com.apsolutions.exception.CsException;
 import com.apsolutions.model.Usuario;
 import com.apsolutions.repository.UsuarioRepository;
 import com.apsolutions.util.ApiResponse;
+import com.apsolutions.util.Global;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,59 +49,55 @@ public class UsuarioService {
         usuario.setEstado(true);
         usuario.setBloqueado(Byte.parseByte("0"));
         usuarioRepository.save(usuario);
-        return new ApiResponse<>(true, "Se registro correctamente.");
+        return new ApiResponse<>(true, Global.SUCCESSFUL_INSERT_MESSAGE);
     }
 
     public ApiResponse<String> edit(Integer id, Usuario usuario) {
         usuario.setId(id);
         checkValidations(usuario.getUsuario(), usuario.getId());
         usuarioRepository.save(usuario);
-        return new ApiResponse<>(true, "Se modificó correctamente.");
+        return new ApiResponse<>(true, Global.SUCCESSFUL_UPDATE_MESSAGE);
     }
 
     public ApiResponse<String> delete(Integer id, HttpServletRequest request) {
-        if (!usuarioRepository.existsById(id)) {
-            throw new CsException("No se encontró registro.");
-        }
-
-        Usuario usuario = tokenService.getUserByToken(request.getHeader(HttpHeaders.AUTHORIZATION));
-
-        if (usuario.getId().equals(id)) {
-            throw new CsException("No es posible eliminar el usuario con el que esta logeado.");
-        }
         Optional<Usuario> optionalUsuario = usuarioRepository.searchById(id);
         if (optionalUsuario.isPresent()) {
+            Usuario userLogin = tokenService.getUserByToken(request.getHeader(HttpHeaders.AUTHORIZATION));
+            if (userLogin.getId().equals(id)) {
+                throw new CsException("No es posible eliminar el usuario con el que está logeado.");
+            }
+
             if (optionalUsuario.get().getPerfil().getId() == 1) {
                 throw new CsException("No es posible eliminar al usuario por ser administrador.");
             }
+
+            usuarioRepository.updateStatus(false, id);
+            return new ApiResponse<>(true, Global.SUCCESSFUL_DELETE_MESSAGE);
+        } else {
+            throw new CsException(Global.REGISTER_NOT_FOUND);
         }
-
-        usuarioRepository.updateStatus(false, id);
-
-        return new ApiResponse<>(true, "Se eliminó correctamente.");
     }
 
     public ApiResponse<String> bloquear(Integer id, HttpServletRequest request) {
-        if (!usuarioRepository.existsById(id)) {
-            throw new CsException("No se encontró registro.");
-        }
-
-        Usuario usuario = tokenService.getUserByToken(request.getHeader(HttpHeaders.AUTHORIZATION));
-        if (usuario.getId().equals(id)) {
-            throw new CsException("No es posible bloquear el usuario con el que esta logeado.");
-        }
-
-        Byte bloqueo = 0;
         Optional<Usuario> optionalUsuario = usuarioRepository.searchById(id);
         if (optionalUsuario.isPresent()) {
-            if (optionalUsuario.get().getBloqueado() == 1) {
-                bloqueo = 0;
-            } else {
-                bloqueo = 1;
+            Usuario userLogin = tokenService.getUserByToken(request.getHeader(HttpHeaders.AUTHORIZATION));
+            if (userLogin.getId().equals(id)) {
+                throw new CsException("No es posible bloquear el usuario con el que está logeado.");
             }
+
+            byte locked;
+            if (optionalUsuario.get().getBloqueado() == 1) {
+                locked = 0;
+            } else {
+                locked = 1;
+            }
+
+            usuarioRepository.updateBloqueo(id, locked);
+            return new ApiResponse<>(true, "Se " + (locked == 1 ? "bloqueó" : "desbloqueó") + " correctamente.");
+        } else {
+            throw new CsException(Global.REGISTER_NOT_FOUND);
         }
-        usuarioRepository.updateBloqueo(id, bloqueo);
-        return new ApiResponse<>(true, "Se " + (bloqueo == 1 ? "bloqueó" : "desbloqueo") + " correctamente.");
     }
 
     public ApiResponse<UsuarioDto> getAuthenticatedUser(HttpServletRequest request) {

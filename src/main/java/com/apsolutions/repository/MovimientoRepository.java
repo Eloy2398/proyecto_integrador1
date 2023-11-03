@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface MovimientoRepository extends JpaRepository<Movimiento, Integer> {
 
-    @Query("SELECT new com.apsolutions.dto.MovimientoListDto(m.id, m.fecha, m.tipo, p.nombre, m.descripcion) FROM Movimiento m INNER JOIN m.persona p")
+    @Query("SELECT new com.apsolutions.dto.MovimientoListDto(m.id, m.fecha, m.tipo, p.nombre, m.descripcion, m.estado) FROM Movimiento m INNER JOIN m.persona p")
     List<MovimientoListDto> list();
 
     @Modifying

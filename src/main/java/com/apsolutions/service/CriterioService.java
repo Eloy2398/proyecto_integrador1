@@ -8,6 +8,7 @@ import com.apsolutions.model.Criterioopcion;
 import com.apsolutions.repository.CriterioRepository;
 import com.apsolutions.repository.CriterioopcionRepository;
 import com.apsolutions.util.ApiResponse;
+import com.apsolutions.util.Global;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +38,7 @@ public class CriterioService {
         criterioDto.setEstado(true);
         processSaved(criterioDto);
 
-        return new ApiResponse<>(true, "Se " + (criterioDto.getId() > 0 ? "modificó" : "registró") + " correctamente");
+        return new ApiResponse<>(true, criterioDto.getId() > 0 ? Global.SUCCESSFUL_UPDATE_MESSAGE : Global.SUCCESSFUL_INSERT_MESSAGE);
     }
 
     private void processSaved(CriterioDto criterioDto) {
@@ -46,7 +47,7 @@ public class CriterioService {
             throw new CsException("El criterio " + criterioDto.getNombre() + " ya se encuentra registrado.");
         }
 
-        if (criterioDto.getId()>0){
+        if (criterioDto.getId() > 0) {
             criterioopcionRepository.updateStatusByCriterio(false, criterioDto.getId());
         }
 
@@ -87,12 +88,12 @@ public class CriterioService {
     @Transactional
     public ApiResponse<String> delete(Integer id) {
         if (!criterioRepository.existsById(id)) {
-            throw new CsException("No se encontró registro");
+            throw new CsException(Global.REGISTER_NOT_FOUND);
         }
 
         criterioRepository.updateStatus(false, id);
 
-        return new ApiResponse<>(true, "Se eliminó correctamente");
+        return new ApiResponse<>(true, Global.SUCCESSFUL_DELETE_MESSAGE);
     }
 
 }

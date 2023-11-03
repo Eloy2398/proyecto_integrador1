@@ -9,13 +9,15 @@ public class MovimientoListDto {
     private Byte tipo;
     private String personaNombre;
     private String descripcion;
+    private Boolean estado;
 
-    public MovimientoListDto(Integer id, Date fecha, Byte tipo, String personaNombre, String descripcion) {
+    public MovimientoListDto(Integer id, Date fecha, Byte tipo, String personaNombre, String descripcion, Boolean estado) {
         this.id = id;
         this.fecha = fecha;
         this.tipo = tipo;
         this.personaNombre = personaNombre;
         this.descripcion = descripcion;
+        this.estado = estado;
     }
 
     public Integer getId() {
@@ -56,5 +58,13 @@ public class MovimientoListDto {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
     }
 }

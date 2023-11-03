@@ -4,6 +4,7 @@ import com.apsolutions.exception.CsException;
 import com.apsolutions.model.Marca;
 import com.apsolutions.repository.MarcaRepository;
 import com.apsolutions.util.ApiResponse;
+import com.apsolutions.util.Global;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class MarcaService {
         checkValidations(marca);
         marcaRepository.save(marca);
 
-        return new ApiResponse<>(true, "Se " + (marca.getId() > 0 ? "modificó" : "registró") + " correctamente");
+        return new ApiResponse<>(true, marca.getId() > 0 ? Global.SUCCESSFUL_UPDATE_MESSAGE : Global.SUCCESSFUL_INSERT_MESSAGE);
     }
 
     private void checkValidations(Marca marca) {
@@ -48,11 +49,11 @@ public class MarcaService {
     @Transactional
     public ApiResponse<String> delete(Integer id) {
         if (!marcaRepository.existsById(id)) {
-            throw new CsException("No se encontró registro");
+            throw new CsException(Global.REGISTER_NOT_FOUND);
         }
 
         marcaRepository.updateStatus(false, id);
 
-        return new ApiResponse<>(true, "Se eliminó correctamente");
+        return new ApiResponse<>(true, Global.SUCCESSFUL_DELETE_MESSAGE);
     }
 }

@@ -7,6 +7,7 @@ import com.apsolutions.model.Proveedor;
 import com.apsolutions.repository.PersonaRepository;
 import com.apsolutions.repository.ProveedorRepository;
 import com.apsolutions.util.ApiResponse;
+import com.apsolutions.util.Global;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class ProveedorService {
         if (persona.getId() > 0) {
             checkValidation(persona.getDocumento(), persona.getId());
             personaRepository.save(persona);
-            return new ApiResponse<>(true, "Se modificó correctamente");
+            return new ApiResponse<>(true, Global.SUCCESSFUL_UPDATE_MESSAGE);
         } else {
             Optional<Proveedor> proveedorOptional = proveedorRepository.existsByDocument(persona.getDocumento(), 0);
             if (proveedorOptional.isPresent()) {
@@ -52,30 +53,16 @@ public class ProveedorService {
             Optional<Persona> optionalPersona = personaRepository.existsByDocument(persona.getDocumento(), 0);
             if (optionalPersona.isPresent()) {
                 persona = optionalPersona.get();
-                Proveedor proveedor = new Proveedor();
-                proveedor.setPersona(persona);
-                proveedor.setEstado(true);
-                proveedorRepository.save(proveedor);
-                return new ApiResponse<>(true, "Se registro correctamente.");
             } else {
                 persona = personaRepository.save(persona);
-
-                Proveedor proveedor = new Proveedor();
-                proveedor.setPersona(persona);
-                proveedor.setEstado(true);
-                proveedorRepository.save(proveedor);
-
-                return new ApiResponse<>(true, "Se registro correctamente.");
             }
-        }
-    }
 
-    @Transactional
-    public ApiResponse<String> edit(Integer id, Persona persona) {
-        persona.setId(id);
-        checkValidation(persona.getDocumento(), persona.getId());
-        personaRepository.save(persona);
-        return new ApiResponse<>(true, "Se modificó correctamente");
+            Proveedor proveedor = new Proveedor();
+            proveedor.setPersona(persona);
+            proveedor.setEstado(true);
+            proveedorRepository.save(proveedor);
+            return new ApiResponse<>(true, Global.SUCCESSFUL_INSERT_MESSAGE);
+        }
     }
 
     public ApiResponse<Persona> read(Integer id) {
@@ -90,18 +77,10 @@ public class ProveedorService {
     public ApiResponse<String> delete(Integer id) {
         Optional<Proveedor> optionalProveedor = proveedorRepository.obtenerById(id);
         if (optionalProveedor.isPresent()) {
-            Proveedor proveedor = new Proveedor();
-            proveedor = optionalProveedor.get();
-            id = proveedor.getId();
-        }else{
-            id = 0;
+            proveedorRepository.updateStatus(false, optionalProveedor.get().getId());
+            return new ApiResponse<>(true, Global.SUCCESSFUL_DELETE_MESSAGE);
+        } else {
+            throw new CsException(Global.REGISTER_NOT_FOUND);
         }
-        if (!proveedorRepository.existsById(id)) {
-            throw new CsException("No se encontró registro.");
-        }
-
-        proveedorRepository.updateStatus(false, id);
-
-        return new ApiResponse<>(true, "Se eliminó correctamente.");
     }
 }

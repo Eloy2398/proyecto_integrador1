@@ -5,6 +5,7 @@ import com.apsolutions.dto.ProductoListDto;
 import com.apsolutions.service.ProductoService;
 import com.apsolutions.util.ApiResponse;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -24,8 +25,14 @@ public class ProductoController {
         return productoService.list();
     }
 
-    @PostMapping("/guardar")
+    /*@PostMapping("/guardar")
     public ApiResponse<String> save(@RequestBody ProductoDto productoDto) {
+        return productoService.save(productoDto);
+    }*/
+
+    @PostMapping("/guardar")
+    public ApiResponse<String> save(@RequestPart("object") ProductoDto productoDto, @RequestParam(value = "file", required = false) MultipartFile file) {
+        productoDto.setFile(file);
         return productoService.save(productoDto);
     }
 
@@ -42,5 +49,10 @@ public class ProductoController {
     @GetMapping("/cargarDatosExtra")
     public ApiResponse<Map<String, Object>> loadExtraData() {
         return productoService.loadExtraData();
+    }
+
+    @PostMapping("/upload")
+    public ApiResponse<String> upload(@RequestParam("file") MultipartFile file) {
+        return productoService.upload(file);
     }
 }
