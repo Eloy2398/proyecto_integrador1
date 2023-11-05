@@ -44,19 +44,36 @@ public class UsuarioService {
     }
 
     public ApiResponse<String> save(Usuario usuario) {
-        checkValidations(usuario.getUsuario(), 0);
-        usuario.setClave(passwordEncoder.encode(usuario.getClave()));
+        if (usuario.getId() == null) {
+            usuario.setId(0);
+        }
+
+        checkValidations(usuario.getUsuario(), usuario.getId());
         usuario.setEstado(true);
         usuario.setBloqueado(Byte.parseByte("0"));
+
+        if (usuario.getId() > 0) {
+            Optional<Usuario> optionalUsuario = usuarioRepository.searchById(usuario.getId());
+            if (optionalUsuario.isPresent()) {
+                if (usuario.getUsuario().isEmpty()) {
+                    usuario.setUsuario(optionalUsuario.get().getUsuario());
+                }
+                if (usuario.getClave().isEmpty()) {
+                    usuario.setClave(optionalUsuario.get().getClave());
+                } else {
+                    usuario.setClave(passwordEncoder.encode(usuario.getClave()));
+                }
+            }
+        } else {
+            usuario.setClave(passwordEncoder.encode(usuario.getClave()));
+        }
+
         usuarioRepository.save(usuario);
-        return new ApiResponse<>(true, Global.SUCCESSFUL_INSERT_MESSAGE);
+        return new ApiResponse<>(true, usuario.getId() > 0 ? Global.SUCCESSFUL_UPDATE_MESSAGE : Global.SUCCESSFUL_INSERT_MESSAGE);
     }
 
-    public ApiResponse<String> edit(Integer id, Usuario usuario) {
-        usuario.setId(id);
-        checkValidations(usuario.getUsuario(), usuario.getId());
-        usuarioRepository.save(usuario);
-        return new ApiResponse<>(true, Global.SUCCESSFUL_UPDATE_MESSAGE);
+    public ApiResponse<Usuario> read(Integer id) {
+        return new ApiResponse<>(true, "OK", usuarioRepository.findById(id).orElse(null));
     }
 
     public ApiResponse<String> delete(Integer id, HttpServletRequest request) {

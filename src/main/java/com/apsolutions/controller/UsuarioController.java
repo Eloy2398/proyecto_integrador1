@@ -35,11 +35,6 @@ public class UsuarioController {
         return usuarioService.save(usuario);
     }
 
-    @PutMapping("/editar/{id}")
-    public ApiResponse<String> edit(@PathVariable("id") Integer id, @RequestBody Usuario usuario) {
-        return usuarioService.edit(id, usuario);
-    }
-
     @GetMapping("/getAuthenticatedUser")
     public ApiResponse<UsuarioDto> getAuthenticatedUser(HttpServletRequest request) {
         return usuarioService.getAuthenticatedUser(request);
@@ -48,6 +43,11 @@ public class UsuarioController {
     @PutMapping("/eliminar/{id}")
     public ApiResponse<String> delete(@PathVariable("id") Integer id, HttpServletRequest request) {
         return usuarioService.delete(id, request);
+    }
+
+    @GetMapping("/leer/{id}")
+    public ApiResponse<Usuario> read(@PathVariable("id") Integer id) {
+        return usuarioService.read(id);
     }
 
     @PutMapping("/bloquear/{id}")
