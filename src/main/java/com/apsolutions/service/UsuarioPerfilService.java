@@ -34,6 +34,13 @@ public class UsuarioPerfilService {
         this.usuarioPerfilRepository = usuarioPerfilRepository;
     }
 
+    private void checkValidations(String use, int id) {
+        Optional<Usuario> optionalUsuario = usuarioRepository.existsByUsername(use, id);
+        if (optionalUsuario.isPresent()) {
+            throw new CsException("El usuario " + use + " ya se encuentra registrado.");
+        }
+    }
+
     @Transactional
     public ApiResponse<String> updateUsernamePassword(UsuarioPerfilDto usuario, HttpServletRequest request){
         Usuario userLogin = tokenService.getUserByToken(request.getHeader(HttpHeaders.AUTHORIZATION));
@@ -42,6 +49,7 @@ public class UsuarioPerfilService {
 
         if (optionalUsuario.isPresent()){
             if (!usuario.getUsuario().isEmpty()){
+                checkValidations(usuario.getUsuario(), userLogin.getId());
                 usuarioPerfilRepository.updateUsername(usuario.getUsuario(), userLogin.getId());
             }
 
