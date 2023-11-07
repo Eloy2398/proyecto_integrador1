@@ -1,11 +1,13 @@
 package com.apsolutions.repository;
 
+import com.apsolutions.dto.IndicadorProductoDto;
 import com.apsolutions.dto.ProductoBusquedaDto;
 import com.apsolutions.dto.ProductoListDto;
 import com.apsolutions.model.Producto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -40,4 +42,11 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     @Modifying
     @Query("UPDATE Producto p SET p.estado = :estado WHERE p.id = :id")
     void updateStatus(Boolean estado, Integer id);
+
+    @Query("SELECT new com.apsolutions.dto.IndicadorProductoDto(p.nombre, p.stock, SUM(CASE WHEN m.tipo = 1 THEN md.cantidad ELSE 0 END) AS inc, SUM(CASE WHEN m.tipo = 2 THEN md.cantidad ELSE 0 END) AS out) FROM Movimientodetalle md " +
+            "LEFT JOIN md.movimiento m LEFT JOIN md.producto p WHERE m.estado = true AND p.estado = true AND YEAR(m.fecha) = :anio GROUP BY p.id ORDER BY p.stock ASC LIMIT 10")
+    List<IndicadorProductoDto> stockproductos(int anio);
+
+    @Query("SELECT COUNT(p.id) FROM Producto p WHERE p.estado = true")
+    Integer getTotalRegistros();
 }

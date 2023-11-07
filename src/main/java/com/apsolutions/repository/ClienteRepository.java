@@ -28,4 +28,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     @Modifying
     @Query("UPDATE Cliente c SET c.estado = :estado WHERE c.id = :id")
     void updateStatus(Boolean estado, Integer id);
+
+    @Query("SELECT COUNT(c.id) FROM Cliente c WHERE c.estado = true")
+    Integer getTotalRegistros();
 }
