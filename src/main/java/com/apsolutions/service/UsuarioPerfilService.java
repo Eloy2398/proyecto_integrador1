@@ -68,11 +68,11 @@ public class UsuarioPerfilService {
                 usuario.setClaveNueva(passwordEncoder.encode(usuario.getClaveNueva()));
                 validationPassword(usuario.getClaveActual(), claveActualLogin);
                 usuarioPerfilRepository.updatePassword(usuario.getClaveNueva(), userLogin.getId());
-
-                return new ApiResponse<>(true, Global.SUCCESSFUL_UPDATE_MESSAGE);
             } else {
                 throw new CsException(Global.REGISTER_NOT_FOUND);
             }
         }
+
+        return new ApiResponse<>(true, Global.SUCCESSFUL_UPDATE_MESSAGE);
     }
 }
