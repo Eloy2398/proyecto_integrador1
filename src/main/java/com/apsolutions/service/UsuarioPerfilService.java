@@ -5,12 +5,14 @@ import com.apsolutions.exception.CsException;
 import com.apsolutions.model.Usuario;
 import com.apsolutions.repository.UsuarioPerfilRepository;
 import com.apsolutions.repository.UsuarioRepository;
+import com.apsolutions.security.ApplicationConfig;
 import com.apsolutions.util.ApiResponse;
 import com.apsolutions.util.Global;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ import java.util.Optional;
 
 @Service
 public class UsuarioPerfilService {
+
+    private static BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     private final UsuarioPerfilRepository usuarioPerfilRepository;
 
@@ -32,6 +36,16 @@ public class UsuarioPerfilService {
 
     public UsuarioPerfilService(UsuarioPerfilRepository usuarioPerfilRepository) {
         this.usuarioPerfilRepository = usuarioPerfilRepository;
+    }
+
+    public static boolean verifyPassword(String rawPassword, String encodedPassword) {
+        return bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
+    }
+
+    private void validationPassword(String textPassword, String passwordDB){
+        if (!verifyPassword(textPassword, passwordDB)) {
+            throw new CsException("La contraseña actual no coincide.");
+        }
     }
 
     private void checkValidations(String use, int id) {
@@ -54,11 +68,9 @@ public class UsuarioPerfilService {
             }
 
             if (!usuario.getClaveNueva().isEmpty()){
+                String claveActualLogin = optionalUsuario.get().getClave();
                 usuario.setClaveNueva(passwordEncoder.encode(usuario.getClaveNueva()));
-                /*usuario.setClaveAnterior(passwordEncoder.encode(usuario.getClaveAnterior()));
-                if (!userLogin.getClave().equals(usuario.getClaveAnterior())){
-                    //throw new CsException("La clave anterior del usuario es incorrecta.");
-                }*/
+                validationPassword(usuario.getClaveActual(), claveActualLogin);
                 usuarioPerfilRepository.updatePassword(usuario.getClaveNueva(), userLogin.getId());
             }
 

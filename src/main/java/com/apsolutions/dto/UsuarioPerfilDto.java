@@ -4,13 +4,13 @@ public class UsuarioPerfilDto {
 
     private String usuario;
 
-    private String claveAnterior;
+    private String claveActual;
 
     private String claveNueva;
 
     public UsuarioPerfilDto(String usuario, String claveAnterior, String claveNueva) {
         this.usuario = usuario;
-        this.claveAnterior = claveAnterior;
+        this.claveActual = claveAnterior;
         this.claveNueva = claveNueva;
     }
 
@@ -22,12 +22,12 @@ public class UsuarioPerfilDto {
         this.usuario = usuario;
     }
 
-    public String getClaveAnterior() {
-        return claveAnterior;
+    public String getClaveActual() {
+        return claveActual;
     }
 
-    public void setClaveAnterior(String claveAnterior) {
-        this.claveAnterior = claveAnterior;
+    public void setClaveActual(String claveAnterior) {
+        this.claveActual = claveAnterior;
     }
 
     public String getClaveNueva() {
