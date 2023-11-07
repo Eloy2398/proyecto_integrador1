@@ -20,7 +20,7 @@ public class UsuarioPerfilController {
     }
 
     @PostMapping("/update")
-    public ApiResponse<String> save(@RequestBody UsuarioPerfilDto usuarioPerfilDto, HttpServletRequest request){
+    public ApiResponse<String> save(@RequestBody UsuarioPerfilDto usuarioPerfilDto, HttpServletRequest request) {
         return usuarioPerfilService.updateUsernamePassword(usuarioPerfilDto, request);
     }
 }

@@ -5,14 +5,12 @@ import com.apsolutions.exception.CsException;
 import com.apsolutions.model.Usuario;
 import com.apsolutions.repository.UsuarioPerfilRepository;
 import com.apsolutions.repository.UsuarioRepository;
-import com.apsolutions.security.ApplicationConfig;
 import com.apsolutions.util.ApiResponse;
 import com.apsolutions.util.Global;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +18,6 @@ import java.util.Optional;
 
 @Service
 public class UsuarioPerfilService {
-
-    private static BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     private final UsuarioPerfilRepository usuarioPerfilRepository;
 
@@ -38,11 +34,11 @@ public class UsuarioPerfilService {
         this.usuarioPerfilRepository = usuarioPerfilRepository;
     }
 
-    public static boolean verifyPassword(String rawPassword, String encodedPassword) {
-        return bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
+    public boolean verifyPassword(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 
-    private void validationPassword(String textPassword, String passwordDB){
+    private void validationPassword(String textPassword, String passwordDB) {
         if (!verifyPassword(textPassword, passwordDB)) {
             throw new CsException("La contraseña actual no coincide.");
         }
@@ -56,28 +52,27 @@ public class UsuarioPerfilService {
     }
 
     @Transactional
-    public ApiResponse<String> updateUsernamePassword(UsuarioPerfilDto usuario, HttpServletRequest request){
+    public ApiResponse<String> updateUsernamePassword(UsuarioPerfilDto usuario, HttpServletRequest request) {
         Usuario userLogin = tokenService.getUserByToken(request.getHeader(HttpHeaders.AUTHORIZATION));
 
-        Optional<Usuario> optionalUsuario = usuarioRepository.searchById(userLogin.getId());
+        if (!usuario.getUsuario().isEmpty()) {
+            checkValidations(usuario.getUsuario(), userLogin.getId());
+            usuarioPerfilRepository.updateUsername(usuario.getUsuario(), userLogin.getId());
+        }
 
-        if (optionalUsuario.isPresent()){
-            if (!usuario.getUsuario().isEmpty()){
-                checkValidations(usuario.getUsuario(), userLogin.getId());
-                usuarioPerfilRepository.updateUsername(usuario.getUsuario(), userLogin.getId());
-            }
+        if (!usuario.getClaveNueva().isEmpty()) {
+            Optional<Usuario> optionalUsuario = usuarioRepository.searchById(userLogin.getId());
 
-            if (!usuario.getClaveNueva().isEmpty()){
+            if (optionalUsuario.isPresent()) {
                 String claveActualLogin = optionalUsuario.get().getClave();
                 usuario.setClaveNueva(passwordEncoder.encode(usuario.getClaveNueva()));
                 validationPassword(usuario.getClaveActual(), claveActualLogin);
                 usuarioPerfilRepository.updatePassword(usuario.getClaveNueva(), userLogin.getId());
+
+                return new ApiResponse<>(true, Global.SUCCESSFUL_UPDATE_MESSAGE);
+            } else {
+                throw new CsException(Global.REGISTER_NOT_FOUND);
             }
-
-            return new ApiResponse<>(true, Global.SUCCESSFUL_UPDATE_MESSAGE);
-        }else{
-            throw new CsException(Global.REGISTER_NOT_FOUND);
         }
-
     }
 }
