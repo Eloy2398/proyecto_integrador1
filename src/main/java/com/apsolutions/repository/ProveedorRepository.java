@@ -28,4 +28,7 @@ public interface ProveedorRepository extends JpaRepository<Proveedor, Integer> {
     @Modifying
     @Query("UPDATE Proveedor p SET p.estado = :estado WHERE p.id = :id")
     void updateStatus(Boolean estado, Integer id);
+
+    @Query("SELECT COUNT(p.id) FROM Proveedor p WHERE p.estado = true")
+    Integer getTotalRegistros();
 }
