@@ -3,7 +3,9 @@ package com.apsolutions.repository;
 import com.apsolutions.dto.IndicadorProductoDto;
 import com.apsolutions.dto.ProductoBusquedaDto;
 import com.apsolutions.dto.ProductoListDto;
+import com.apsolutions.dto.ProductoWebsiteDto;
 import com.apsolutions.model.Producto;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -35,6 +37,9 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     @Query("SELECT p.stock FROM Producto p WHERE p.id = :id")
     Integer getStock(Integer id);
 
+    @Query("SELECT p.imagen FROM Producto p WHERE p.id = :id")
+    String getImage(Integer id);
+
     @Modifying
     @Query("UPDATE Producto p SET p.stock = :stock WHERE p.id = :id")
     void updateStock(Integer stock, Integer id);
@@ -49,4 +54,7 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
 
     @Query("SELECT COUNT(p.id) FROM Producto p WHERE p.estado = true")
     Integer getTotalRegistros();
+
+    @Query("SELECT new com.apsolutions.dto.ProductoWebsiteDto(p.id, p.nombre, p.descripcion, p.imagen) FROM Producto p WHERE p.estado = true")
+    List<ProductoWebsiteDto> getProductsToBanner(Pageable pageable);
 }
