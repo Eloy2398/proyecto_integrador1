@@ -69,14 +69,20 @@ public class ProductoService {
         try {
             checkValidations(productoDto);
 
+            String filenameImage = "";
+
             if (productoDto.getId() > 0) {
                 productoCriterioopcionRepository.updateStatusByIdProducto(false, productoDto.getId());
                 productoCaracteristicaRepository.deleteByIdProducto(productoDto.getId());
+                filenameImage = productoRepository.getImage(productoDto.getId());
+                if (productoDto.getFile() == null) {
+                    fileStorage.delete(filenameImage, Global.DIR_PRODUCTS);
+                }
             }
 
             productoDto.setEstado(true);
             Producto productTmp = productoMapper.toEntity(productoDto);
-            productTmp.setImagen(fileStorage.upload(productoDto.getFile(), Global.DIR_PRODUCTS));
+            productTmp.setImagen(fileStorage.upload(productoDto.getFile(), Global.DIR_PRODUCTS, filenameImage));
             Producto producto = productoRepository.save(productTmp);
 
             productoDto.getProductoCriterioopcionList().forEach(idCriterioopcion -> {

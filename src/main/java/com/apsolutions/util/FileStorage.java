@@ -26,7 +26,7 @@ public class FileStorage {
         this.storagePathProperties = storagePathProperties;
     }
 
-    public String upload(MultipartFile file, String dir) {
+    private String uploadExec(MultipartFile file, String dir, String filename) {
         String uploadedFilename = "";
 
         if (file != null && !file.isEmpty()) {
@@ -36,10 +36,16 @@ public class FileStorage {
             checkIfExistsDir(absoluteStoragePath);
 
             try {
-                UUID uuid = UUID.randomUUID();
-                String randomName = uuid.toString().replace("-", "");
+                if (filename.isEmpty()) {
+                    UUID uuid = UUID.randomUUID();
+                    uploadedFilename = uuid.toString().replace("-", "");
+                } else {
+                    uploadedFilename = filename.substring(0, filename.lastIndexOf("."));
+                }
+
                 String extensionDot = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf("."));
-                uploadedFilename = randomName + extensionDot;
+                uploadedFilename += extensionDot;
+
                 byte[] bytesImg = file.getBytes();
                 Path fullStorePath = Paths.get(absoluteStoragePath + "//" + uploadedFilename);
                 Files.write(fullStorePath, bytesImg);
@@ -50,6 +56,14 @@ public class FileStorage {
         }
 
         return uploadedFilename;
+    }
+
+    public String upload(MultipartFile file, String dir) {
+        return uploadExec(file, dir, "");
+    }
+
+    public String upload(MultipartFile file, String dir, String filename) {
+        return uploadExec(file, dir, filename);
     }
 
     private void checkIfExistsDir(String absolutePath) {
@@ -77,10 +91,22 @@ public class FileStorage {
         }
     }
 
+    public boolean delete(String filename, String dir) {
+        if (filename != null && !filename.isEmpty()) {
+            Path fileStorageLocation = Paths.get(storagePathProperties.getImageUploadDir() + "//" + dir).resolve(filename);
+
+            try {
+                return Files.deleteIfExists(fileStorageLocation);
+            } catch (IOException e) {
+                throw new CsException("Error deleting file");
+                //throw new RuntimeException(e);
+            }
+        }
+
+        return true;
+    }
+
     public String getFullFilePath(String filename, String dir) {
-        return ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(storagePathProperties.getImageUploadDir() + "//" + dir + "//")
-                .path(filename)
-                .toUriString();
+        return ServletUriComponentsBuilder.fromCurrentContextPath().path(storagePathProperties.getImageUploadDir() + "//" + dir + "//").path(filename).toUriString();
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.security.SignatureException;
@@ -33,6 +34,12 @@ public class CsExceptionHandler extends ResponseEntityExceptionHandler {
             response = new ApiResponse<>(false, "Don't have permission");
         }
 
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiResponse<String>> handlerMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
+        ApiResponse<String> response = new ApiResponse<>(false, "The file exceeds the set size limit.");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
