@@ -19,30 +19,8 @@ public class DownloadService {
         this.fileStorage = fileStorage;
     }
 
-    public ResponseEntity<Resource> download(String filename) {
-        Resource file = fileStorage.download(filename, Global.DIR_PRODUCTS);
-        String contentType = null;
-        try {
-            contentType = Files.probeContentType(file.getFile().toPath());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, contentType).body(file);
-    }
-
-    public ResponseEntity<Resource> download_cat(String filename) {
-        Resource file = fileStorage.download(filename, Global.DIR_CATEGORIES);
-        String contentType = null;
-        try {
-            contentType = Files.probeContentType(file.getFile().toPath());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, contentType).body(file);
-    }
-
-    public ResponseEntity<Resource> download_mar(String filename) {
-        Resource file = fileStorage.download(filename, Global.DIR_BRANDS);
+    public ResponseEntity<Resource> download(String filename, String dir) {
+        Resource file = fileStorage.download(filename, dir);
         String contentType = null;
         try {
             contentType = Files.probeContentType(file.getFile().toPath());
