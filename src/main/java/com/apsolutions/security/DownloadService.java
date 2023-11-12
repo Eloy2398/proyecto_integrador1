@@ -29,4 +29,26 @@ public class DownloadService {
         }
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, contentType).body(file);
     }
+
+    public ResponseEntity<Resource> download_cat(String filename) {
+        Resource file = fileStorage.download(filename, Global.DIR_CATEGORIES);
+        String contentType = null;
+        try {
+            contentType = Files.probeContentType(file.getFile().toPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, contentType).body(file);
+    }
+
+    public ResponseEntity<Resource> download_mar(String filename) {
+        Resource file = fileStorage.download(filename, Global.DIR_BRANDS);
+        String contentType = null;
+        try {
+            contentType = Files.probeContentType(file.getFile().toPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, contentType).body(file);
+    }
 }

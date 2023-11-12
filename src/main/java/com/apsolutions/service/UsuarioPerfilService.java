@@ -54,8 +54,11 @@ public class UsuarioPerfilService {
     @Transactional
     public ApiResponse<String> updateUsernamePassword(UsuarioPerfilDto usuario, HttpServletRequest request) {
         Usuario userLogin = tokenService.getUserByToken(request.getHeader(HttpHeaders.AUTHORIZATION));
-
+        String userUpdate = "no";
         if (!usuario.getUsuario().isEmpty()) {
+            if (!userLogin.getUsuario().equals(usuario.getUsuario())){
+                userUpdate = "si";
+            }
             checkValidations(usuario.getUsuario(), userLogin.getId());
             usuarioPerfilRepository.updateUsername(usuario.getUsuario(), userLogin.getId());
         }
@@ -73,6 +76,6 @@ public class UsuarioPerfilService {
             }
         }
 
-        return new ApiResponse<>(true, Global.SUCCESSFUL_UPDATE_MESSAGE);
+        return new ApiResponse<>(true, Global.SUCCESSFUL_UPDATE_MESSAGE, userUpdate);
     }
 }

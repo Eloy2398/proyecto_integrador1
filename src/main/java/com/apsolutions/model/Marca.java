@@ -15,6 +15,15 @@ public class Marca {
     @Column(columnDefinition = "boolean default true", nullable = false)
     private Boolean estado;
 
+    @Column(length = 150)
+    private String imagen;
+
+    @Column(columnDefinition = "tinyint(1) DEFAULT 0", nullable = false)
+    private Byte mostrarweb;
+
+    @Column(columnDefinition = "tinyint(1) DEFAULT 0", nullable = false)
+    private Byte mostrardestacado;
+
     public Integer getId() {
         return id;
     }
@@ -37,5 +46,29 @@ public class Marca {
 
     public void setEstado(Boolean estado) {
         this.estado = estado;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
+
+    public Byte getMostrarweb() {
+        return mostrarweb;
+    }
+
+    public void setMostrarweb(Byte mostrarweb) {
+        this.mostrarweb = mostrarweb;
+    }
+
+    public Byte getMostrardestacado() {
+        return mostrardestacado;
+    }
+
+    public void setMostrardestacado(Byte mostrardestacado) {
+        this.mostrardestacado = mostrardestacado;
     }
 }

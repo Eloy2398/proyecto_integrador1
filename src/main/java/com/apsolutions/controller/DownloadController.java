@@ -23,4 +23,14 @@ public class DownloadController {
     public ResponseEntity<Resource> download(@PathVariable("filename") String filename) {
         return downloadService.download(filename);
     }
+
+    @GetMapping("/categoria/{filename}")
+    public ResponseEntity<Resource> download_cat(@PathVariable("filename") String filename) {
+        return downloadService.download_cat(filename);
+    }
+
+    @GetMapping("/marca/{filename}")
+    public ResponseEntity<Resource> download_mar(@PathVariable("filename") String filename) {
+        return downloadService.download_mar(filename);
+    }
 }

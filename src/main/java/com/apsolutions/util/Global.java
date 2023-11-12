@@ -3,6 +3,8 @@ package com.apsolutions.util;
 public class Global {
 
     public final static String DIR_PRODUCTS = "products";
+    public final static String DIR_CATEGORIES = "categories";
+    public final static String DIR_BRANDS = "brands";
     public final static String SUCCESSFUL_INSERT_MESSAGE = "Se registró correctamente";
     public final static String SUCCESSFUL_UPDATE_MESSAGE = "Se modificó correctamente";
     public final static String SUCCESSFUL_DELETE_MESSAGE = "Se eliminó correctamente";

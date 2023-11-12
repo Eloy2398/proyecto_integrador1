@@ -1,9 +1,11 @@
 package com.apsolutions.controller;
 
+import com.apsolutions.dto.CategoriaDto;
 import com.apsolutions.model.Categoria;
 import com.apsolutions.service.CategoriaService;
 import com.apsolutions.util.ApiResponse;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,8 +30,9 @@ public class CategoriaController {
     }
 
     @PostMapping("/guardar")
-    public ApiResponse<String> save(@RequestBody Categoria categoria) {
-        return categoriaService.save(categoria);
+    public ApiResponse<String> save(@RequestPart("object") CategoriaDto categoriaDto, @RequestParam(value = "file", required = false) MultipartFile file) {
+        categoriaDto.setFile(file);
+        return categoriaService.save(categoriaDto);
     }
 
 

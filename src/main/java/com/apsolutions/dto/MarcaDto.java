@@ -1,10 +1,18 @@
 package com.apsolutions.dto;
 
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class MarcaDto {
     private Integer id;
     private String nombre;
     private Boolean estado;
+
+    private MultipartFile file;
+
+    private Byte mostrarweb;
+
+    private Byte mostrardestacado;
 
     public Integer getId() {
         return id;
@@ -28,5 +36,29 @@ public class MarcaDto {
 
     public void setEstado(Boolean estado) {
         this.estado = estado;
+    }
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
+    public Byte getMostrarweb() {
+        return mostrarweb;
+    }
+
+    public void setMostrarweb(Byte mostrarweb) {
+        this.mostrarweb = mostrarweb;
+    }
+
+    public Byte getMostrardestacado() {
+        return mostrardestacado;
+    }
+
+    public void setMostrardestacado(Byte mostrardestacado) {
+        this.mostrardestacado = mostrardestacado;
     }
 }

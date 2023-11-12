@@ -1,11 +1,15 @@
 package com.apsolutions.service;
 
+import com.apsolutions.dto.MarcaDto;
 import com.apsolutions.exception.CsException;
+import com.apsolutions.mapper.MarcaMapper;
 import com.apsolutions.model.Marca;
 import com.apsolutions.repository.MarcaRepository;
 import com.apsolutions.util.ApiResponse;
+import com.apsolutions.util.FileStorage;
 import com.apsolutions.util.Global;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,26 +19,37 @@ import java.util.Optional;
 public class MarcaService {
     private final MarcaRepository marcaRepository;
 
+    @Autowired
+    private FileStorage fileStorage;
+
+    @Autowired
+    private MarcaMapper marcaMapper;
+
     public MarcaService(MarcaRepository marcaRepository) {
         this.marcaRepository = marcaRepository;
     }
 
-    public ApiResponse<String> save(Marca marca) {
-        if (marca.getId() == null) {
-            marca.setId(0);
+    public ApiResponse<String> save(MarcaDto marcaDto) {
+        if (marcaDto.getId() == null) {
+            marcaDto.setId(0);
         }
+        checkValidations(marcaDto);
 
-        marca.setEstado(true);
-        checkValidations(marca);
-        marcaRepository.save(marca);
+        marcaDto.setEstado(true);
 
-        return new ApiResponse<>(true, marca.getId() > 0 ? Global.SUCCESSFUL_UPDATE_MESSAGE : Global.SUCCESSFUL_INSERT_MESSAGE);
+        Marca marcaTmp = marcaMapper.toEntity(marcaDto);
+        marcaTmp.setImagen(fileStorage.upload(marcaDto.getFile(), Global.DIR_BRANDS));
+        marcaTmp.setMostrardestacado(marcaDto.getMostrardestacado());
+        marcaTmp.setMostrarweb(marcaDto.getMostrarweb());
+        marcaRepository.save(marcaTmp);
+
+        return new ApiResponse<>(true, marcaTmp.getId() > 0 ? Global.SUCCESSFUL_UPDATE_MESSAGE : Global.SUCCESSFUL_INSERT_MESSAGE);
     }
 
-    private void checkValidations(Marca marca) {
-        Optional<Marca> optionalMarca = marcaRepository.existsByName(marca.getNombre(), marca.getId());
+    private void checkValidations(MarcaDto marcaDto) {
+        Optional<Marca> optionalMarca = marcaRepository.existsByName(marcaDto.getNombre(), marcaDto.getId());
         if (optionalMarca.isPresent()) {
-            throw new CsException("La marca " + marca.getNombre() + " ya se encuentra registrada");
+            throw new CsException("La marca " + marcaDto.getNombre() + " ya se encuentra registrada");
         }
     }
 
