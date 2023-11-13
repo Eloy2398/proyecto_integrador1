@@ -20,4 +20,7 @@ public interface MarcaRepository extends JpaRepository<Marca, Integer> {
     @Query("UPDATE Marca m SET m.estado = :estado WHERE m.id = :id")
     void updateStatus(Boolean estado, Integer id);
 
+    @Query("SELECT m.imagen FROM Marca m WHERE m.id = :id")
+    String getImage(Integer id);
+
 }

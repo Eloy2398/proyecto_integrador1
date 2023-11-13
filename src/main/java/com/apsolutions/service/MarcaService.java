@@ -30,15 +30,22 @@ public class MarcaService {
     }
 
     public ApiResponse<String> save(MarcaDto marcaDto) {
+        checkValidations(marcaDto);
+
+        String filenameImage = "";
+
         if (marcaDto.getId() == null) {
             marcaDto.setId(0);
+            filenameImage = marcaRepository.getImage(marcaDto.getId());
+            if (marcaDto.getFile() == null){
+                fileStorage.delete(filenameImage, Global.DIR_BRANDS);
+            }
         }
-        checkValidations(marcaDto);
 
         marcaDto.setEstado(true);
 
         Marca marcaTmp = marcaMapper.toEntity(marcaDto);
-        marcaTmp.setImagen(fileStorage.upload(marcaDto.getFile(), Global.DIR_BRANDS));
+        marcaTmp.setImagen(fileStorage.upload(marcaDto.getFile(), Global.DIR_BRANDS, filenameImage));
         marcaTmp.setMostrardestacado(marcaDto.getMostrardestacado());
         marcaTmp.setMostrarweb(marcaDto.getMostrarweb());
         marcaRepository.save(marcaTmp);

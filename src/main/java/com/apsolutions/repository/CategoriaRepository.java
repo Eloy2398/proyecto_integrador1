@@ -21,4 +21,7 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
     @Modifying
     @Query("UPDATE Categoria c SET c.estado = :estado WHERE c.id = :id")
     void updateStatus(Boolean estado, Integer id);
+
+    @Query("SELECT c.imagen FROM Categoria c WHERE c.id = :id")
+    String getImage(Integer id);
 }

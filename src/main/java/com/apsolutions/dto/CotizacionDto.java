@@ -1,28 +1,21 @@
 package com.apsolutions.dto;
 
+import com.apsolutions.model.Cliente;
+import com.apsolutions.model.Cotizaciondetalle;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class CotizacionDto {
     private Integer id;
 
     private Date fecha;
 
-    private Boolean estado;
+    private Cliente cliente;
 
-    private Integer idCliente;
-
-    private String clienteDocumento;
-
-    private String clienteNombre;
-
-    public CotizacionDto(Integer id, Date fecha, Boolean estado, Integer idCliente, String clienteDocumento, String clienteNombre) {
-        this.id = id;
-        this.fecha = fecha;
-        this.estado = estado;
-        this.idCliente = idCliente;
-        this.clienteDocumento = clienteDocumento;
-        this.clienteNombre = clienteNombre;
-    }
+    private List<Cotizaciondetalle> cotizaciondetalleList;
 
     public Integer getId() {
         return id;
@@ -36,39 +29,28 @@ public class CotizacionDto {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
+    public void setFecha(String fecha) {
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+            this.fecha = format.parse(fecha);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public Boolean getEstado() {
-        return estado;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setEstado(Boolean estado) {
-        this.estado = estado;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
-    public Integer getIdCliente() {
-        return idCliente;
+    public List<Cotizaciondetalle> getCotizaciondetalleList() {
+        return cotizaciondetalleList;
     }
 
-    public void setIdCliente(Integer idCliente) {
-        this.idCliente = idCliente;
-    }
-
-    public String getClienteDocumento() {
-        return clienteDocumento;
-    }
-
-    public void setClienteDocumento(String clienteDocumento) {
-        this.clienteDocumento = clienteDocumento;
-    }
-
-    public String getClienteNombre() {
-        return clienteNombre;
-    }
-
-    public void setClienteNombre(String clienteNombre) {
-        this.clienteNombre = clienteNombre;
+    public void setCotizaciondetalleList(List<Cotizaciondetalle> cotizaciondetalleList) {
+        this.cotizaciondetalleList = cotizaciondetalleList;
     }
 }

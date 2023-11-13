@@ -31,17 +31,25 @@ public class CategoriaService {
     }
 
     public ApiResponse<String> save(CategoriaDto categoriaDto) {
+        checkValidations(categoriaDto);
+
+        String filenameImage = "";
+
         if (categoriaDto.getId() == null) {
             categoriaDto.setId(0);
+
+            filenameImage = categoriaRepository.getImage(categoriaDto.getId());
+            if (categoriaDto.getFile() == null){
+                fileStorage.delete(filenameImage, Global.DIR_CATEGORIES);
+            }
         }
 
         categoriaDto.setEstado(true);
 
         Categoria categoriaTmp = categoriaMapper.toEntity(categoriaDto);
-        categoriaTmp.setImagen(fileStorage.upload(categoriaDto.getFile(), Global.DIR_CATEGORIES));
+        categoriaTmp.setImagen(fileStorage.upload(categoriaDto.getFile(), Global.DIR_CATEGORIES, filenameImage));
         categoriaTmp.setMostrardestacado(categoriaDto.getMostrardestacado());
         categoriaTmp.setMostrarweb(categoriaDto.getMostrarweb());
-        checkValidations(categoriaDto);
         categoriaRepository.save(categoriaTmp);
         return new ApiResponse<>(true, categoriaTmp.getId() > 0 ? Global.SUCCESSFUL_UPDATE_MESSAGE : Global.SUCCESSFUL_INSERT_MESSAGE);
     }

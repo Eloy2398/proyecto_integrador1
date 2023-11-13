@@ -2,6 +2,8 @@ package com.apsolutions.model;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 public class Cotizaciondetalle {
 
@@ -16,6 +18,12 @@ public class Cotizaciondetalle {
     @ManyToOne
     @JoinColumn(name = "idproducto", nullable = false)
     private Producto producto;
+
+    @Column(nullable = false)
+    private Short cantidad;
+
+    @Column(precision = 8, scale = 2, nullable = false)
+    private BigDecimal precio;
 
     public Integer getId() {
         return id;
@@ -39,5 +47,21 @@ public class Cotizaciondetalle {
 
     public void setProducto(Producto producto) {
         this.producto = producto;
+    }
+
+    public Short getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Short cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public BigDecimal getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(BigDecimal precio) {
+        this.precio = precio;
     }
 }
