@@ -3,13 +3,12 @@ package com.apsolutions.repository;
 import com.apsolutions.dto.IndicadorProductoDto;
 import com.apsolutions.dto.ProductoBusquedaDto;
 import com.apsolutions.dto.ProductoListDto;
-import com.apsolutions.dto.ProductoWebsiteDto;
+import com.apsolutions.dto.website.ProductoDto;
 import com.apsolutions.model.Producto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,10 +22,6 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
 
     @Query("SELECT new com.apsolutions.dto.ProductoBusquedaDto(p.id, p.nombre, p.precio) FROM Producto p WHERE p.estado = true AND p.nombre LIKE :query")
     List<ProductoBusquedaDto> search(String query);
-
-    @Query(value = "SELECT p.id, p.codigo, p.nombre, p.descripcion, c.nombre AS categoriaNombre, m.nombre AS marcaNombre " +
-            "FROM producto p INNER JOIN categoria c ON p.idcategoria = c.id INNER JOIN marca m ON p.idmarca = m.id", nativeQuery = true)
-    List<ProductoListDto> listCs();
 
     @Query("SELECT p FROM Producto p WHERE p.estado = true AND p.nombre LIKE :nombre AND p.marca.id = :idmarca AND p.id <> :id")
     Optional<Producto> existsByNameAndBrand(String nombre, Integer idmarca, Integer id);
@@ -55,6 +50,11 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     @Query("SELECT COUNT(p.id) FROM Producto p WHERE p.estado = true")
     Integer getTotalRegistros();
 
-    @Query("SELECT new com.apsolutions.dto.ProductoWebsiteDto(p.id, p.nombre, p.descripcion, p.imagen) FROM Producto p WHERE p.estado = true")
-    List<ProductoWebsiteDto> getProductsToBanner(Pageable pageable);
+    @Query("SELECT new com.apsolutions.dto.website.ProductoDto(p.id, p.nombre, p.descripcion, p.imagen) FROM Producto p " +
+            "INNER JOIN p.marca m INNER JOIN p.categoria c WHERE p.estado = true AND c.mostrarweb = 1 AND m.mostrarweb = 1")
+    List<ProductoDto> getProductsToBanner(Pageable pageable);
+
+    @Query("SELECT new com.apsolutions.dto.website.ProductoDto(p.id, p.nombre, p.precio, p.imagen) FROM Producto p " +
+            "INNER JOIN p.marca m INNER JOIN p.categoria c WHERE p.estado = true AND c.mostrarweb = 1 AND m.mostrarweb = 1")
+    List<ProductoDto> getProductsMain();
 }

@@ -1,12 +1,16 @@
 package com.apsolutions.service;
 
-import com.apsolutions.dto.ProductoWebsiteDto;
+import com.apsolutions.dto.website.CategoriaDto;
+import com.apsolutions.dto.website.MarcaDto;
+import com.apsolutions.dto.website.ProductoDto;
 import com.apsolutions.model.Categoria;
 import com.apsolutions.repository.CategoriaRepository;
+import com.apsolutions.repository.MarcaRepository;
 import com.apsolutions.repository.ProductoRepository;
 import com.apsolutions.util.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,16 +20,30 @@ public class WebsiteService {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
-
     @Autowired
     private ProductoRepository productoRepository;
+    @Autowired
+    private MarcaRepository marcaRepository;
 
-    public ApiResponse<List<Categoria>> listCategories() {
-        return new ApiResponse<>(true, "Ok", categoriaRepository.list());
+    public ApiResponse<List<ProductoDto>> getProductsToBanner() {
+        PageRequest pageRequest = PageRequest.of(1, 5, Sort.by("id").descending());
+        return new ApiResponse<>(true, "Ok", productoRepository.getProductsToBanner(pageRequest));
     }
 
-    public ApiResponse<List<ProductoWebsiteDto>> getProductsToBanner() {
-        PageRequest pageRequest = PageRequest.of(1, 5);
-        return new ApiResponse<>(true, "Ok", productoRepository.getProductsToBanner(pageRequest));
+    public ApiResponse<List<MarcaDto>> getBrandsMain() {
+        return new ApiResponse<>(true, "Ok", marcaRepository.getBrandsMain());
+    }
+
+    public ApiResponse<List<CategoriaDto>> getCategoriesMain() {
+        return new ApiResponse<>(true, "Ok", categoriaRepository.getCategoriesMain());
+    }
+
+    public ApiResponse<List<ProductoDto>> getProductsMain() {
+        // PageRequest pageRequest = PageRequest.of(1, 8, Sort.by(Sort.Direction.DESC, "id"));
+        return new ApiResponse<>(true, "Ok", productoRepository.getProductsMain());
+    }
+
+    public ApiResponse<Categoria> validateCategory(Integer id, String name) {
+        return new ApiResponse<>(true, "Ok", categoriaRepository.validateByIdAndName(id, name).orElse(null));
     }
 }

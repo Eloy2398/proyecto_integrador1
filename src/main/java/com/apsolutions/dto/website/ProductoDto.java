@@ -1,8 +1,8 @@
-package com.apsolutions.dto;
+package com.apsolutions.dto.website;
 
 import java.math.BigDecimal;
 
-public class ProductoWebsiteDto {
+public class ProductoDto {
 
     private Integer id;
 
@@ -22,14 +22,21 @@ public class ProductoWebsiteDto {
 
     private String imagen;
 
-    public ProductoWebsiteDto(Integer id, String nombre, String descripcion, String imagen) {
+    public ProductoDto(Integer id, String nombre, String descripcion, String imagen) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.imagen = imagen;
     }
 
-    public ProductoWebsiteDto(Integer id, String codigo, String nombre, String descripcion, String categoriaNombre, String marcaNombre, BigDecimal precio, Short stock, String imagen) {
+    public ProductoDto(Integer id, String nombre, BigDecimal precio, String imagen) {
+        this.id = id;
+        this.nombre = nombre;
+        this.precio = precio;
+        this.imagen = imagen;
+    }
+
+    public ProductoDto(Integer id, String codigo, String nombre, String descripcion, String categoriaNombre, String marcaNombre, BigDecimal precio, Short stock, String imagen) {
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
