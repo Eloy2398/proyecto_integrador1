@@ -1,35 +1,37 @@
-package com.apsolutions.dto;
+package com.apsolutions.dto.website;
 
 import java.math.BigDecimal;
 
-public class ProductoWebsiteDto {
+public class ProductoDto {
 
     private Integer id;
-
     private String codigo;
-
     private String nombre;
-
+    private String nombreUrl;
     private String descripcion;
-
     private String categoriaNombre;
-
     private String marcaNombre;
-
     private BigDecimal precio;
-
     private Short stock;
-
     private String imagen;
 
-    public ProductoWebsiteDto(Integer id, String nombre, String descripcion, String imagen) {
+    public ProductoDto(Integer id, String nombre, String nombreUrl, String descripcion, String imagen) {
         this.id = id;
         this.nombre = nombre;
+        this.nombreUrl = nombreUrl;
         this.descripcion = descripcion;
         this.imagen = imagen;
     }
 
-    public ProductoWebsiteDto(Integer id, String codigo, String nombre, String descripcion, String categoriaNombre, String marcaNombre, BigDecimal precio, Short stock, String imagen) {
+    public ProductoDto(Integer id, String nombre, String nombreUrl, BigDecimal precio, String imagen) {
+        this.id = id;
+        this.nombre = nombre;
+        this.nombreUrl = nombreUrl;
+        this.precio = precio;
+        this.imagen = imagen;
+    }
+
+    public ProductoDto(Integer id, String codigo, String nombre, String descripcion, String categoriaNombre, String marcaNombre, BigDecimal precio, Short stock, String imagen) {
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
@@ -51,6 +53,10 @@ public class ProductoWebsiteDto {
 
     public String getNombre() {
         return nombre;
+    }
+
+    public String getNombreUrl() {
+        return nombreUrl;
     }
 
     public String getDescripcion() {
