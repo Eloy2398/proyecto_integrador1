@@ -5,33 +5,28 @@ import java.math.BigDecimal;
 public class ProductoDto {
 
     private Integer id;
-
     private String codigo;
-
     private String nombre;
-
+    private String nombreUrl;
     private String descripcion;
-
     private String categoriaNombre;
-
     private String marcaNombre;
-
     private BigDecimal precio;
-
     private Short stock;
-
     private String imagen;
 
-    public ProductoDto(Integer id, String nombre, String descripcion, String imagen) {
+    public ProductoDto(Integer id, String nombre, String nombreUrl, String descripcion, String imagen) {
         this.id = id;
         this.nombre = nombre;
+        this.nombreUrl = nombreUrl;
         this.descripcion = descripcion;
         this.imagen = imagen;
     }
 
-    public ProductoDto(Integer id, String nombre, BigDecimal precio, String imagen) {
+    public ProductoDto(Integer id, String nombre, String nombreUrl, BigDecimal precio, String imagen) {
         this.id = id;
         this.nombre = nombre;
+        this.nombreUrl = nombreUrl;
         this.precio = precio;
         this.imagen = imagen;
     }
@@ -58,6 +53,10 @@ public class ProductoDto {
 
     public String getNombre() {
         return nombre;
+    }
+
+    public String getNombreUrl() {
+        return nombreUrl;
     }
 
     public String getDescripcion() {

@@ -43,7 +43,7 @@ public class WebsiteService {
         return new ApiResponse<>(true, "Ok", productoRepository.getProductsMain());
     }
 
-    public ApiResponse<Categoria> validateCategory(Integer id, String name) {
-        return new ApiResponse<>(true, "Ok", categoriaRepository.validateByIdAndName(id, name).orElse(null));
+    public ApiResponse<Categoria> validateCategory(Integer id, String urlName) {
+        return new ApiResponse<>(true, "Ok", categoriaRepository.validateByIdAndName(id, urlName).orElse(null));
     }
 }

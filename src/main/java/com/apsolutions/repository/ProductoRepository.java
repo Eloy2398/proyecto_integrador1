@@ -50,11 +50,11 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     @Query("SELECT COUNT(p.id) FROM Producto p WHERE p.estado = true")
     Integer getTotalRegistros();
 
-    @Query("SELECT new com.apsolutions.dto.website.ProductoDto(p.id, p.nombre, p.descripcion, p.imagen) FROM Producto p " +
+    @Query("SELECT new com.apsolutions.dto.website.ProductoDto(p.id, p.nombre, p.nombreUrl, p.descripcion, p.imagen) FROM Producto p " +
             "INNER JOIN p.marca m INNER JOIN p.categoria c WHERE p.estado = true AND c.mostrarweb = 1 AND m.mostrarweb = 1")
     List<ProductoDto> getProductsToBanner(Pageable pageable);
 
-    @Query("SELECT new com.apsolutions.dto.website.ProductoDto(p.id, p.nombre, p.precio, p.imagen) FROM Producto p " +
+    @Query("SELECT new com.apsolutions.dto.website.ProductoDto(p.id, p.nombre, p.nombreUrl, p.precio, p.imagen) FROM Producto p " +
             "INNER JOIN p.marca m INNER JOIN p.categoria c WHERE p.estado = true AND c.mostrarweb = 1 AND m.mostrarweb = 1")
     List<ProductoDto> getProductsMain();
 }

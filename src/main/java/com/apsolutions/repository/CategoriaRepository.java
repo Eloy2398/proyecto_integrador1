@@ -23,12 +23,12 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
     @Query("UPDATE Categoria c SET c.estado = :estado WHERE c.id = :id")
     void updateStatus(Boolean estado, Integer id);
 
-    @Query("SELECT new com.apsolutions.dto.website.CategoriaDto(c.id, c.nombre, c.imagen) FROM Categoria c WHERE c.estado = true AND c.mostrarweb = 1 AND c.mostrardestacado = 1")
+    @Query("SELECT new com.apsolutions.dto.website.CategoriaDto(c.id, c.nombre, c.nombreUrl, c.imagen) FROM Categoria c WHERE c.estado = true AND c.mostrarweb = 1 AND c.mostrardestacado = 1")
     List<CategoriaDto> getCategoriesMain();
 
-    @Query("SELECT new com.apsolutions.dto.website.CategoriaDto(c.id, c.nombre) FROM Categoria c WHERE c.estado = true AND c.mostrarweb = 1")
+    @Query("SELECT new com.apsolutions.dto.website.CategoriaDto(c.id, c.nombre, c.nombreUrl) FROM Categoria c WHERE c.estado = true AND c.mostrarweb = 1")
     List<CategoriaDto> getCategories();
 
-    @Query("SELECT c FROM Categoria c WHERE c.estado = true AND c.mostrarweb = 1 AND c.id = :id AND c.nombre LIKE :name")
-    Optional<Categoria> validateByIdAndName(Integer id, String name);
+    @Query("SELECT c FROM Categoria c WHERE c.estado = true AND c.mostrarweb = 1 AND c.id = :id AND c.nombreUrl LIKE :urlName")
+    Optional<Categoria> validateByIdAndName(Integer id, String urlName);
 }

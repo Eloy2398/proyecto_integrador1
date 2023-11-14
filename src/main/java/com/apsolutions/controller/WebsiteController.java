@@ -44,7 +44,7 @@ public class WebsiteController {
     }
 
     @GetMapping("/validate-category")
-    public ApiResponse<Categoria> validateCategory(@RequestParam Integer id, @RequestParam String name) {
-        return websiteService.validateCategory(id, name);
+    public ApiResponse<Categoria> validateCategory(@RequestParam Integer id, @RequestParam String urlName) {
+        return websiteService.validateCategory(id, urlName);
     }
 }
