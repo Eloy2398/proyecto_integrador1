@@ -8,6 +8,7 @@ import com.apsolutions.repository.CategoriaRepository;
 import com.apsolutions.util.ApiResponse;
 import com.apsolutions.util.FileStorage;
 import com.apsolutions.util.Global;
+import com.apsolutions.util.URLNormalizer;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,10 +20,8 @@ import java.util.Optional;
 public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
-
     @Autowired
     private FileStorage fileStorage;
-
     @Autowired
     private CategoriaMapper categoriaMapper;
 
@@ -39,7 +38,7 @@ public class CategoriaService {
             categoriaDto.setId(0);
 
             filenameImage = categoriaRepository.getImage(categoriaDto.getId());
-            if (categoriaDto.getFile() == null){
+            if (categoriaDto.getFile() == null) {
                 fileStorage.delete(filenameImage, Global.DIR_CATEGORIES);
             }
         }
@@ -47,6 +46,7 @@ public class CategoriaService {
         categoriaDto.setEstado(true);
 
         Categoria categoriaTmp = categoriaMapper.toEntity(categoriaDto);
+        categoriaTmp.setNombreUrl(URLNormalizer.encode(categoriaTmp.getNombre()));
         categoriaTmp.setImagen(fileStorage.upload(categoriaDto.getFile(), Global.DIR_CATEGORIES, filenameImage));
         categoriaTmp.setMostrardestacado(categoriaDto.getMostrardestacado());
         categoriaTmp.setMostrarweb(categoriaDto.getMostrarweb());

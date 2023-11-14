@@ -19,12 +19,12 @@ public class CotizacionController {
     }
 
     @PostMapping("/guardar")
-    public ApiResponse<String> save(@RequestBody CotizacionDto cotizacionDto){
+    public ApiResponse<String> save(@RequestBody CotizacionDto cotizacionDto) {
         return cotizacionService.save(cotizacionDto);
     }
 
     @GetMapping("/listar")
-    public ApiResponse<List<CotizacionListDto>> list(){
+    public ApiResponse<List<CotizacionListDto>> list() {
         return cotizacionService.list();
     }
 
@@ -39,7 +39,7 @@ public class CotizacionController {
     }
 
     @GetMapping("/buscarCliente")
-    public ApiResponse<List<ClienteBusquedaDto>> searchClient(@RequestParam String query){
+    public ApiResponse<List<ClienteBusquedaDto>> searchClient(@RequestParam String query) {
         return cotizacionService.searchClient(query);
     }
 

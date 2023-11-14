@@ -1,6 +1,5 @@
 package com.apsolutions.repository;
 
-import com.apsolutions.dto.CotizacionDto;
 import com.apsolutions.dto.CotizacionListDto;
 import com.apsolutions.dto.IndicadorCotizacionDto;
 import com.apsolutions.model.Cotizacion;

@@ -17,6 +17,9 @@ public class Producto {
     @Column(length = 100, nullable = false)
     private String nombre;
 
+    @Column(length = 100, nullable = false)
+    private String nombreUrl;
+
     @Column(length = 250)
     private String descripcion;
 
@@ -62,6 +65,14 @@ public class Producto {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getNombreUrl() {
+        return nombreUrl;
+    }
+
+    public void setNombreUrl(String nombreUrl) {
+        this.nombreUrl = nombreUrl;
     }
 
     public String getDescripcion() {

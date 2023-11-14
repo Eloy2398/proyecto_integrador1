@@ -10,6 +10,10 @@ public class Categoria {
 
     @Column(length = 50, nullable = false)
     private String nombre;
+
+    @Column(length = 50, nullable = false)
+    private String nombreUrl;
+
     @Column(columnDefinition = "boolean default true", nullable = false)
     private Boolean estado;
 
@@ -36,6 +40,14 @@ public class Categoria {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getNombreUrl() {
+        return nombreUrl;
+    }
+
+    public void setNombreUrl(String nombreUrl) {
+        this.nombreUrl = nombreUrl;
     }
 
     public Boolean getEstado() {

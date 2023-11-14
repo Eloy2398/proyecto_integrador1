@@ -18,10 +18,8 @@ import java.util.Optional;
 @Service
 public class MarcaService {
     private final MarcaRepository marcaRepository;
-
     @Autowired
     private FileStorage fileStorage;
-
     @Autowired
     private MarcaMapper marcaMapper;
 
@@ -37,7 +35,7 @@ public class MarcaService {
         if (marcaDto.getId() == null) {
             marcaDto.setId(0);
             filenameImage = marcaRepository.getImage(marcaDto.getId());
-            if (marcaDto.getFile() == null){
+            if (marcaDto.getFile() == null) {
                 fileStorage.delete(filenameImage, Global.DIR_BRANDS);
             }
         }

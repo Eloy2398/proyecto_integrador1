@@ -7,15 +7,10 @@ public class CategoriaDto {
 
     private Integer id;
     private String nombre;
-
     private Boolean estado;
-
     private MultipartFile file;
-
     private Byte mostrarweb;
-
     private Byte mostrardestacado;
-
 
     public Integer getId() {
         return id;

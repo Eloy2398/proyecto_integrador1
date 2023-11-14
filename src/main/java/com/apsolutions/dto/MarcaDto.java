@@ -7,11 +7,8 @@ public class MarcaDto {
     private Integer id;
     private String nombre;
     private Boolean estado;
-
     private MultipartFile file;
-
     private Byte mostrarweb;
-
     private Byte mostrardestacado;
 
     public Integer getId() {

@@ -21,7 +21,6 @@ public class ProductoDto {
     private String imagen;
     private Boolean estado;
     private List<Integer> productoCriterioopcionList;
-
     private List<ProductoCaracteristicaDto> productoCaracteristicaList;
 
     public Integer getId() {

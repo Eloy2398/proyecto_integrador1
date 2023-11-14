@@ -17,7 +17,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class CotizacionService {
     }
 
     @Transactional
-    public ApiResponse<String> save(CotizacionDto cotizacionDto){
+    public ApiResponse<String> save(CotizacionDto cotizacionDto) {
         try {
             Cotizacion cotizacion = cotizacionMapper.toEntity(cotizacionDto);
             cotizacion.setEstado(true);
@@ -53,7 +52,7 @@ public class CotizacionService {
             });
 
             return new ApiResponse<>(true, Global.SUCCESSFUL_INSERT_MESSAGE);
-        } catch (DataIntegrityViolationException | JpaObjectRetrievalFailureException e){
+        } catch (DataIntegrityViolationException | JpaObjectRetrievalFailureException e) {
             throw new CsException(Global.DATA_INTEGRITY_ERROR + e.getMessage());
         }
     }
@@ -69,7 +68,7 @@ public class CotizacionService {
         return new ApiResponse<>(true, Global.SUCCESSFUL_DELETE_MESSAGE);
     }
 
-    public ApiResponse<CotizacionDto> read(Integer id){
+    public ApiResponse<CotizacionDto> read(Integer id) {
         CotizacionDto cotizacionDto = cotizacionMapper.toDto(cotizacionRepository.findById(id).orElse(null));
         cotizacionDto.setCotizaciondetalleList(cotizaciondetalleRepository.listByIdCotizacion(id));
 
@@ -80,7 +79,7 @@ public class CotizacionService {
         return new ApiResponse<>(true, "OK", cotizacionRepository.list());
     }
 
-    public ApiResponse<List<ClienteBusquedaDto>> searchClient(String query){
+    public ApiResponse<List<ClienteBusquedaDto>> searchClient(String query) {
         return new ApiResponse<>(true, "Ok", clienteRepository.search(query + "%"));
     }
 }

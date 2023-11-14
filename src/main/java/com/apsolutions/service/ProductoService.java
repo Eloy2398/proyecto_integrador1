@@ -12,6 +12,7 @@ import com.apsolutions.repository.*;
 import com.apsolutions.util.ApiResponse;
 import com.apsolutions.util.FileStorage;
 import com.apsolutions.util.Global;
+import com.apsolutions.util.URLNormalizer;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -46,7 +47,6 @@ public class ProductoService {
     private CriterioopcionRepository criterioopcionRepository;
     @Autowired
     private ProductoCriterioopcionRepository productoCriterioopcionRepository;
-
     @Autowired
     private FileStorage fileStorage;
 
@@ -82,6 +82,7 @@ public class ProductoService {
 
             productoDto.setEstado(true);
             Producto productTmp = productoMapper.toEntity(productoDto);
+            productTmp.setNombreUrl(URLNormalizer.encode(productTmp.getNombre()));
             productTmp.setImagen(fileStorage.upload(productoDto.getFile(), Global.DIR_PRODUCTS, filenameImage));
             Producto producto = productoRepository.save(productTmp);
 
