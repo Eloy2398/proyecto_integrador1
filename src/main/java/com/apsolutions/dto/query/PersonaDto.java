@@ -1,11 +1,12 @@
-package com.apsolutions.dto;
+package com.apsolutions.dto.query;
 
-public class ClienteBusquedaDto {
+public class PersonaDto {
     private Integer id;
     private String documento;
     private String nombre;
+    private String value;
 
-    public ClienteBusquedaDto(Integer id, String documento, String nombre) {
+    public PersonaDto(Integer id, String documento, String nombre) {
         this.id = id;
         this.documento = documento;
         this.nombre = nombre;
@@ -15,23 +16,15 @@ public class ClienteBusquedaDto {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getDocumento() {
         return documento;
-    }
-
-    public void setDocumento(String documento) {
-        this.documento = documento;
     }
 
     public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public String getValue() {
+        return nombre;
     }
 }

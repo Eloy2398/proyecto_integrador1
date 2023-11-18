@@ -1,7 +1,7 @@
 package com.apsolutions.repository;
 
-import com.apsolutions.dto.ClienteBusquedaDto;
 import com.apsolutions.dto.ClienteDto;
+import com.apsolutions.dto.query.PersonaDto;
 import com.apsolutions.model.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -33,6 +33,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     @Query("SELECT COUNT(c.id) FROM Cliente c WHERE c.estado = true")
     Integer getTotalRegistros();
 
-    @Query("SELECT new com.apsolutions.dto.ClienteBusquedaDto(c.id, p.documento, p.nombre) FROM Cliente c INNER JOIN c.persona p WHERE p.nombre LIKE :query")
-    List<ClienteBusquedaDto> search(String query);
+    @Query("SELECT new com.apsolutions.dto.query.PersonaDto(c.id, p.documento, p.nombre) FROM Cliente c INNER JOIN c.persona p WHERE p.nombre LIKE :query")
+    List<PersonaDto> search(String query);
 }

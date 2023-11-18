@@ -6,6 +6,7 @@ import com.apsolutions.dto.website.ProductoDto;
 import com.apsolutions.model.Categoria;
 import com.apsolutions.repository.CategoriaRepository;
 import com.apsolutions.repository.MarcaRepository;
+import com.apsolutions.repository.ProductoCaracteristicaRepository;
 import com.apsolutions.repository.ProductoRepository;
 import com.apsolutions.util.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class WebsiteService {
     private CategoriaRepository categoriaRepository;
     @Autowired
     private ProductoRepository productoRepository;
+    @Autowired
+    private ProductoCaracteristicaRepository productoCaracteristicaRepository;
     @Autowired
     private MarcaRepository marcaRepository;
 
@@ -45,5 +48,15 @@ public class WebsiteService {
 
     public ApiResponse<Categoria> validateCategory(Integer id, String urlName) {
         return new ApiResponse<>(true, "Ok", categoriaRepository.validateByIdAndName(id, urlName).orElse(null));
+    }
+
+    public ApiResponse<ProductoDto> getProductData(Integer id, String urlName) {
+        ProductoDto productoDto = productoRepository.getProductData(id, urlName).orElse(null);
+
+        if (productoDto != null) {
+            productoDto.setProductoCaracteristicaList(productoCaracteristicaRepository.findByIdProducto(productoDto.getId()));
+        }
+
+        return new ApiResponse<>(true, "Ok", productoDto);
     }
 }

@@ -1,9 +1,5 @@
 package com.apsolutions.dto;
 
-import com.apsolutions.model.Cotizacion;
-import com.apsolutions.model.Movimientodetalle;
-import com.apsolutions.model.Persona;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,10 +10,24 @@ public class MovimientoDto {
     private Integer id;
     private Date fecha;
     private Byte tipo;
-    private Persona persona;
+    private Integer idPersona;
+    private String nombrePersona;
     private String descripcion;
-    private Cotizacion cotizacion;
-    private List<Movimientodetalle> movimientodetalleList;
+    private Integer idCotizacion;
+    private Boolean estado;
+    private List<MovimientodetalleDto> movimientodetalleList;
+
+    public MovimientoDto() {
+    }
+
+    public MovimientoDto(Date fecha, Byte tipo, String nombrePersona, String descripcion, Boolean estado, Integer idCotizacion) {
+        this.fecha = fecha;
+        this.tipo = tipo;
+        this.nombrePersona = nombrePersona;
+        this.descripcion = descripcion;
+        this.estado = estado;
+        this.idCotizacion = idCotizacion;
+    }
 
     public Integer getId() {
         return id;
@@ -48,12 +58,20 @@ public class MovimientoDto {
         this.tipo = tipo;
     }
 
-    public Persona getPersona() {
-        return persona;
+    public Integer getIdPersona() {
+        return idPersona;
     }
 
-    public void setPersona(Persona persona) {
-        this.persona = persona;
+    public void setIdPersona(Integer idPersona) {
+        this.idPersona = idPersona;
+    }
+
+    public String getNombrePersona() {
+        return nombrePersona;
+    }
+
+    public void setNombrePersona(String nombrePersona) {
+        this.nombrePersona = nombrePersona;
     }
 
     public String getDescripcion() {
@@ -64,19 +82,27 @@ public class MovimientoDto {
         this.descripcion = descripcion;
     }
 
-    public Cotizacion getCotizacion() {
-        return cotizacion;
+    public Integer getIdCotizacion() {
+        return idCotizacion;
     }
 
-    public void setCotizacion(Cotizacion cotizacion) {
-        this.cotizacion = cotizacion;
+    public void setIdCotizacion(Integer idCotizacion) {
+        this.idCotizacion = idCotizacion;
     }
 
-    public List<Movimientodetalle> getMovimientodetalleList() {
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
+    }
+
+    public List<MovimientodetalleDto> getMovimientodetalleList() {
         return movimientodetalleList;
     }
 
-    public void setMovimientodetalleList(List<Movimientodetalle> movimientodetalleList) {
+    public void setMovimientodetalleList(List<MovimientodetalleDto> movimientodetalleList) {
         this.movimientodetalleList = movimientodetalleList;
     }
 }

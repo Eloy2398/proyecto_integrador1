@@ -1,8 +1,8 @@
 package com.apsolutions.controller;
 
-import com.apsolutions.dto.ClienteBusquedaDto;
 import com.apsolutions.dto.CotizacionDto;
 import com.apsolutions.dto.CotizacionListDto;
+import com.apsolutions.dto.query.PersonaDto;
 import com.apsolutions.service.CotizacionService;
 import com.apsolutions.util.ApiResponse;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +38,13 @@ public class CotizacionController {
         return cotizacionService.read(id);
     }
 
+    @GetMapping("/buscar")
+    public ApiResponse<List<com.apsolutions.dto.query.CotizacionDto>> search(@RequestParam String query) {
+        return cotizacionService.search(query);
+    }
+
     @GetMapping("/buscarCliente")
-    public ApiResponse<List<ClienteBusquedaDto>> searchClient(@RequestParam String query) {
+    public ApiResponse<List<PersonaDto>> searchClient(@RequestParam String query) {
         return cotizacionService.searchClient(query);
     }
 

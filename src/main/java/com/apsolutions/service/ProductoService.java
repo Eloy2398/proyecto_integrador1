@@ -1,9 +1,7 @@
 package com.apsolutions.service;
 
-import com.apsolutions.dto.CriterioDto;
-import com.apsolutions.dto.MovimientoDto;
-import com.apsolutions.dto.ProductoDto;
-import com.apsolutions.dto.ProductoListDto;
+import com.apsolutions.dto.*;
+import com.apsolutions.dto.query.ProductoDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.CriterioMapper;
 import com.apsolutions.mapper.ProductoMapper;
@@ -55,7 +53,7 @@ public class ProductoService {
     }
 
     @Transactional
-    public ApiResponse<String> save(ProductoDto productoDto) {
+    public ApiResponse<String> save(com.apsolutions.dto.ProductoDto productoDto) {
         if (productoDto.getId() == null) {
             productoDto.setId(0);
         }
@@ -65,7 +63,7 @@ public class ProductoService {
         return new ApiResponse<>(true, productoDto.getId() > 0 ? Global.SUCCESSFUL_UPDATE_MESSAGE : Global.SUCCESSFUL_INSERT_MESSAGE);
     }
 
-    private void processSaved(ProductoDto productoDto) {
+    private void processSaved(com.apsolutions.dto.ProductoDto productoDto) {
         try {
             checkValidations(productoDto);
 
@@ -127,12 +125,12 @@ public class ProductoService {
                 movimientoDto.setTipo((byte) 1);
                 movimientoDto.setDescripcion("Inventario inicial");
 
-                Movimientodetalle movimientodetalle = new Movimientodetalle();
-                movimientodetalle.setProducto(producto);
-                movimientodetalle.setPrecio(producto.getPrecio());
-                movimientodetalle.setCantidad(producto.getStock());
-                List<Movimientodetalle> list = new ArrayList<>();
-                list.add(movimientodetalle);
+                MovimientodetalleDto movimientodetalleDto = new MovimientodetalleDto();
+                movimientodetalleDto.setIdProducto(producto.getId());
+                movimientodetalleDto.setPrecio(producto.getPrecio());
+                movimientodetalleDto.setCantidad(producto.getStock());
+                List<MovimientodetalleDto> list = new ArrayList<>();
+                list.add(movimientodetalleDto);
 
                 movimientoDto.setMovimientodetalleList(list);
                 movimientoService.save(movimientoDto);
@@ -143,7 +141,7 @@ public class ProductoService {
         }
     }
 
-    private void checkValidations(ProductoDto productoDto) {
+    private void checkValidations(com.apsolutions.dto.ProductoDto productoDto) {
         Optional<Producto> optionalProduct;
 
         optionalProduct = productoRepository.existsByNameAndBrand(productoDto.getNombre(), productoDto.getMarca().getId(), productoDto.getId());
@@ -192,13 +190,17 @@ public class ProductoService {
         return new ApiResponse<>(true, "Ok", data);
     }
 
-    public ApiResponse<ProductoDto> read(Integer id) {
+    public ApiResponse<com.apsolutions.dto.ProductoDto> read(Integer id) {
         Producto producto = productoRepository.findById(id).orElse(new Producto());
-        ProductoDto productoDto = productoMapper.toDto(producto);
+        com.apsolutions.dto.ProductoDto productoDto = productoMapper.toDto(producto);
         productoDto.setProductoCaracteristicaList(productoCaracteristicaRepository.findByIdProducto(id));
         productoDto.setProductoCriterioopcionList(productoCriterioopcionRepository.listIdCriterioopcionByIdProducto(id));
 
         return new ApiResponse<>(true, "Ok", productoDto);
+    }
+
+    public ApiResponse<List<ProductoDto>> search(String query) {
+        return new ApiResponse<>(true, "Ok", productoRepository.search(query + "%"));
     }
 
     public ApiResponse<String> upload(MultipartFile file) {

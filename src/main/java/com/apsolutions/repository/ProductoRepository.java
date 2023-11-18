@@ -1,9 +1,7 @@
 package com.apsolutions.repository;
 
-import com.apsolutions.dto.IndicadorProductoDto;
-import com.apsolutions.dto.ProductoBusquedaDto;
+import com.apsolutions.dto.indicator.ProductoDto;
 import com.apsolutions.dto.ProductoListDto;
-import com.apsolutions.dto.website.ProductoDto;
 import com.apsolutions.model.Producto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,8 +18,8 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     @Query("SELECT new com.apsolutions.dto.ProductoListDto(p.id, p.codigo, p.nombre, p.descripcion, c.nombre, m.nombre, p.precio, p.stock) FROM Producto p INNER JOIN p.categoria c INNER JOIN p.marca m WHERE p.estado = true")
     List<ProductoListDto> list();
 
-    @Query("SELECT new com.apsolutions.dto.ProductoBusquedaDto(p.id, p.nombre, p.precio) FROM Producto p WHERE p.estado = true AND p.nombre LIKE :query")
-    List<ProductoBusquedaDto> search(String query);
+    @Query("SELECT new com.apsolutions.dto.query.ProductoDto(p.id, p.nombre, p.precio) FROM Producto p WHERE p.estado = true AND p.nombre LIKE :query")
+    List<com.apsolutions.dto.query.ProductoDto> search(String query);
 
     @Query("SELECT p FROM Producto p WHERE p.estado = true AND p.nombre LIKE :nombre AND p.marca.id = :idmarca AND p.id <> :id")
     Optional<Producto> existsByNameAndBrand(String nombre, Integer idmarca, Integer id);
@@ -43,18 +41,22 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     @Query("UPDATE Producto p SET p.estado = :estado WHERE p.id = :id")
     void updateStatus(Boolean estado, Integer id);
 
-    @Query("SELECT new com.apsolutions.dto.IndicadorProductoDto(p.nombre, p.stock, SUM(CASE WHEN m.tipo = 1 THEN md.cantidad ELSE 0 END) AS inc, SUM(CASE WHEN m.tipo = 2 THEN md.cantidad ELSE 0 END) AS out) FROM Movimientodetalle md " +
+    @Query("SELECT new com.apsolutions.dto.indicator.ProductoDto(p.nombre, p.stock, SUM(CASE WHEN m.tipo = 1 THEN md.cantidad ELSE 0 END) AS inc, SUM(CASE WHEN m.tipo = 2 THEN md.cantidad ELSE 0 END) AS out) FROM Movimientodetalle md " +
             "LEFT JOIN md.movimiento m LEFT JOIN md.producto p WHERE m.estado = true AND p.estado = true AND YEAR(m.fecha) = :anio GROUP BY p.id ORDER BY p.stock ASC LIMIT 10")
-    List<IndicadorProductoDto> stockproductos(int anio);
+    List<ProductoDto> stockproductos(int anio);
 
     @Query("SELECT COUNT(p.id) FROM Producto p WHERE p.estado = true")
     Integer getTotalRegistros();
 
     @Query("SELECT new com.apsolutions.dto.website.ProductoDto(p.id, p.nombre, p.nombreUrl, p.descripcion, p.imagen) FROM Producto p " +
             "INNER JOIN p.marca m INNER JOIN p.categoria c WHERE p.estado = true AND c.mostrarweb = 1 AND m.mostrarweb = 1")
-    List<ProductoDto> getProductsToBanner(Pageable pageable);
+    List<com.apsolutions.dto.website.ProductoDto> getProductsToBanner(Pageable pageable);
 
     @Query("SELECT new com.apsolutions.dto.website.ProductoDto(p.id, p.nombre, p.nombreUrl, p.precio, p.imagen) FROM Producto p " +
             "INNER JOIN p.marca m INNER JOIN p.categoria c WHERE p.estado = true AND c.mostrarweb = 1 AND m.mostrarweb = 1")
-    List<ProductoDto> getProductsMain();
+    List<com.apsolutions.dto.website.ProductoDto> getProductsMain();
+
+    @Query("SELECT new com.apsolutions.dto.website.ProductoDto(p.id, p.codigo, p.nombre, p.descripcion, c.nombre, m.nombre, p.precio, p.stock, p.imagen) FROM Producto p " +
+            "INNER JOIN p.marca m INNER JOIN p.categoria c WHERE p.estado = true AND c.mostrarweb = 1 AND m.mostrarweb = 1 AND p.id = :id AND p.nombreUrl = :urlName")
+    Optional<com.apsolutions.dto.website.ProductoDto> getProductData(Integer id, String urlName);
 }

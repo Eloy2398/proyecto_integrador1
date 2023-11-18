@@ -1,6 +1,6 @@
-package com.apsolutions.dto;
+package com.apsolutions.dto.indicator;
 
-public class IndicadorProductoDto {
+public class ProductoDto {
 
     private String name;
     private int y;
@@ -10,7 +10,7 @@ public class IndicadorProductoDto {
     private boolean sliced;
     private boolean selected;
 
-    public IndicadorProductoDto(String name, int y, Long income, Long output) {
+    public ProductoDto(String name, int y, Long income, Long output) {
         this.name = name;
         this.y = y;
         this.income = income;

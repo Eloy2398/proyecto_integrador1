@@ -1,8 +1,8 @@
 package com.apsolutions.service;
 
-import com.apsolutions.dto.ClienteBusquedaDto;
 import com.apsolutions.dto.CotizacionDto;
 import com.apsolutions.dto.CotizacionListDto;
+import com.apsolutions.dto.query.PersonaDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.CotizacionMapper;
 import com.apsolutions.model.Cotizacion;
@@ -79,7 +79,15 @@ public class CotizacionService {
         return new ApiResponse<>(true, "OK", cotizacionRepository.list());
     }
 
-    public ApiResponse<List<ClienteBusquedaDto>> searchClient(String query) {
+    public ApiResponse<List<PersonaDto>> searchClient(String query) {
         return new ApiResponse<>(true, "Ok", clienteRepository.search(query + "%"));
+    }
+
+    public ApiResponse<List<com.apsolutions.dto.query.CotizacionDto>> search(String query) {
+        if (Character.isDigit(query.charAt(0))) {
+            return new ApiResponse<>(true, "Ok", cotizacionRepository.search(Integer.parseInt(query)));
+        } else {
+            return new ApiResponse<>(true, "Ok", cotizacionRepository.search(query + "%"));
+        }
     }
 }

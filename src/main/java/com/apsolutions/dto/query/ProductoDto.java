@@ -1,15 +1,15 @@
-package com.apsolutions.dto;
+package com.apsolutions.dto.query;
 
 import java.math.BigDecimal;
 
-public class ProductoBusquedaDto {
+public class ProductoDto {
 
     private Integer id;
     private String nombre;
     private BigDecimal precio;
     private String value;
 
-    public ProductoBusquedaDto(Integer id, String nombre, BigDecimal precio) {
+    public ProductoDto(Integer id, String nombre, BigDecimal precio) {
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;

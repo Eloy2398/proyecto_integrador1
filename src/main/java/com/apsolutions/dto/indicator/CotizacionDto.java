@@ -1,10 +1,10 @@
-package com.apsolutions.dto;
+package com.apsolutions.dto.indicator;
 
-public class IndicadorCotizacionDto {
+public class CotizacionDto {
     private String datename;
     private Long number;
 
-    public IndicadorCotizacionDto(String datename, Long number) {
+    public CotizacionDto(String datename, Long number) {
         this.datename = datename;
         this.number = number;
     }

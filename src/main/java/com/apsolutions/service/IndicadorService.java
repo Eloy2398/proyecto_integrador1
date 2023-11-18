@@ -1,6 +1,6 @@
 package com.apsolutions.service;
 
-import com.apsolutions.dto.IndicadorProductoDto;
+import com.apsolutions.dto.indicator.ProductoDto;
 import com.apsolutions.repository.*;
 import com.apsolutions.util.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class IndicadorService {
         return new ApiResponse<>(true, "Ok", objectMap);
     }
 
-    public ApiResponse<List<IndicadorProductoDto>> stockproductos(int idCategoria, int valOrden) {
+    public ApiResponse<List<ProductoDto>> stockproductos(int idCategoria, int valOrden) {
         String strValOrden = "";
 
         if (valOrden == 1) {
@@ -39,7 +39,7 @@ public class IndicadorService {
             strValOrden = "DESC";
         }
 
-        List<IndicadorProductoDto> indicadorProductoDtoList = productoRepository.stockproductos(getCurrentYear());
+        List<ProductoDto> indicadorProductoDtoList = productoRepository.stockproductos(getCurrentYear());
 
         for (int i = 0; i < indicadorProductoDtoList.size(); i++) {
             indicadorProductoDtoList.get(i).setInitial(0);

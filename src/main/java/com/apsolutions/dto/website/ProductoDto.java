@@ -1,6 +1,9 @@
 package com.apsolutions.dto.website;
 
+import com.apsolutions.dto.ProductoCaracteristicaDto;
+
 import java.math.BigDecimal;
+import java.util.List;
 
 public class ProductoDto {
 
@@ -14,6 +17,7 @@ public class ProductoDto {
     private BigDecimal precio;
     private Short stock;
     private String imagen;
+    private List<ProductoCaracteristicaDto> productoCaracteristicaList;
 
     public ProductoDto(Integer id, String nombre, String nombreUrl, String descripcion, String imagen) {
         this.id = id;
@@ -81,5 +85,13 @@ public class ProductoDto {
 
     public String getImagen() {
         return imagen;
+    }
+
+    public List<ProductoCaracteristicaDto> getProductoCaracteristicaList() {
+        return productoCaracteristicaList;
+    }
+
+    public void setProductoCaracteristicaList(List<ProductoCaracteristicaDto> productoCaracteristicaList) {
+        this.productoCaracteristicaList = productoCaracteristicaList;
     }
 }

@@ -47,4 +47,9 @@ public class WebsiteController {
     public ApiResponse<Categoria> validateCategory(@RequestParam Integer id, @RequestParam String urlName) {
         return websiteService.validateCategory(id, urlName);
     }
+
+    @GetMapping("/get-product-data")
+    public ApiResponse<ProductoDto> getProductData(@RequestParam Integer id, @RequestParam String urlName) {
+        return websiteService.getProductData(id, urlName);
+    }
 }

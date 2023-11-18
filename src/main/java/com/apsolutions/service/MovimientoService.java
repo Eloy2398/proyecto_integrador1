@@ -1,17 +1,12 @@
 package com.apsolutions.service;
 
-import com.apsolutions.dto.MovimientoDto;
-import com.apsolutions.dto.MovimientoListDto;
-import com.apsolutions.dto.PersonaBusquedaDto;
-import com.apsolutions.dto.ProductoBusquedaDto;
+import com.apsolutions.dto.*;
+import com.apsolutions.dto.query.PersonaDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.MovimientoMapper;
 import com.apsolutions.model.Movimiento;
 import com.apsolutions.model.Movimientodetalle;
-import com.apsolutions.repository.MovimientoRepository;
-import com.apsolutions.repository.MovimientodetalleRepository;
-import com.apsolutions.repository.PersonaRepository;
-import com.apsolutions.repository.ProductoRepository;
+import com.apsolutions.repository.*;
 import com.apsolutions.util.ApiResponse;
 import com.apsolutions.util.Global;
 import jakarta.transaction.Transactional;
@@ -29,15 +24,14 @@ public class MovimientoService {
 
     @Autowired
     private MovimientodetalleRepository movimientodetalleRepository;
-
     @Autowired
     private ProductoRepository productoRepository;
-
     @Autowired
     private MovimientoMapper movimientoMapper;
-
     @Autowired
     private PersonaRepository personaRepository;
+    @Autowired
+    private CotizacionRepository cotizacionRepository;
 
     public MovimientoService(MovimientoRepository movimientoRepository) {
         this.movimientoRepository = movimientoRepository;
@@ -54,19 +48,31 @@ public class MovimientoService {
             movimiento.setEstado(true);
             movimiento.setFecharegistro(new Date());
 
+            if (movimientoDto.getIdPersona() != null && movimientoDto.getIdPersona() > 0) {
+                movimiento.setPersona(personaRepository.findById(movimientoDto.getIdPersona()).orElse(null));
+            }
+
+            if (movimientoDto.getIdCotizacion() != null && movimientoDto.getIdCotizacion() > 0) {
+                movimiento.setCotizacion(cotizacionRepository.findById(movimientoDto.getIdCotizacion()).orElse(null));
+            }
+
             Movimiento movimientoSaved = movimientoRepository.save(movimiento);
 
-            movimientoDto.getMovimientodetalleList().forEach(movimientodetalle -> {
+            movimientoDto.getMovimientodetalleList().forEach(movimientodetalleDto -> {
+                Movimientodetalle movimientodetalle = new Movimientodetalle();
                 movimientodetalle.setMovimiento(movimientoSaved);
+                movimientodetalle.setProducto(productoRepository.findById(movimientodetalleDto.getIdProducto()).orElse(null));
+                movimientodetalle.setPrecio(movimientodetalleDto.getPrecio());
+                movimientodetalle.setCantidad(movimientodetalleDto.getCantidad());
                 movimientodetalleRepository.save(movimientodetalle);
 
-                int stock = productoRepository.getStock(movimientodetalle.getProducto().getId());
+                int stock = productoRepository.getStock(movimientodetalleDto.getIdProducto());
                 if (movimientoSaved.getTipo() == Global.INPUT_TYPE) {
-                    stock += movimientodetalle.getCantidad();
+                    stock += movimientodetalleDto.getCantidad();
                 } else {
-                    stock -= movimientodetalle.getCantidad();
+                    stock -= movimientodetalleDto.getCantidad();
                 }
-                productoRepository.updateStock(stock, movimientodetalle.getProducto().getId());
+                productoRepository.updateStock(stock, movimientodetalleDto.getIdProducto());
             });
 
             return new ApiResponse<>(true, Global.SUCCESSFUL_INSERT_MESSAGE);
@@ -75,12 +81,12 @@ public class MovimientoService {
         }
     }
 
-    private void checkStockProducts(List<Movimientodetalle> movimientodetalleList) {
+    private void checkStockProducts(List<MovimientodetalleDto> movimientodetalleList) {
         List<String> strProductList = new ArrayList<>();
 
         movimientodetalleList.forEach(movimientodetalle -> {
-            if (productoRepository.getStock(movimientodetalle.getProducto().getId()) < movimientodetalle.getCantidad()) {
-                strProductList.add(movimientodetalle.getProducto().getNombre());
+            if (productoRepository.getStock(movimientodetalle.getIdProducto()) < movimientodetalle.getCantidad()) {
+                strProductList.add(movimientodetalle.getNombreProducto());
             }
         });
 
@@ -121,11 +127,14 @@ public class MovimientoService {
         }
     }
 
-    public ApiResponse<List<PersonaBusquedaDto>> searchPerson(String query) {
+    public ApiResponse<List<PersonaDto>> searchPerson(String query) {
         return new ApiResponse<>(true, "Ok", personaRepository.search(query + "%"));
     }
 
-    public ApiResponse<List<ProductoBusquedaDto>> searchProduct(String query) {
-        return new ApiResponse<>(true, "Ok", productoRepository.search(query + "%"));
+    public ApiResponse<MovimientoDto> read(Integer id) {
+        MovimientoDto movimientoDto = movimientoRepository.read(id);
+        movimientoDto.setMovimientodetalleList(movimientodetalleRepository.listByIdMovimientoSimplifado(id));
+
+        return new ApiResponse<>(true, "Ok", movimientoDto);
     }
 }

@@ -2,9 +2,7 @@ package com.apsolutions.controller;
 
 import com.apsolutions.dto.MovimientoDto;
 import com.apsolutions.dto.MovimientoListDto;
-import com.apsolutions.dto.PersonaBusquedaDto;
-import com.apsolutions.dto.ProductoBusquedaDto;
-import com.apsolutions.model.Movimiento;
+import com.apsolutions.dto.query.PersonaDto;
 import com.apsolutions.service.MovimientoService;
 import com.apsolutions.util.ApiResponse;
 import org.springframework.web.bind.annotation.*;
@@ -31,18 +29,18 @@ public class MovimientoController {
         return movimientoService.list();
     }
 
+    @GetMapping("/leer/{id}")
+    public ApiResponse<MovimientoDto> read(@PathVariable("id") Integer id) {
+        return movimientoService.read(id);
+    }
+
     @PutMapping("/anular/{id}")
     public ApiResponse<String> unregister(@PathVariable("id") Integer id) {
         return movimientoService.unregister(id);
     }
 
     @GetMapping("/buscarPersona")
-    public ApiResponse<List<PersonaBusquedaDto>> searchPerson(@RequestParam String query) {
+    public ApiResponse<List<PersonaDto>> searchPerson(@RequestParam String query) {
         return movimientoService.searchPerson(query);
-    }
-
-    @GetMapping("/buscarProducto")
-    public ApiResponse<List<ProductoBusquedaDto>> searchProduct(@RequestParam String query) {
-        return movimientoService.searchProduct(query);
     }
 }
