@@ -3,6 +3,7 @@ package com.apsolutions.controller;
 import com.apsolutions.dto.CotizacionDto;
 import com.apsolutions.dto.CotizacionListDto;
 import com.apsolutions.dto.query.PersonaDto;
+import com.apsolutions.dto.report.CotizacionReportDto;
 import com.apsolutions.service.CotizacionService;
 import com.apsolutions.util.ApiResponse;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +47,11 @@ public class CotizacionController {
     @GetMapping("/buscarCliente")
     public ApiResponse<List<PersonaDto>> searchClient(@RequestParam String query) {
         return cotizacionService.searchClient(query);
+    }
+
+    @PostMapping("/reporte")
+    public ApiResponse<List<CotizacionReportDto>> filter(@RequestBody CotizacionReportDto cotizacionReportDto) {
+        return cotizacionService.filter(cotizacionReportDto);
     }
 
 }

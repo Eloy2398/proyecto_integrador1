@@ -3,6 +3,7 @@ package com.apsolutions.service;
 import com.apsolutions.dto.CotizacionDto;
 import com.apsolutions.dto.CotizacionListDto;
 import com.apsolutions.dto.query.PersonaDto;
+import com.apsolutions.dto.report.CotizacionReportDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.CotizacionMapper;
 import com.apsolutions.model.Cotizacion;
@@ -41,7 +42,7 @@ public class CotizacionService {
     public ApiResponse<String> save(CotizacionDto cotizacionDto) {
         try {
             Cotizacion cotizacion = cotizacionMapper.toEntity(cotizacionDto);
-            cotizacion.setEstado(true);
+            cotizacion.setEstado((byte) 1);
             cotizacion.setFecha(new Date());
 
             Cotizacion cotizacionSaved = cotizacionRepository.save(cotizacion);
@@ -89,5 +90,14 @@ public class CotizacionService {
         } else {
             return new ApiResponse<>(true, "Ok", cotizacionRepository.search(query + "%"));
         }
+    }
+
+    public ApiResponse<List<CotizacionReportDto>> filter(CotizacionReportDto cotizacionReportDto) {
+        Date fec1 = cotizacionReportDto.getFecha1();
+        Date fec2 = cotizacionReportDto.getFecha2();
+        Integer idCliente = cotizacionReportDto.getIdCliente();
+
+        return new ApiResponse<>(true, "OK"+fec1+fec2, cotizacionRepository.filter(fec1,fec2,idCliente));
+
     }
 }
