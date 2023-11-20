@@ -97,7 +97,7 @@ public class CotizacionService {
         Date fec2 = cotizacionReportDto.getFecha2();
         Integer idCliente = cotizacionReportDto.getIdCliente();
 
-        return new ApiResponse<>(true, "OK"+fec1+fec2, cotizacionRepository.filter(fec1,fec2,idCliente));
+        return new ApiResponse<>(true, "OK", cotizacionRepository.filter(fec1,fec2,idCliente));
 
     }
 }
