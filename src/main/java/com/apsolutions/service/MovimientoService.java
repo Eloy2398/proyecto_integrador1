@@ -2,6 +2,7 @@ package com.apsolutions.service;
 
 import com.apsolutions.dto.*;
 import com.apsolutions.dto.query.PersonaDto;
+import com.apsolutions.dto.report.MovimientoReportDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.MovimientoMapper;
 import com.apsolutions.model.Movimiento;
@@ -136,5 +137,18 @@ public class MovimientoService {
         movimientoDto.setMovimientodetalleList(movimientodetalleRepository.listByIdMovimientoSimplifado(id));
 
         return new ApiResponse<>(true, "Ok", movimientoDto);
+    }
+
+    public ApiResponse<List<MovimientoReportDto>> filter(MovimientoReportDto movimientoReportDto) {
+        if (movimientoReportDto.getIdProducto() == null || movimientoReportDto.getIdProducto() <= 0){
+            throw new CsException("Seleccione un producto en el filtro.");
+        }
+
+        Date fec1 = movimientoReportDto.getFecha1();
+        Date fec2 = movimientoReportDto.getFecha2();
+        Integer idProducto = movimientoReportDto.getIdProducto();
+
+        return new ApiResponse<>(true, "OK", movimientoRepository.filter(fec1,fec2,idProducto));
+
     }
 }
