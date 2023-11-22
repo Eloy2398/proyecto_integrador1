@@ -7,9 +7,11 @@ import com.apsolutions.dto.report.CotizacionReportDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.CotizacionMapper;
 import com.apsolutions.model.Cotizacion;
+import com.apsolutions.model.Cotizaciondetalle;
 import com.apsolutions.repository.ClienteRepository;
 import com.apsolutions.repository.CotizacionRepository;
 import com.apsolutions.repository.CotizaciondetalleRepository;
+import com.apsolutions.repository.ProductoRepository;
 import com.apsolutions.util.ApiResponse;
 import com.apsolutions.util.Global;
 import jakarta.transaction.Transactional;
@@ -29,6 +31,9 @@ public class CotizacionService {
     private ClienteRepository clienteRepository;
 
     @Autowired
+    private ProductoRepository productoRepository;
+
+    @Autowired
     private CotizacionMapper cotizacionMapper;
 
     @Autowired
@@ -45,10 +50,18 @@ public class CotizacionService {
             cotizacion.setEstado((byte) 1);
             cotizacion.setFecha(new Date());
 
+            if (cotizacionDto.getIdCliente() != null && cotizacionDto.getIdCliente() > 0) {
+                cotizacion.setCliente(clienteRepository.findById(cotizacionDto.getIdCliente()).orElse(null));
+            }
+
             Cotizacion cotizacionSaved = cotizacionRepository.save(cotizacion);
 
-            cotizacionDto.getCotizaciondetalleList().forEach(cotizaciondetalle -> {
+            cotizacionDto.getCotizaciondetalleList().forEach(cotizaciondetalleDto -> {
+                Cotizaciondetalle cotizaciondetalle = new Cotizaciondetalle();
                 cotizaciondetalle.setCotizacion(cotizacionSaved);
+                cotizaciondetalle.setProducto(productoRepository.findById(cotizaciondetalleDto.getIdProducto()).orElse(null));
+                cotizaciondetalle.setPrecio(cotizaciondetalleDto.getPrecio());
+                cotizaciondetalle.setCantidad(cotizaciondetalleDto.getCantidad());
                 cotizaciondetalleRepository.save(cotizaciondetalle);
             });
 
@@ -70,8 +83,8 @@ public class CotizacionService {
     }
 
     public ApiResponse<CotizacionDto> read(Integer id) {
-        CotizacionDto cotizacionDto = cotizacionMapper.toDto(cotizacionRepository.findById(id).orElse(null));
-        cotizacionDto.setCotizaciondetalleList(cotizaciondetalleRepository.listByIdCotizacion(id));
+        CotizacionDto cotizacionDto = cotizacionRepository.read(id);
+        cotizacionDto.setCotizaciondetalleList(cotizaciondetalleRepository.listByIdCotizacionSimplifado(id));
 
         return new ApiResponse<>(true, "OK", cotizacionDto);
     }

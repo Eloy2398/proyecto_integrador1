@@ -13,9 +13,22 @@ public class CotizacionDto {
 
     private Date fecha;
 
-    private Cliente cliente;
+    private Integer idCliente;
 
-    private List<Cotizaciondetalle> cotizaciondetalleList;
+    private String nombreCliente;
+
+    private Byte origen;
+
+    private List<CotizaciondetalleDto> cotizaciondetalleList;
+
+    public CotizacionDto() {
+    }
+
+    public CotizacionDto(Date fecha, Integer idCliente, String nombreCliente) {
+        this.fecha = fecha;
+        this.idCliente = idCliente;
+        this.nombreCliente = nombreCliente;
+    }
 
     public Integer getId() {
         return id;
@@ -38,19 +51,39 @@ public class CotizacionDto {
         }
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public Integer getIdCliente() {
+        return idCliente;
     }
 
-    public List<Cotizaciondetalle> getCotizaciondetalleList() {
+    public void setIdCliente(Integer idCliente) {
+        this.idCliente = idCliente;
+    }
+
+    public String getNombreCliente() {
+        return nombreCliente;
+    }
+
+    public void setNombreCliente(String nombreCliente) {
+        this.nombreCliente = nombreCliente;
+    }
+
+    public Byte getOrigen() {
+        return origen;
+    }
+
+    public void setOrigen(Byte origen) {
+        this.origen = origen;
+    }
+
+    public List<CotizaciondetalleDto> getCotizaciondetalleList() {
         return cotizaciondetalleList;
     }
 
-    public void setCotizaciondetalleList(List<Cotizaciondetalle> cotizaciondetalleList) {
+    public void setCotizaciondetalleList(List<CotizaciondetalleDto> cotizaciondetalleList) {
         this.cotizaciondetalleList = cotizaciondetalleList;
     }
 }
