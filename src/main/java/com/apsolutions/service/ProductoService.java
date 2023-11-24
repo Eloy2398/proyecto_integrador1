@@ -182,9 +182,7 @@ public class ProductoService {
         data.put("marcaList", marcaRepository.list());
 
         List<CriterioDto> criterioDtoList = criterioMapper.toDto(criterioRepository.list());
-        criterioDtoList.forEach(criterioDto -> {
-            criterioDto.setCriterioopcionList(criterioopcionRepository.listByIdCriterio(criterioDto.getId()));
-        });
+        criterioDtoList.forEach(criterioDto -> criterioDto.setCriterioopcionList(criterioopcionRepository.listByIdCriterio(criterioDto.getId())));
 
         data.put("criterioopcionList", criterioDtoList);
 

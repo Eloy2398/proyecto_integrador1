@@ -1,9 +1,6 @@
 package com.apsolutions.controller;
 
 import com.apsolutions.dto.ClienteDto;
-import com.apsolutions.dto.PersonaDto;
-import com.apsolutions.model.Categoria;
-import com.apsolutions.model.Cliente;
 import com.apsolutions.model.Persona;
 import com.apsolutions.service.ClienteService;
 import com.apsolutions.util.ApiResponse;
