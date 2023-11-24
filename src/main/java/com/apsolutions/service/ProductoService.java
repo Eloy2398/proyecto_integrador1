@@ -80,6 +80,7 @@ public class ProductoService {
 
             productoDto.setEstado(true);
             Producto productTmp = productoMapper.toEntity(productoDto);
+            if (productTmp.getStock() == null) productTmp.setStock((short) 0);
             productTmp.setNombreUrl(URLNormalizer.encode(productTmp.getNombre()));
             productTmp.setImagen(fileStorage.upload(productoDto.getFile(), Global.DIR_PRODUCTS, filenameImage));
             Producto producto = productoRepository.save(productTmp);

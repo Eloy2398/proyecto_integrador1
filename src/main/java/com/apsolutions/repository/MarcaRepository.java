@@ -29,4 +29,8 @@ public interface MarcaRepository extends JpaRepository<Marca, Integer> {
 
     @Query("SELECT new com.apsolutions.dto.website.MarcaDto(m.id, m.nombre) FROM Marca m WHERE m.estado = true AND m.mostrarweb = 1")
     List<MarcaDto> getBrands();
+
+    @Query("SELECT new com.apsolutions.dto.website.MarcaDto(m.id, m.nombre) FROM Producto p INNER JOIN p.marca m " +
+            "WHERE p.estado = true AND p.categoria.id = :idCategory AND m.mostrarweb = 1 GROUP BY m.id")
+    List<MarcaDto> getBrandsCategory(Integer idCategory);
 }

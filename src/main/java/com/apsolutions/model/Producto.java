@@ -20,7 +20,7 @@ public class Producto {
     @Column(length = 100, nullable = false)
     private String nombreUrl;
 
-    @Column(length = 250)
+    @Column(columnDefinition = "text")
     private String descripcion;
 
     @ManyToOne

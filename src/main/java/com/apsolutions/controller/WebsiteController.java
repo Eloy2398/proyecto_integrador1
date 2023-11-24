@@ -6,12 +6,10 @@ import com.apsolutions.dto.website.ProductoDto;
 import com.apsolutions.model.Categoria;
 import com.apsolutions.service.WebsiteService;
 import com.apsolutions.util.ApiResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/website")
@@ -33,14 +31,38 @@ public class WebsiteController {
         return websiteService.getBrandsMain();
     }
 
+    @GetMapping("/get-brands")
+    public ApiResponse<List<MarcaDto>> getBrands() {
+        return websiteService.getBrands();
+    }
+
+    @GetMapping("/get-brands-category/{id}")
+    public ApiResponse<List<MarcaDto>> getBrands(@PathVariable("id") Integer id) {
+        return websiteService.getBrandsCategory(id);
+    }
+
     @GetMapping("/get-categories-main")
     public ApiResponse<List<CategoriaDto>> getCategoriesMain() {
         return websiteService.getCategoriesMain();
     }
 
+    @GetMapping("/get-categories")
+    public ApiResponse<List<CategoriaDto>> getCategories() {
+        return websiteService.getCategories();
+    }
+
     @GetMapping("/get-products-main")
     public ApiResponse<List<ProductoDto>> getProductsMain() {
         return websiteService.getProductsMain();
+    }
+
+    @GetMapping("/get-products-category/{id}")
+    public ApiResponse<Map<String, Object>> getProductsCategory(
+            @PathVariable("id") Integer id,
+            @RequestParam(name = "brand", required = false) String brand,
+            @RequestParam(name = "price", required = false) String strPriceRange,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "3") Integer sortBy) {
+        return websiteService.getProductsCategory(id, brand, strPriceRange, sortBy);
     }
 
     @GetMapping("/validate-category")
