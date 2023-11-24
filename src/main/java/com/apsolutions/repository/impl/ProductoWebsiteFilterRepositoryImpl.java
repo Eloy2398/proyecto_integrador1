@@ -1,6 +1,6 @@
 package com.apsolutions.repository.impl;
 
-import com.apsolutions.dto.website.ProductoDto;
+import com.apsolutions.dto.website.ProductoWebsiteDto;
 import com.apsolutions.repository.custom.ProductoWebsiteFilterRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,8 +17,8 @@ public class ProductoWebsiteFilterRepositoryImpl implements ProductoWebsiteFilte
     private EntityManager entityManager;
 
     @Override
-    public List<ProductoDto> getAll(int idCategory, String idBrands, String strPriceRange, int sortBy) {
-        StringBuilder jpql = new StringBuilder("SELECT new com.apsolutions.dto.website.ProductoDto(p.id, p.nombre, p.nombreUrl, p.precio, p.imagen) FROM Producto p " +
+    public List<ProductoWebsiteDto> getAll(int idCategory, String idBrands, String strPriceRange, int sortBy) {
+        StringBuilder jpql = new StringBuilder("SELECT new com.apsolutions.dto.website.ProductoQueryDto(p.id, p.nombre, p.nombreUrl, p.precio, p.imagen) FROM Producto p " +
                 "INNER JOIN p.marca m INNER JOIN p.categoria c WHERE p.estado = true AND c.mostrarweb = 1 AND m.mostrarweb = 1 AND c.id = :idCategory");
 
         double[] priceRangeValues = priceRangeValues(strPriceRange);
@@ -32,7 +32,7 @@ public class ProductoWebsiteFilterRepositoryImpl implements ProductoWebsiteFilte
             jpql.append(" ORDER BY p.id DESC");
         }
 
-        TypedQuery<ProductoDto> query = entityManager.createQuery(jpql.toString(), ProductoDto.class);
+        TypedQuery<ProductoWebsiteDto> query = entityManager.createQuery(jpql.toString(), ProductoWebsiteDto.class);
 
         query.setParameter("idCategory", idCategory);
 

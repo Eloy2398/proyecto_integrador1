@@ -1,13 +1,13 @@
 package com.apsolutions.dto.query;
 
-public class CotizacionDto {
+public class CotizacionQueryDto {
 
     private Integer id;
     private Integer idPersona;
     private String nombreCliente;
     private String value;
 
-    public CotizacionDto(Integer id, Integer idPersona, String nombreCliente) {
+    public CotizacionQueryDto(Integer id, Integer idPersona, String nombreCliente) {
         this.id = id;
         this.idPersona = idPersona;
         this.nombreCliente = nombreCliente;

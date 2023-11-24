@@ -1,6 +1,7 @@
 package com.apsolutions.controller;
 
-import com.apsolutions.dto.query.ProductoDto;
+import com.apsolutions.dto.ProductoDto;
+import com.apsolutions.dto.query.ProductoQueryDto;
 import com.apsolutions.dto.ProductoListDto;
 import com.apsolutions.service.ProductoService;
 import com.apsolutions.util.ApiResponse;
@@ -26,18 +27,18 @@ public class ProductoController {
     }
 
     /*@PostMapping("/guardar")
-    public ApiResponse<String> save(@RequestBody ProductoDto productoDto) {
+    public ApiResponse<String> save(@RequestBody ProductoQueryDto productoDto) {
         return productoService.save(productoDto);
     }*/
 
     @PostMapping("/guardar")
-    public ApiResponse<String> save(@RequestPart("object") com.apsolutions.dto.ProductoDto productoDto, @RequestParam(value = "file", required = false) MultipartFile file) {
+    public ApiResponse<String> save(@RequestPart("object") ProductoDto productoDto, @RequestParam(value = "file", required = false) MultipartFile file) {
         productoDto.setFile(file);
         return productoService.save(productoDto);
     }
 
     @GetMapping("/leer/{id}")
-    public ApiResponse<com.apsolutions.dto.ProductoDto> read(@PathVariable("id") Integer id) {
+    public ApiResponse<ProductoDto> read(@PathVariable("id") Integer id) {
         return productoService.read(id);
     }
 
@@ -52,7 +53,7 @@ public class ProductoController {
     }
 
     @GetMapping("/buscar")
-    public ApiResponse<List<ProductoDto>> search(@RequestParam String query) {
+    public ApiResponse<List<ProductoQueryDto>> search(@RequestParam String query) {
         return productoService.search(query);
     }
 

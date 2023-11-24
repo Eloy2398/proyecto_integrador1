@@ -1,6 +1,6 @@
 package com.apsolutions.service;
 
-import com.apsolutions.dto.indicator.ProductoDto;
+import com.apsolutions.dto.indicator.ProductoIndicatorDto;
 import com.apsolutions.repository.*;
 import com.apsolutions.repository.custom.ProductoIndicadorRepository;
 import com.apsolutions.util.ApiResponse;
@@ -33,18 +33,18 @@ public class IndicadorService {
         return new ApiResponse<>(true, "Ok", objectMap);
     }
 
-    public ApiResponse<List<ProductoDto>> stockproductos(int idCategoria, int valOrden) {
-        List<ProductoDto> indicadorProductoDtoList = productoIndicadorRepository.getStockListForChart(getCurrentYear(), idCategoria, valOrden);
+    public ApiResponse<List<ProductoIndicatorDto>> stockproductos(int idCategoria, int valOrden) {
+        List<ProductoIndicatorDto> productoIndicatorDtoList = productoIndicadorRepository.getStockListForChart(getCurrentYear(), idCategoria, valOrden);
 
-        for (int i = 0; i < indicadorProductoDtoList.size(); i++) {
-            indicadorProductoDtoList.get(i).setInitial(0);
+        for (int i = 0; i < productoIndicatorDtoList.size(); i++) {
+            productoIndicatorDtoList.get(i).setInitial(0);
             if (i == 0) {
-                indicadorProductoDtoList.get(i).setSelected(true);
-                indicadorProductoDtoList.get(i).setSliced(true);
+                productoIndicatorDtoList.get(i).setSelected(true);
+                productoIndicatorDtoList.get(i).setSliced(true);
             }
         }
 
-        return new ApiResponse<>(true, "Ok", indicadorProductoDtoList);
+        return new ApiResponse<>(true, "Ok", productoIndicatorDtoList);
     }
 
     public ApiResponse<Map<String, Object>> cotizaciones() {

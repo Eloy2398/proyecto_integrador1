@@ -1,16 +1,16 @@
 package com.apsolutions.dto.website;
 
-public class MarcaDto {
+public class MarcaWebsiteDto {
     private Integer id;
     private String nombre;
     private String imagen;
 
-    public MarcaDto(Integer id, String nombre) {
+    public MarcaWebsiteDto(Integer id, String nombre) {
         this.id = id;
         this.nombre = nombre;
     }
 
-    public MarcaDto(Integer id, String nombre, String imagen) {
+    public MarcaWebsiteDto(Integer id, String nombre, String imagen) {
         this.id = id;
         this.nombre = nombre;
         this.imagen = imagen;

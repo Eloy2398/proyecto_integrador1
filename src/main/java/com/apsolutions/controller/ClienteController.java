@@ -21,7 +21,7 @@ public class ClienteController {
     }
 
     @PostMapping("/guardar")
-    public ApiResponse<String> save(@RequestBody Persona persona){
+    public ApiResponse<String> save(@RequestBody Persona persona) {
         return clienteService.save(persona);
     }
 
@@ -31,12 +31,12 @@ public class ClienteController {
     }
 
     @GetMapping("/listar")
-    public ApiResponse<List<ClienteDto>> list(){
+    public ApiResponse<List<ClienteDto>> list() {
         return clienteService.list();
     }
 
     @PutMapping("/eliminar/{id}")
-    public ApiResponse<String> delete(@PathVariable("id") Integer id){
+    public ApiResponse<String> delete(@PathVariable("id") Integer id) {
         return clienteService.delete(id);
     }
 }

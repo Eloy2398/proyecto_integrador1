@@ -1,20 +1,20 @@
 package com.apsolutions.dto.website;
 
-public class CategoriaDto {
+public class CategoriaWebsiteDto {
 
     private Integer id;
     private String nombre;
     private String nombreUrl;
     private String imagen;
 
-    public CategoriaDto(Integer id, String nombre, String nombreUrl, String imagen) {
+    public CategoriaWebsiteDto(Integer id, String nombre, String nombreUrl, String imagen) {
         this.id = id;
         this.nombreUrl = nombreUrl;
         this.nombre = nombre;
         this.imagen = imagen;
     }
 
-    public CategoriaDto(Integer id, String nombre, String nombreUrl) {
+    public CategoriaWebsiteDto(Integer id, String nombre, String nombreUrl) {
         this.id = id;
         this.nombre = nombre;
         this.nombreUrl = nombreUrl;

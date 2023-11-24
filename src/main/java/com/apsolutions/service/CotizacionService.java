@@ -2,7 +2,8 @@ package com.apsolutions.service;
 
 import com.apsolutions.dto.CotizacionDto;
 import com.apsolutions.dto.CotizacionListDto;
-import com.apsolutions.dto.query.PersonaDto;
+import com.apsolutions.dto.query.CotizacionQueryDto;
+import com.apsolutions.dto.query.PersonaQueryDto;
 import com.apsolutions.dto.report.CotizacionReportDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.CotizacionMapper;
@@ -93,11 +94,11 @@ public class CotizacionService {
         return new ApiResponse<>(true, "OK", cotizacionRepository.list());
     }
 
-    public ApiResponse<List<PersonaDto>> searchClient(String query) {
+    public ApiResponse<List<PersonaQueryDto>> searchClient(String query) {
         return new ApiResponse<>(true, "Ok", clienteRepository.search(query + "%"));
     }
 
-    public ApiResponse<List<com.apsolutions.dto.query.CotizacionDto>> search(String query) {
+    public ApiResponse<List<CotizacionQueryDto>> search(String query) {
         if (Character.isDigit(query.charAt(0))) {
             return new ApiResponse<>(true, "Ok", cotizacionRepository.search(Integer.parseInt(query)));
         } else {
@@ -110,7 +111,7 @@ public class CotizacionService {
         Date fec2 = cotizacionReportDto.getFecha2();
         Integer idCliente = cotizacionReportDto.getIdCliente();
 
-        return new ApiResponse<>(true, "OK", cotizacionRepository.filter(fec1,fec2,idCliente));
+        return new ApiResponse<>(true, "OK", cotizacionRepository.filter(fec1, fec2, idCliente));
 
     }
 }

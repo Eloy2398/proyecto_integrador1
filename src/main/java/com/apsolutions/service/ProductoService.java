@@ -1,7 +1,7 @@
 package com.apsolutions.service;
 
 import com.apsolutions.dto.*;
-import com.apsolutions.dto.query.ProductoDto;
+import com.apsolutions.dto.query.ProductoQueryDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.CriterioMapper;
 import com.apsolutions.mapper.ProductoMapper;
@@ -53,7 +53,7 @@ public class ProductoService {
     }
 
     @Transactional
-    public ApiResponse<String> save(com.apsolutions.dto.ProductoDto productoDto) {
+    public ApiResponse<String> save(ProductoDto productoDto) {
         if (productoDto.getId() == null) {
             productoDto.setId(0);
         }
@@ -63,7 +63,7 @@ public class ProductoService {
         return new ApiResponse<>(true, productoDto.getId() > 0 ? Global.SUCCESSFUL_UPDATE_MESSAGE : Global.SUCCESSFUL_INSERT_MESSAGE);
     }
 
-    private void processSaved(com.apsolutions.dto.ProductoDto productoDto) {
+    private void processSaved(ProductoDto productoDto) {
         try {
             checkValidations(productoDto);
 
@@ -142,7 +142,7 @@ public class ProductoService {
         }
     }
 
-    private void checkValidations(com.apsolutions.dto.ProductoDto productoDto) {
+    private void checkValidations(ProductoDto productoDto) {
         Optional<Producto> optionalProduct;
 
         optionalProduct = productoRepository.existsByNameAndBrand(productoDto.getNombre(), productoDto.getMarca().getId(), productoDto.getId());
@@ -191,16 +191,16 @@ public class ProductoService {
         return new ApiResponse<>(true, "Ok", data);
     }
 
-    public ApiResponse<com.apsolutions.dto.ProductoDto> read(Integer id) {
+    public ApiResponse<ProductoDto> read(Integer id) {
         Producto producto = productoRepository.findById(id).orElse(new Producto());
-        com.apsolutions.dto.ProductoDto productoDto = productoMapper.toDto(producto);
+        ProductoDto productoDto = productoMapper.toDto(producto);
         productoDto.setProductoCaracteristicaList(productoCaracteristicaRepository.findByIdProducto(id));
         productoDto.setProductoCriterioopcionList(productoCriterioopcionRepository.listIdCriterioopcionByIdProducto(id));
 
         return new ApiResponse<>(true, "Ok", productoDto);
     }
 
-    public ApiResponse<List<ProductoDto>> search(String query) {
+    public ApiResponse<List<ProductoQueryDto>> search(String query) {
         return new ApiResponse<>(true, "Ok", productoRepository.search(query + "%"));
     }
 

@@ -2,14 +2,14 @@ package com.apsolutions.dto.query;
 
 import java.math.BigDecimal;
 
-public class ProductoDto {
+public class ProductoQueryDto {
 
     private Integer id;
     private String nombre;
     private BigDecimal precio;
     private String value;
 
-    public ProductoDto(Integer id, String nombre, BigDecimal precio) {
+    public ProductoQueryDto(Integer id, String nombre, BigDecimal precio) {
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;

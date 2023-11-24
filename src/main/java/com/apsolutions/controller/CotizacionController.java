@@ -2,7 +2,8 @@ package com.apsolutions.controller;
 
 import com.apsolutions.dto.CotizacionDto;
 import com.apsolutions.dto.CotizacionListDto;
-import com.apsolutions.dto.query.PersonaDto;
+import com.apsolutions.dto.query.CotizacionQueryDto;
+import com.apsolutions.dto.query.PersonaQueryDto;
 import com.apsolutions.dto.report.CotizacionReportDto;
 import com.apsolutions.service.CotizacionService;
 import com.apsolutions.util.ApiResponse;
@@ -40,12 +41,12 @@ public class CotizacionController {
     }
 
     @GetMapping("/buscar")
-    public ApiResponse<List<com.apsolutions.dto.query.CotizacionDto>> search(@RequestParam String query) {
+    public ApiResponse<List<CotizacionQueryDto>> search(@RequestParam String query) {
         return cotizacionService.search(query);
     }
 
     @GetMapping("/buscarCliente")
-    public ApiResponse<List<PersonaDto>> searchClient(@RequestParam String query) {
+    public ApiResponse<List<PersonaQueryDto>> searchClient(@RequestParam String query) {
         return cotizacionService.searchClient(query);
     }
 

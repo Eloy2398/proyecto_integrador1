@@ -28,32 +28,32 @@ public class WebsiteService {
     @Autowired
     private MarcaRepository marcaRepository;
 
-    public ApiResponse<List<ProductoDto>> getProductsToBanner() {
+    public ApiResponse<List<ProductoWebsiteDto>> getProductsToBanner() {
         PageRequest pageRequest = PageRequest.of(1, 5, Sort.by("id").descending());
         return new ApiResponse<>(true, "Ok", productoWebsiteRepository.getProductsToBanner(pageRequest));
     }
 
-    public ApiResponse<List<MarcaDto>> getBrandsMain() {
+    public ApiResponse<List<MarcaWebsiteDto>> getBrandsMain() {
         return new ApiResponse<>(true, "Ok", marcaRepository.getBrandsMain());
     }
 
-    public ApiResponse<List<MarcaDto>> getBrands() {
+    public ApiResponse<List<MarcaWebsiteDto>> getBrands() {
         return new ApiResponse<>(true, "Ok", marcaRepository.getBrands());
     }
 
-    public ApiResponse<List<MarcaDto>> getBrandsCategory(Integer idCategory) {
+    public ApiResponse<List<MarcaWebsiteDto>> getBrandsCategory(Integer idCategory) {
         return new ApiResponse<>(true, "Ok", marcaRepository.getBrandsCategory(idCategory));
     }
 
-    public ApiResponse<List<CategoriaDto>> getCategoriesMain() {
+    public ApiResponse<List<CategoriaWebsiteDto>> getCategoriesMain() {
         return new ApiResponse<>(true, "Ok", categoriaRepository.getCategoriesMain());
     }
 
-    public ApiResponse<List<CategoriaDto>> getCategories() {
+    public ApiResponse<List<CategoriaWebsiteDto>> getCategories() {
         return new ApiResponse<>(true, "Ok", categoriaRepository.getCategories());
     }
 
-    public ApiResponse<List<ProductoDto>> getProductsMain() {
+    public ApiResponse<List<ProductoWebsiteDto>> getProductsMain() {
         PageRequest pageRequest = PageRequest.of(1, 12, Sort.by(Sort.Direction.DESC, "id"));
         return new ApiResponse<>(true, "Ok", productoWebsiteRepository.getProductsMain(pageRequest));
     }
@@ -62,8 +62,8 @@ public class WebsiteService {
         return new ApiResponse<>(true, "Ok", categoriaRepository.validateByIdAndName(id, urlName).orElse(null));
     }
 
-    public ApiResponse<ProductoDto> getProductData(Integer id, String urlName) {
-        ProductoDto productoDto = productoWebsiteRepository.getProductData(id, urlName).orElse(null);
+    public ApiResponse<ProductoWebsiteDto> getProductData(Integer id, String urlName) {
+        ProductoWebsiteDto productoDto = productoWebsiteRepository.getProductData(id, urlName).orElse(null);
 
         if (productoDto != null) {
             productoDto.setProductoCaracteristicaList(productoCaracteristicaRepository.findByIdProducto(productoDto.getId()));

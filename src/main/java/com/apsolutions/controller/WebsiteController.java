@@ -1,8 +1,8 @@
 package com.apsolutions.controller;
 
-import com.apsolutions.dto.website.CategoriaDto;
-import com.apsolutions.dto.website.MarcaDto;
-import com.apsolutions.dto.website.ProductoDto;
+import com.apsolutions.dto.website.CategoriaWebsiteDto;
+import com.apsolutions.dto.website.MarcaWebsiteDto;
+import com.apsolutions.dto.website.ProductoWebsiteDto;
 import com.apsolutions.model.Categoria;
 import com.apsolutions.service.WebsiteService;
 import com.apsolutions.util.ApiResponse;
@@ -22,37 +22,37 @@ public class WebsiteController {
     }
 
     @GetMapping("/get-products-to-banner")
-    public ApiResponse<List<ProductoDto>> getProductsToBanner() {
+    public ApiResponse<List<ProductoWebsiteDto>> getProductsToBanner() {
         return websiteService.getProductsToBanner();
     }
 
     @GetMapping("/get-brands-main")
-    public ApiResponse<List<MarcaDto>> getBrandsMain() {
+    public ApiResponse<List<MarcaWebsiteDto>> getBrandsMain() {
         return websiteService.getBrandsMain();
     }
 
     @GetMapping("/get-brands")
-    public ApiResponse<List<MarcaDto>> getBrands() {
+    public ApiResponse<List<MarcaWebsiteDto>> getBrands() {
         return websiteService.getBrands();
     }
 
     @GetMapping("/get-brands-category/{id}")
-    public ApiResponse<List<MarcaDto>> getBrands(@PathVariable("id") Integer id) {
+    public ApiResponse<List<MarcaWebsiteDto>> getBrands(@PathVariable("id") Integer id) {
         return websiteService.getBrandsCategory(id);
     }
 
     @GetMapping("/get-categories-main")
-    public ApiResponse<List<CategoriaDto>> getCategoriesMain() {
+    public ApiResponse<List<CategoriaWebsiteDto>> getCategoriesMain() {
         return websiteService.getCategoriesMain();
     }
 
     @GetMapping("/get-categories")
-    public ApiResponse<List<CategoriaDto>> getCategories() {
+    public ApiResponse<List<CategoriaWebsiteDto>> getCategories() {
         return websiteService.getCategories();
     }
 
     @GetMapping("/get-products-main")
-    public ApiResponse<List<ProductoDto>> getProductsMain() {
+    public ApiResponse<List<ProductoWebsiteDto>> getProductsMain() {
         return websiteService.getProductsMain();
     }
 
@@ -71,7 +71,7 @@ public class WebsiteController {
     }
 
     @GetMapping("/get-product-data")
-    public ApiResponse<ProductoDto> getProductData(@RequestParam Integer id, @RequestParam String urlName) {
+    public ApiResponse<ProductoWebsiteDto> getProductData(@RequestParam Integer id, @RequestParam String urlName) {
         return websiteService.getProductData(id, urlName);
     }
 }

@@ -2,8 +2,7 @@ package com.apsolutions.controller;
 
 import com.apsolutions.dto.MovimientoDto;
 import com.apsolutions.dto.MovimientoListDto;
-import com.apsolutions.dto.query.PersonaDto;
-import com.apsolutions.dto.report.CotizacionReportDto;
+import com.apsolutions.dto.query.PersonaQueryDto;
 import com.apsolutions.dto.report.MovimientoReportDto;
 import com.apsolutions.service.MovimientoService;
 import com.apsolutions.util.ApiResponse;
@@ -42,7 +41,7 @@ public class MovimientoController {
     }
 
     @GetMapping("/buscarPersona")
-    public ApiResponse<List<PersonaDto>> searchPerson(@RequestParam String query) {
+    public ApiResponse<List<PersonaQueryDto>> searchPerson(@RequestParam String query) {
         return movimientoService.searchPerson(query);
     }
 

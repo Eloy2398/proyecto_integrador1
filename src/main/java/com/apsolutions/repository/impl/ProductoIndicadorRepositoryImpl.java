@@ -1,6 +1,6 @@
 package com.apsolutions.repository.impl;
 
-import com.apsolutions.dto.indicator.ProductoDto;
+import com.apsolutions.dto.indicator.ProductoIndicatorDto;
 import com.apsolutions.repository.custom.ProductoIndicadorRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -15,8 +15,8 @@ public class ProductoIndicadorRepositoryImpl implements ProductoIndicadorReposit
     private EntityManager entityManager;
 
     @Override
-    public List<ProductoDto> getStockListForChart(int year, int idCategory, int sortByStock) {
-        StringBuilder jpql = new StringBuilder("SELECT new com.apsolutions.dto.indicator.ProductoDto(p.nombre, p.stock, SUM(CASE WHEN m.tipo = 1 THEN md.cantidad ELSE 0 END) AS inc, SUM(CASE WHEN m.tipo = 2 THEN md.cantidad ELSE 0 END) AS out) FROM Movimientodetalle md " +
+    public List<ProductoIndicatorDto> getStockListForChart(int year, int idCategory, int sortByStock) {
+        StringBuilder jpql = new StringBuilder("SELECT new com.apsolutions.dto.indicator.ProductoQueryDto(p.nombre, p.stock, SUM(CASE WHEN m.tipo = 1 THEN md.cantidad ELSE 0 END) AS inc, SUM(CASE WHEN m.tipo = 2 THEN md.cantidad ELSE 0 END) AS out) FROM Movimientodetalle md " +
                 "LEFT JOIN md.movimiento m LEFT JOIN md.producto p " +
                 "WHERE m.estado = true AND p.estado = true AND YEAR(m.fecha) = :year");
 
@@ -34,7 +34,7 @@ public class ProductoIndicadorRepositoryImpl implements ProductoIndicadorReposit
 
         jpql.append(" LIMIT 5");
 
-        TypedQuery<ProductoDto> query = entityManager.createQuery(jpql.toString(), ProductoDto.class);
+        TypedQuery<ProductoIndicatorDto> query = entityManager.createQuery(jpql.toString(), ProductoIndicatorDto.class);
 
         query.setParameter("year", year);
 

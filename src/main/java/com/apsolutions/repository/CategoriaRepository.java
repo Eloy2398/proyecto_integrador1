@@ -1,6 +1,6 @@
 package com.apsolutions.repository;
 
-import com.apsolutions.dto.website.CategoriaDto;
+import com.apsolutions.dto.website.CategoriaWebsiteDto;
 import com.apsolutions.model.Categoria;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -26,11 +26,11 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
     @Query("SELECT c.imagen FROM Categoria c WHERE c.id = :id")
     String getImage(Integer id);
 
-    @Query("SELECT new com.apsolutions.dto.website.CategoriaDto(c.id, c.nombre, c.nombreUrl, c.imagen) FROM Categoria c WHERE c.estado = true AND c.mostrarweb = 1 AND c.mostrardestacado = 1")
-    List<CategoriaDto> getCategoriesMain();
+    @Query("SELECT new com.apsolutions.dto.website.CategoriaWebsiteDto(c.id, c.nombre, c.nombreUrl, c.imagen) FROM Categoria c WHERE c.estado = true AND c.mostrarweb = 1 AND c.mostrardestacado = 1")
+    List<CategoriaWebsiteDto> getCategoriesMain();
 
-    @Query("SELECT new com.apsolutions.dto.website.CategoriaDto(c.id, c.nombre, c.nombreUrl) FROM Categoria c WHERE c.estado = true AND c.mostrarweb = 1")
-    List<CategoriaDto> getCategories();
+    @Query("SELECT new com.apsolutions.dto.website.CategoriaWebsiteDto(c.id, c.nombre, c.nombreUrl) FROM Categoria c WHERE c.estado = true AND c.mostrarweb = 1")
+    List<CategoriaWebsiteDto> getCategories();
 
     @Query("SELECT c FROM Categoria c WHERE c.estado = true AND c.mostrarweb = 1 AND c.id = :id AND c.nombreUrl LIKE :urlName")
     Optional<Categoria> validateByIdAndName(Integer id, String urlName);

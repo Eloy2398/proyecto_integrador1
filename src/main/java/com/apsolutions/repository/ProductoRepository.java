@@ -1,7 +1,7 @@
 package com.apsolutions.repository;
 
 import com.apsolutions.dto.ProductoListDto;
-import com.apsolutions.dto.query.ProductoDto;
+import com.apsolutions.dto.query.ProductoQueryDto;
 import com.apsolutions.model.Producto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -17,8 +17,8 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     @Query("SELECT new com.apsolutions.dto.ProductoListDto(p.id, p.codigo, p.nombre, p.descripcion, c.nombre, m.nombre, p.precio, p.stock) FROM Producto p INNER JOIN p.categoria c INNER JOIN p.marca m WHERE p.estado = true")
     List<ProductoListDto> list();
 
-    @Query("SELECT new com.apsolutions.dto.query.ProductoDto(p.id, p.nombre, p.precio) FROM Producto p WHERE p.estado = true AND p.nombre LIKE :query")
-    List<ProductoDto> search(String query);
+    @Query("SELECT new com.apsolutions.dto.query.ProductoQueryDto(p.id, p.nombre, p.precio) FROM Producto p WHERE p.estado = true AND p.nombre LIKE :query")
+    List<ProductoQueryDto> search(String query);
 
     @Query("SELECT p FROM Producto p WHERE p.estado = true AND p.nombre LIKE :nombre AND p.marca.id = :idmarca AND p.id <> :id")
     Optional<Producto> existsByNameAndBrand(String nombre, Integer idmarca, Integer id);

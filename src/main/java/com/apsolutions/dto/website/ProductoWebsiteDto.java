@@ -5,7 +5,7 @@ import com.apsolutions.dto.ProductoCaracteristicaDto;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class ProductoDto {
+public class ProductoWebsiteDto {
 
     private Integer id;
     private String codigo;
@@ -19,7 +19,7 @@ public class ProductoDto {
     private String imagen;
     private List<ProductoCaracteristicaDto> productoCaracteristicaList;
 
-    public ProductoDto(Integer id, String nombre, String nombreUrl, String descripcion, String imagen) {
+    public ProductoWebsiteDto(Integer id, String nombre, String nombreUrl, String descripcion, String imagen) {
         this.id = id;
         this.nombre = nombre;
         this.nombreUrl = nombreUrl;
@@ -27,7 +27,7 @@ public class ProductoDto {
         this.imagen = imagen;
     }
 
-    public ProductoDto(Integer id, String nombre, String nombreUrl, BigDecimal precio, String imagen) {
+    public ProductoWebsiteDto(Integer id, String nombre, String nombreUrl, BigDecimal precio, String imagen) {
         this.id = id;
         this.nombre = nombre;
         this.nombreUrl = nombreUrl;
@@ -35,7 +35,7 @@ public class ProductoDto {
         this.imagen = imagen;
     }
 
-    public ProductoDto(Integer id, String codigo, String nombre, String descripcion, String categoriaNombre, String marcaNombre, BigDecimal precio, Short stock, String imagen) {
+    public ProductoWebsiteDto(Integer id, String codigo, String nombre, String descripcion, String categoriaNombre, String marcaNombre, BigDecimal precio, Short stock, String imagen) {
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
