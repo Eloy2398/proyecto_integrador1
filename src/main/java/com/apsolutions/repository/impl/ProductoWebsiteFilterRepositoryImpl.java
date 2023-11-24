@@ -18,7 +18,7 @@ public class ProductoWebsiteFilterRepositoryImpl implements ProductoWebsiteFilte
 
     @Override
     public List<ProductoWebsiteDto> getAll(int idCategory, String idBrands, String strPriceRange, int sortBy) {
-        StringBuilder jpql = new StringBuilder("SELECT new com.apsolutions.dto.website.ProductoQueryDto(p.id, p.nombre, p.nombreUrl, p.precio, p.imagen) FROM Producto p " +
+        StringBuilder jpql = new StringBuilder("SELECT new com.apsolutions.dto.website.ProductoWebsiteDto(p.id, p.nombre, p.nombreUrl, p.precio, p.imagen) FROM Producto p " +
                 "INNER JOIN p.marca m INNER JOIN p.categoria c WHERE p.estado = true AND c.mostrarweb = 1 AND m.mostrarweb = 1 AND c.id = :idCategory");
 
         double[] priceRangeValues = priceRangeValues(strPriceRange);

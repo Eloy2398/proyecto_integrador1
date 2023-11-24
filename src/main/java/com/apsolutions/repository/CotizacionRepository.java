@@ -24,11 +24,11 @@ public interface CotizacionRepository extends JpaRepository<Cotizacion, Integer>
     @Query("UPDATE Cotizacion c SET c.estado = :estado WHERE c.id = :id")
     void updateStatus(Boolean estado, Integer id);
 
-    @Query("SELECT new com.apsolutions.dto.CotizacionQueryDto(c.fecha, cl.id, p.nombre) FROM Cotizacion c INNER JOIN c.cliente cl INNER JOIN cl.persona p " +
+    @Query("SELECT new com.apsolutions.dto.CotizacionDto(c.fecha, cl.id, p.nombre) FROM Cotizacion c INNER JOIN c.cliente cl INNER JOIN cl.persona p " +
             "WHERE c.id = :id")
     CotizacionDto read(int id);
 
-    @Query("SELECT new com.apsolutions.dto.indicator.CotizacionQueryDto(MONTHNAME(c.fecha) AS m, COUNT(c.id) AS num) FROM Cotizacion c " +
+    @Query("SELECT new com.apsolutions.dto.indicator.CotizacionIndicatorDto(MONTHNAME(c.fecha) AS m, COUNT(c.id) AS num) FROM Cotizacion c " +
             "WHERE YEAR(c.fecha) = :anio GROUP BY MONTHNAME(c.fecha)")
     List<CotizacionIndicatorDto> cotizacionesGeneradas(int anio);
 

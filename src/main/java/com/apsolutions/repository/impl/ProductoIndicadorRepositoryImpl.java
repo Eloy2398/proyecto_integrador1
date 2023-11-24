@@ -16,7 +16,7 @@ public class ProductoIndicadorRepositoryImpl implements ProductoIndicadorReposit
 
     @Override
     public List<ProductoIndicatorDto> getStockListForChart(int year, int idCategory, int sortByStock) {
-        StringBuilder jpql = new StringBuilder("SELECT new com.apsolutions.dto.indicator.ProductoQueryDto(p.nombre, p.stock, SUM(CASE WHEN m.tipo = 1 THEN md.cantidad ELSE 0 END) AS inc, SUM(CASE WHEN m.tipo = 2 THEN md.cantidad ELSE 0 END) AS out) FROM Movimientodetalle md " +
+        StringBuilder jpql = new StringBuilder("SELECT new com.apsolutions.dto.indicator.ProductoIndicatorDto(p.nombre, p.stock, SUM(CASE WHEN m.tipo = 1 THEN md.cantidad ELSE 0 END) AS inc, SUM(CASE WHEN m.tipo = 2 THEN md.cantidad ELSE 0 END) AS out) FROM Movimientodetalle md " +
                 "LEFT JOIN md.movimiento m LEFT JOIN md.producto p " +
                 "WHERE m.estado = true AND p.estado = true AND YEAR(m.fecha) = :year");
 
