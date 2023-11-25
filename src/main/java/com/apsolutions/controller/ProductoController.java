@@ -22,8 +22,13 @@ public class ProductoController {
     }
 
     @GetMapping("/listar")
-    public ApiResponse<List<ProductoListDto>> list() {
-        return productoService.list();
+    public ApiResponse<List<ProductoListDto>> list(
+            @RequestParam(value = "tipo", required = false) Integer tipo,
+            @RequestParam(value = "nombre", required = false) String nombre,
+            @RequestParam(value = "idCategoria", defaultValue = "0", required = false) Integer idCategoria,
+            @RequestParam(value = "idMarca", defaultValue = "0", required = false) Integer idMarca
+    ) {
+        return productoService.list(tipo, nombre, idCategoria, idMarca);
     }
 
     /*@PostMapping("/guardar")

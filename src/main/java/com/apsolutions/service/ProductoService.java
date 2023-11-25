@@ -7,6 +7,7 @@ import com.apsolutions.mapper.CriterioMapper;
 import com.apsolutions.mapper.ProductoMapper;
 import com.apsolutions.model.*;
 import com.apsolutions.repository.*;
+import com.apsolutions.repository.custom.ProductoFilterRepository;
 import com.apsolutions.util.ApiResponse;
 import com.apsolutions.util.FileStorage;
 import com.apsolutions.util.Global;
@@ -25,6 +26,8 @@ import java.util.*;
 public class ProductoService {
 
     private final ProductoRepository productoRepository;
+    @Autowired
+    private ProductoFilterRepository productoFilterRepository;
     @Autowired
     private ProductoMapper productoMapper;
     @Autowired
@@ -172,8 +175,10 @@ public class ProductoService {
         return new ApiResponse<>(true, Global.SUCCESSFUL_DELETE_MESSAGE);
     }
 
-    public ApiResponse<List<ProductoListDto>> list() {
-        return new ApiResponse<>(true, "OK", productoRepository.list());
+    public ApiResponse<List<ProductoListDto>> list(int tipo, String nombre, int idCategory, int idBrand) {
+        // return new ApiResponse<>(true, "OK", productoRepository.list());
+        List<ProductoListDto> productoListDtos = productoFilterRepository.filter(tipo, nombre, idCategory, idBrand);
+        return new ApiResponse<>(true, "OK", productoListDtos);
     }
 
     public ApiResponse<Map<String, Object>> loadExtraData() {
