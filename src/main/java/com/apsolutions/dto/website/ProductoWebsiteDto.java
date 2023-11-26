@@ -27,10 +27,11 @@ public class ProductoWebsiteDto {
         this.imagen = imagen;
     }
 
-    public ProductoWebsiteDto(Integer id, String nombre, String nombreUrl, BigDecimal precio, String imagen) {
+    public ProductoWebsiteDto(Integer id, String nombre, String nombreUrl, String marcaNombre, BigDecimal precio, String imagen) {
         this.id = id;
         this.nombre = nombre;
         this.nombreUrl = nombreUrl;
+        this.marcaNombre = marcaNombre;
         this.precio = precio;
         this.imagen = imagen;
     }
