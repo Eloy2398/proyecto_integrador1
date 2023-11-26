@@ -61,8 +61,10 @@ public class WebsiteController {
             @PathVariable("id") Integer id,
             @RequestParam(name = "brand", required = false) String brand,
             @RequestParam(name = "price", required = false) String strPriceRange,
-            @RequestParam(name = "sortBy", required = false, defaultValue = "3") Integer sortBy) {
-        return websiteService.getProductsCategory(id, brand, strPriceRange, sortBy);
+            @RequestParam(name = "sortBy", required = false, defaultValue = "3") Integer sortBy,
+            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(name = "inf", required = false, defaultValue = "1") Integer inf) {
+        return websiteService.getProductsCategory(id, brand, strPriceRange, sortBy, page, inf);
     }
 
     @GetMapping("/validate-category")
@@ -73,5 +75,10 @@ public class WebsiteController {
     @GetMapping("/get-product-data")
     public ApiResponse<ProductoWebsiteDto> getProductData(@RequestParam Integer id, @RequestParam String urlName) {
         return websiteService.getProductData(id, urlName);
+    }
+
+    @GetMapping("/get-similar-products/{id}")
+    public ApiResponse<List<ProductoWebsiteDto>> getSimilarProducts(@PathVariable("id") Integer id) {
+        return websiteService.getSimilarProducts(id);
     }
 }

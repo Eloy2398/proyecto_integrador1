@@ -5,6 +5,7 @@ import com.apsolutions.model.Categoria;
 import com.apsolutions.repository.*;
 import com.apsolutions.repository.custom.ProductoWebsiteFilterRepository;
 import com.apsolutions.util.ApiResponse;
+import org.hibernate.query.spi.Limit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,7 +30,7 @@ public class WebsiteService {
     private MarcaRepository marcaRepository;
 
     public ApiResponse<List<ProductoWebsiteDto>> getProductsToBanner() {
-        PageRequest pageRequest = PageRequest.of(1, 5, Sort.by("id").descending());
+        PageRequest pageRequest = PageRequest.of(0, 5, Sort.by("id").descending());
         return new ApiResponse<>(true, "Ok", productoWebsiteRepository.getProductsToBanner(pageRequest));
     }
 
@@ -54,7 +55,7 @@ public class WebsiteService {
     }
 
     public ApiResponse<List<ProductoWebsiteDto>> getProductsMain() {
-        PageRequest pageRequest = PageRequest.of(1, 12, Sort.by(Sort.Direction.DESC, "id"));
+        PageRequest pageRequest = PageRequest.of(0, 12, Sort.by(Sort.Direction.DESC, "id"));
         return new ApiResponse<>(true, "Ok", productoWebsiteRepository.getProductsMain(pageRequest));
     }
 
@@ -72,10 +73,20 @@ public class WebsiteService {
         return new ApiResponse<>(true, "Ok", productoDto);
     }
 
-    public ApiResponse<Map<String, Object>> getProductsCategory(Integer idCategory, String brand, String strPriceRange, Integer sortBy) {
+    public ApiResponse<Map<String, Object>> getProductsCategory(Integer idCategory, String brand, String strPriceRange, Integer sortBy, Integer page, Integer inf) {
         Map<String, Object> objectMap = new HashMap<>();
-        objectMap.put("records", productoWebsiteFilterRepository.getAll(idCategory, brand, strPriceRange, sortBy));
-        objectMap.put("totalRecords", productoWebsiteFilterRepository.getTotalRecords(idCategory, brand, strPriceRange));
+        objectMap.put("records", productoWebsiteFilterRepository.getAll(idCategory, brand, strPriceRange, sortBy, page));
+
+        if (inf == 1) {
+            objectMap.put("totalRecords", productoWebsiteFilterRepository.getTotalRecords(idCategory, brand, strPriceRange));
+        }
+
         return new ApiResponse<>(true, "Ok", objectMap);
+    }
+
+    public ApiResponse<List<ProductoWebsiteDto>> getSimilarProducts(Integer id) {
+        Integer idCategory = productoWebsiteRepository.getIdCategoryByIdProduct(id);
+        PageRequest pageRequest = PageRequest.of(0, 12);
+        return new ApiResponse<>(true, "Ok", productoWebsiteRepository.getSimilarProducts(idCategory, id, pageRequest));
     }
 }

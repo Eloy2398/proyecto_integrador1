@@ -17,8 +17,8 @@ public class ProductoWebsiteFilterRepositoryImpl implements ProductoWebsiteFilte
     private EntityManager entityManager;
 
     @Override
-    public List<ProductoWebsiteDto> getAll(int idCategory, String idBrands, String strPriceRange, int sortBy) {
-        StringBuilder jpql = new StringBuilder("SELECT new com.apsolutions.dto.website.ProductoWebsiteDto(p.id, p.nombre, p.nombreUrl, p.precio, p.imagen) FROM Producto p " +
+    public List<ProductoWebsiteDto> getAll(int idCategory, String idBrands, String strPriceRange, int sortBy, int page) {
+        StringBuilder jpql = new StringBuilder("SELECT new com.apsolutions.dto.website.ProductoWebsiteDto(p.id, p.nombre, p.nombreUrl, m.nombre, p.precio, p.imagen) FROM Producto p " +
                 "INNER JOIN p.marca m INNER JOIN p.categoria c WHERE p.estado = true AND c.mostrarweb = 1 AND m.mostrarweb = 1 AND c.id = :idCategory");
 
         double[] priceRangeValues = priceRangeValues(strPriceRange);
@@ -44,7 +44,10 @@ public class ProductoWebsiteFilterRepositoryImpl implements ProductoWebsiteFilte
             query.setParameter("maxPrice", priceRangeValues[1]);
         }
 
-        return query.setFirstResult(0).setMaxResults(9).getResultList();
+        int maxResults = 12;
+        page = (page - 1) * maxResults;
+
+        return query.setFirstResult(page).setMaxResults(maxResults).getResultList();
     }
 
     @Override
