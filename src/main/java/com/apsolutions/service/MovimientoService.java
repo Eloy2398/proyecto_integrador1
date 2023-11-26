@@ -16,6 +16,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -139,16 +141,22 @@ public class MovimientoService {
         return new ApiResponse<>(true, "Ok", movimientoDto);
     }
 
-    public ApiResponse<List<MovimientoReportDto>> filter(MovimientoReportDto movimientoReportDto) {
-        if (movimientoReportDto.getIdProducto() == null || movimientoReportDto.getIdProducto() <= 0) {
+    public ApiResponse<List<MovimientoReportDto>> filter(String fecha1, String fecha2, int idProducto) {
+        if (idProducto == 0) {
             throw new CsException("Seleccione un producto en el filtro.");
         }
 
-        Date fec1 = movimientoReportDto.getFecha1();
-        Date fec2 = movimientoReportDto.getFecha2();
-        Integer idProducto = movimientoReportDto.getIdProducto();
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        format.setLenient(true);
 
-        return new ApiResponse<>(true, "OK", movimientoRepository.filter(fec1, fec2, idProducto));
+        try{
+            Date fec1 = format.parse(fecha1);
+            Date fec2 = format.parse(fecha2);
+
+            return new ApiResponse<>(true, "OK", movimientoRepository.filter(fec1, fec2, idProducto));
+        }catch (ParseException e){
+            throw new RuntimeException(e);
+        }
 
     }
 }

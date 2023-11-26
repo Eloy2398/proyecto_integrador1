@@ -13,6 +13,7 @@ import com.apsolutions.repository.ClienteRepository;
 import com.apsolutions.repository.CotizacionRepository;
 import com.apsolutions.repository.CotizaciondetalleRepository;
 import com.apsolutions.repository.ProductoRepository;
+import com.apsolutions.repository.custom.CotizacionReportRepository;
 import com.apsolutions.util.ApiResponse;
 import com.apsolutions.util.Global;
 import jakarta.transaction.Transactional;
@@ -21,6 +22,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +36,9 @@ public class CotizacionService {
 
     @Autowired
     private ProductoRepository productoRepository;
+
+    @Autowired
+    private CotizacionReportRepository cotizacionReportRepository;
 
     @Autowired
     private CotizacionMapper cotizacionMapper;
@@ -106,12 +112,17 @@ public class CotizacionService {
         }
     }
 
-    public ApiResponse<List<CotizacionReportDto>> filter(CotizacionReportDto cotizacionReportDto) {
-        Date fec1 = cotizacionReportDto.getFecha1();
-        Date fec2 = cotizacionReportDto.getFecha2();
-        Integer idCliente = cotizacionReportDto.getIdCliente();
+    public ApiResponse<List<CotizacionReportDto>> filter(String fecha1, String fecha2, int idCliente) {
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        format.setLenient(true);
+        try {
+            Date fec1 = format.parse(fecha1);
+            Date fec2 = format.parse(fecha2);
 
-        return new ApiResponse<>(true, "OK", cotizacionRepository.filter(fec1, fec2, idCliente));
+            return new ApiResponse<>(true, "OK", cotizacionReportRepository.filter(fec1, fec2, idCliente));
+        }catch (ParseException e){
+            throw new RuntimeException(e);
+        }
 
     }
 }

@@ -45,8 +45,12 @@ public class MovimientoController {
         return movimientoService.searchPerson(query);
     }
 
-    @PostMapping("/reporte")
-    public ApiResponse<List<MovimientoReportDto>> filter(@RequestBody MovimientoReportDto movimientoReportDto) {
-        return movimientoService.filter(movimientoReportDto);
+    @GetMapping("/reporte")
+    public ApiResponse<List<MovimientoReportDto>> filter(
+            @RequestParam(value = "fecha1", required = false) String fecha1,
+            @RequestParam(value = "fecha2", required = false) String fecha2,
+            @RequestParam(value = "idProducto", defaultValue = "0", required = false) Integer idProducto
+    ) {
+        return movimientoService.filter(fecha1, fecha2, idProducto);
     }
 }

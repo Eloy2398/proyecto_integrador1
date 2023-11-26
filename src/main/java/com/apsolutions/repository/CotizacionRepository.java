@@ -45,6 +45,6 @@ public interface CotizacionRepository extends JpaRepository<Cotizacion, Integer>
 
     @Query("SELECT new com.apsolutions.dto.report.CotizacionReportDto(c.id, c.fecha, p.documento, p.nombre, c.estado, c.origen) " +
             "FROM Cotizacion c INNER JOIN c.cliente cl INNER JOIN cl.persona p WHERE c.fecha BETWEEN :fec1 AND :fec2 " +
-            "AND (:idCliente IS NULL OR c.cliente.id = :idCliente)")
+            "AND c.cliente.id = :idCliente ")
     List<CotizacionReportDto> filter(Date fec1, Date fec2, Integer idCliente);
 }
