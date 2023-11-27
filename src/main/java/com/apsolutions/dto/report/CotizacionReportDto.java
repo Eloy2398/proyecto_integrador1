@@ -1,19 +1,11 @@
 package com.apsolutions.dto.report;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CotizacionReportDto {
     private Integer idCotizacion;
 
     private Date fecha;
-
-    private Date fecha1;
-
-    private Date fecha2;
-
-    private Integer idCliente;
 
     private String docCliente;
 
@@ -49,40 +41,6 @@ public class CotizacionReportDto {
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
-    }
-
-    public Date getFecha1() {
-        return fecha1;
-    }
-
-    public void setFecha1(String fecha1) {
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-        try {
-            this.fecha1 = format.parse(fecha1);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Date getFecha2() {
-        return fecha2;
-    }
-
-    public void setFecha2(String fecha2) {
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-        try {
-            this.fecha2 = format.parse(fecha2);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Integer getIdCliente() {
-        return idCliente;
-    }
-
-    public void setIdCliente(Integer idCliente) {
-        this.idCliente = idCliente;
     }
 
     public String getDocCliente() {

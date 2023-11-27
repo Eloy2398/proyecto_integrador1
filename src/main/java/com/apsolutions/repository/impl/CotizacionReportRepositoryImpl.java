@@ -17,11 +17,11 @@ public class CotizacionReportRepositoryImpl implements CotizacionReportRepositor
     private EntityManager entityManager;
 
     @Override
-    public List<CotizacionReportDto> filter(Date fec1, Date fec2, int idCliente){
+    public List<CotizacionReportDto> filter(Date fec1, Date fec2, int idCliente) {
         StringBuilder jpql = new StringBuilder("SELECT new com.apsolutions.dto.report.CotizacionReportDto(c.id, c.fecha, p.documento, p.nombre, c.estado, c.origen) " +
                 "FROM Cotizacion c INNER JOIN c.cliente cl INNER JOIN cl.persona p WHERE c.fecha BETWEEN :fec1 AND :fec2 ");
 
-        if (idCliente > 0){
+        if (idCliente > 0) {
             jpql.append(" AND c.cliente.id = :idCliente ");
         }
 
@@ -30,7 +30,7 @@ public class CotizacionReportRepositoryImpl implements CotizacionReportRepositor
         query.setParameter("fec1", fec1);
         query.setParameter("fec2", fec2);
 
-        if (idCliente > 0){
+        if (idCliente > 0) {
             query.setParameter("idCliente", idCliente);
         }
 

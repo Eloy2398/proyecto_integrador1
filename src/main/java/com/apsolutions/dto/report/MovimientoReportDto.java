@@ -1,20 +1,12 @@
 package com.apsolutions.dto.report;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MovimientoReportDto {
     private Integer idMovimiento;
 
     private Date fecha;
-
-    private Date fecha1;
-
-    private Date fecha2;
-
-    private Integer idProducto;
 
     private Byte tipooperacion;
 
@@ -47,40 +39,6 @@ public class MovimientoReportDto {
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
-    }
-
-    public Date getFecha1() {
-        return fecha1;
-    }
-
-    public void setFecha1(String fecha1) {
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-        try {
-            this.fecha1 = format.parse(fecha1);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Date getFecha2() {
-        return fecha2;
-    }
-
-    public void setFecha2(String fecha2) {
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-        try {
-            this.fecha2 = format.parse(fecha2);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Integer getIdProducto() {
-        return idProducto;
-    }
-
-    public void setIdProducto(Integer idProducto) {
-        this.idProducto = idProducto;
     }
 
     public Byte getTipooperacion() {

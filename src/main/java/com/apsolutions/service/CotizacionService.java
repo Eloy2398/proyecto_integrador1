@@ -120,7 +120,7 @@ public class CotizacionService {
             Date fec2 = format.parse(fecha2);
 
             return new ApiResponse<>(true, "OK", cotizacionReportRepository.filter(fec1, fec2, idCliente));
-        }catch (ParseException e){
+        } catch (ParseException e) {
             throw new RuntimeException(e);
         }
 

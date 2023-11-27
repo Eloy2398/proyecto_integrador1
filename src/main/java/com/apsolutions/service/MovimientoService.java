@@ -149,12 +149,12 @@ public class MovimientoService {
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         format.setLenient(true);
 
-        try{
+        try {
             Date fec1 = format.parse(fecha1);
             Date fec2 = format.parse(fecha2);
 
             return new ApiResponse<>(true, "OK", movimientoRepository.filter(fec1, fec2, idProducto));
-        }catch (ParseException e){
+        } catch (ParseException e) {
             throw new RuntimeException(e);
         }
 
