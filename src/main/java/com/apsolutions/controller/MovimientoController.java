@@ -6,6 +6,8 @@ import com.apsolutions.dto.query.PersonaQueryDto;
 import com.apsolutions.dto.report.MovimientoReportDto;
 import com.apsolutions.service.MovimientoService;
 import com.apsolutions.util.ApiResponse;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,8 +51,15 @@ public class MovimientoController {
     public ApiResponse<List<MovimientoReportDto>> filter(
             @RequestParam(value = "fecha1", required = false) String fecha1,
             @RequestParam(value = "fecha2", required = false) String fecha2,
-            @RequestParam(value = "idProducto", defaultValue = "0", required = false) Integer idProducto
-    ) {
+            @RequestParam(value = "idProducto", defaultValue = "0", required = false) Integer idProducto) {
         return movimientoService.filter(fecha1, fecha2, idProducto);
+    }
+
+    @GetMapping("/reporte/excel")
+    public ResponseEntity<Resource> excelReport(
+            @RequestParam(value = "fecha1") String fecha1,
+            @RequestParam(value = "fecha2") String fecha2,
+            @RequestParam(value = "idProducto", defaultValue = "0", required = false) Integer idProducto) {
+        return movimientoService.excelReport(fecha1, fecha2, idProducto);
     }
 }

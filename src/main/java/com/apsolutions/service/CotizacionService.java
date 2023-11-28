@@ -16,6 +16,7 @@ import com.apsolutions.repository.ProductoRepository;
 import com.apsolutions.repository.custom.CotizacionReportRepository;
 import com.apsolutions.util.ApiResponse;
 import com.apsolutions.util.Global;
+import com.apsolutions.util.JasperReportGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -123,6 +124,5 @@ public class CotizacionService {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-
     }
 }

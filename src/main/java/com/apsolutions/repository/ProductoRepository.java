@@ -32,6 +32,9 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     @Query("SELECT p.imagen FROM Producto p WHERE p.id = :id")
     String getImage(Integer id);
 
+    @Query("SELECT p.nombre FROM Producto p WHERE p.id = :id")
+    String getName(Integer id);
+
     @Modifying
     @Query("UPDATE Producto p SET p.stock = :stock WHERE p.id = :id")
     void updateStock(Integer stock, Integer id);

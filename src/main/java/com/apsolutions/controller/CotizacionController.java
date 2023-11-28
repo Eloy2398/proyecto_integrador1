@@ -54,9 +54,7 @@ public class CotizacionController {
     public ApiResponse<List<CotizacionReportDto>> filter(
             @RequestParam(value = "fecha1", required = false) String fecha1,
             @RequestParam(value = "fecha2", required = false) String fecha2,
-            @RequestParam(value = "idCliente", defaultValue = "0", required = false) Integer idCliente
-    ) {
+            @RequestParam(value = "idCliente", defaultValue = "0", required = false) Integer idCliente) {
         return cotizacionService.filter(fecha1, fecha2, idCliente);
     }
-
 }

@@ -10,9 +10,13 @@ import com.apsolutions.model.Movimientodetalle;
 import com.apsolutions.repository.*;
 import com.apsolutions.util.ApiResponse;
 import com.apsolutions.util.Global;
+import com.apsolutions.util.JasperReportGenerator;
 import jakarta.transaction.Transactional;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +39,8 @@ public class MovimientoService {
     private PersonaRepository personaRepository;
     @Autowired
     private CotizacionRepository cotizacionRepository;
+    @Autowired
+    private JasperReportGenerator jasperReportGenerator;
 
     public MovimientoService(MovimientoRepository movimientoRepository) {
         this.movimientoRepository = movimientoRepository;
@@ -157,6 +163,30 @@ public class MovimientoService {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    public ResponseEntity<Resource> excelReport(String fecha1, String fecha2, Integer idProducto) {
+        if (idProducto == 0) {
+            throw new CsException("Seleccione un producto en el filtro.");
+        }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        List<MovimientoReportDto> movimientoReportDtoList;
+
+        try {
+            movimientoReportDtoList = movimientoRepository.filter(simpleDateFormat.parse(fecha1), simpleDateFormat.parse(fecha2), idProducto);
+        } catch (ParseException e) {
+            throw new CsException("Error al parsear fechas");
+        }
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("dateRange", fecha1 + " al " + fecha2);
+        params.put("productName", productoRepository.getName(idProducto));
+        params.put("printDate", simpleDateFormat.format(new Date()));
+        params.put("dts", new JRBeanCollectionDataSource(movimientoReportDtoList));
+
+        JasperReportDto jasperReportDto = jasperReportGenerator.generateExcel("productsReport", params);
+
+        return ResponseEntity.ok().headers(jasperReportDto.getHeaders()).contentLength(jasperReportDto.getLength()).body(jasperReportDto.getResource());
     }
 }
