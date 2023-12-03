@@ -7,6 +7,8 @@ import com.apsolutions.dto.query.PersonaQueryDto;
 import com.apsolutions.dto.report.CotizacionReportDto;
 import com.apsolutions.service.CotizacionService;
 import com.apsolutions.util.ApiResponse;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -56,5 +58,13 @@ public class CotizacionController {
             @RequestParam(value = "fecha2", required = false) String fecha2,
             @RequestParam(value = "idCliente", defaultValue = "0", required = false) Integer idCliente) {
         return cotizacionService.filter(fecha1, fecha2, idCliente);
+    }
+
+    @GetMapping("/reporte/excel")
+    public ResponseEntity<Resource> excelReport(
+            @RequestParam(value = "fecha1", required = false) String fecha1,
+            @RequestParam(value = "fecha2", required = false) String fecha2,
+            @RequestParam(value = "idCliente", defaultValue = "0", required = false) Integer idCliente) {
+        return cotizacionService.excelReport(fecha1, fecha2, idCliente);
     }
 }

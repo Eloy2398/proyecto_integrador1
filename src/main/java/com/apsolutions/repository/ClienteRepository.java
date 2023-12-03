@@ -26,6 +26,9 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     @Query("SELECT c FROM Cliente c INNER JOIN c.persona p WHERE p.id = :id")
     Optional<Cliente> obtenerById(Integer id);
 
+    @Query("SELECT p.nombre FROM Cliente c INNER JOIN c.persona p WHERE c.id = :id")
+    String getName(Integer id);
+
     @Modifying
     @Query("UPDATE Cliente c SET c.estado = :estado WHERE c.id = :id")
     void updateStatus(Boolean estado, Integer id);

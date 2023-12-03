@@ -2,6 +2,7 @@ package com.apsolutions.service;
 
 import com.apsolutions.dto.CotizacionDto;
 import com.apsolutions.dto.CotizacionListDto;
+import com.apsolutions.dto.JasperReportDto;
 import com.apsolutions.dto.query.CotizacionQueryDto;
 import com.apsolutions.dto.query.PersonaQueryDto;
 import com.apsolutions.dto.report.CotizacionReportDto;
@@ -17,16 +18,21 @@ import com.apsolutions.repository.custom.CotizacionReportRepository;
 import com.apsolutions.util.ApiResponse;
 import com.apsolutions.util.Global;
 import com.apsolutions.util.JasperReportGenerator;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.springframework.core.io.Resource;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CotizacionService {
@@ -46,6 +52,9 @@ public class CotizacionService {
 
     @Autowired
     private CotizaciondetalleRepository cotizaciondetalleRepository;
+
+    @Autowired
+    private JasperReportGenerator jasperReportGenerator;
 
     public CotizacionService(CotizacionRepository cotizacionRepository) {
         this.cotizacionRepository = cotizacionRepository;
@@ -124,5 +133,34 @@ public class CotizacionService {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public ResponseEntity<Resource> excelReport(String fecha1, String fecha2, int idCliente){
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        format.setLenient(true);
+
+        List<CotizacionReportDto> cotizacionReportDtoList;
+
+        try {
+            Date fec1 = format.parse(fecha1);
+            Date fec2 = format.parse(fecha2);
+            cotizacionReportDtoList = cotizacionReportRepository.filter(fec1, fec2, idCliente);
+        }catch (ParseException e){
+            throw new RuntimeException(e);
+        }
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("dateRange", fecha1 + " al " + fecha2);
+        if (idCliente>0){
+            params.put("clientName", clienteRepository.getName(idCliente));
+        }else{
+            params.put("clientName", "TODOS");
+        }
+        params.put("printDate", format.format(new Date()));
+        params.put("dts", new JRBeanCollectionDataSource(cotizacionReportDtoList));
+
+        JasperReportDto jasperReportDto = jasperReportGenerator.generateExcel("cotizacionReport", params);
+
+        return ResponseEntity.ok().headers(jasperReportDto.getHeaders()).contentLength(jasperReportDto.getLength()).body(jasperReportDto.getResource());
     }
 }
