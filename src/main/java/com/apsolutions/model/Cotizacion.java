@@ -19,8 +19,8 @@ public class Cotizacion {
     @JoinColumn(name = "idcliente")
     private Cliente cliente;
 
-    @Column(columnDefinition = "tinyint(1) DEFAULT 1", nullable = false)
-    private Byte estado;
+    @Column(columnDefinition = "boolean default true", nullable = false)
+    private Boolean estado;
 
     @Column(columnDefinition = "tinyint(1) DEFAULT 1", nullable = false)
     private Byte origen;
@@ -49,11 +49,11 @@ public class Cotizacion {
         this.cliente = cliente;
     }
 
-    public Byte getEstado() {
+    public Boolean getEstado() {
         return estado;
     }
 
-    public void setEstado(Byte estado) {
+    public void setEstado(Boolean estado) {
         this.estado = estado;
     }
 

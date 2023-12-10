@@ -11,14 +11,14 @@ public class CotizacionReportDto {
 
     private String nomCliente;
 
-    private Byte estado;
+    private Boolean estado;
 
     private Byte origen;
 
     public CotizacionReportDto() {
     }
 
-    public CotizacionReportDto(Integer idCotizacion, Date fecha, String docCliente, String nomCliente, Byte estado, Byte origen) {
+    public CotizacionReportDto(Integer idCotizacion, Date fecha, String docCliente, String nomCliente, Boolean estado, Byte origen) {
         this.idCotizacion = idCotizacion;
         this.fecha = fecha;
         this.docCliente = docCliente;
@@ -59,11 +59,11 @@ public class CotizacionReportDto {
         this.nomCliente = nomCliente;
     }
 
-    public Byte getEstado() {
+    public Boolean getEstado() {
         return estado;
     }
 
-    public void setEstado(Byte estado) {
+    public void setEstado(Boolean estado) {
         this.estado = estado;
     }
 

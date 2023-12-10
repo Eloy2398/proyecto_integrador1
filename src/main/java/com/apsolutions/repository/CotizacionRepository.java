@@ -17,7 +17,7 @@ import java.util.List;
 @Repository
 public interface CotizacionRepository extends JpaRepository<Cotizacion, Integer> {
     @Query("SELECT new com.apsolutions.dto.CotizacionListDto(c.id, c.fecha, c.estado, cl.id, p.documento, p.nombre) " +
-            "FROM Cotizacion c INNER JOIN c.cliente cl INNER JOIN cl.persona p")
+            "FROM Cotizacion c INNER JOIN c.cliente cl INNER JOIN cl.persona p WHERE c.origen = 1")
     List<CotizacionListDto> list();
 
     @Modifying
@@ -36,11 +36,11 @@ public interface CotizacionRepository extends JpaRepository<Cotizacion, Integer>
     Integer getTotalRegistros();
 
     @Query("SELECT new com.apsolutions.dto.query.CotizacionQueryDto(c.id, p.id, p.nombre) FROM Cotizacion c INNER JOIN c.cliente cl INNER JOIN cl.persona p " +
-            "WHERE c.estado = 1 AND p.nombre LIKE :query")
+            "WHERE c.estado = true AND p.nombre LIKE :query")
     List<CotizacionQueryDto> search(String query);
 
     @Query("SELECT new com.apsolutions.dto.query.CotizacionQueryDto(c.id, p.id, p.nombre) FROM Cotizacion c INNER JOIN c.cliente cl INNER JOIN cl.persona p " +
-            "WHERE c.estado = 1 AND c.id = :query")
+            "WHERE c.estado = true AND c.id = :query")
     List<CotizacionQueryDto> search(Integer query);
 
     @Query("SELECT new com.apsolutions.dto.report.CotizacionReportDto(c.id, c.fecha, p.documento, p.nombre, c.estado, c.origen) " +

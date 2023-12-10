@@ -7,7 +7,7 @@ public class CotizacionListDto {
 
     private Date fecha;
 
-    private Byte estado;
+    private Boolean estado;
 
     private Integer idCliente;
 
@@ -15,7 +15,7 @@ public class CotizacionListDto {
 
     private String clienteNombre;
 
-    public CotizacionListDto(Integer id, Date fecha, Byte estado, Integer idCliente, String clienteDocumento, String clienteNombre) {
+    public CotizacionListDto(Integer id, Date fecha, Boolean estado, Integer idCliente, String clienteDocumento, String clienteNombre) {
         this.id = id;
         this.fecha = fecha;
         this.estado = estado;
@@ -40,11 +40,11 @@ public class CotizacionListDto {
         this.fecha = fecha;
     }
 
-    public Byte getEstado() {
+    public Boolean getEstado() {
         return estado;
     }
 
-    public void setEstado(Byte estado) {
+    public void setEstado(Boolean estado) {
         this.estado = estado;
     }
 

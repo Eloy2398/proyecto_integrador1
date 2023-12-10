@@ -63,7 +63,7 @@ public class CotizacionService {
     public ApiResponse<String> save(CotizacionDto cotizacionDto) {
         try {
             Cotizacion cotizacion = cotizacionMapper.toEntity(cotizacionDto);
-            cotizacion.setEstado((byte) 1);
+            cotizacion.setEstado(true);
             cotizacion.setFecha(new Date());
 
             if (cotizacionDto.getIdCliente() != null && cotizacionDto.getIdCliente() > 0) {
@@ -102,7 +102,7 @@ public class CotizacionService {
 
         cotizacionRepository.updateStatus(false, id);
 
-        return new ApiResponse<>(true, Global.SUCCESSFUL_DELETE_MESSAGE);
+        return new ApiResponse<>(true, Global.SUCCESSFUL_DEREGISTER_MESSAGE);
     }
 
     public ApiResponse<CotizacionDto> read(Integer id) {
@@ -141,7 +141,7 @@ public class CotizacionService {
         }
     }
 
-    public ResponseEntity<Resource> excelReport(String fecha1, String fecha2, int idCliente){
+    public ResponseEntity<Resource> excelReport(String fecha1, String fecha2, int idCliente) {
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         format.setLenient(true);
 
@@ -151,15 +151,15 @@ public class CotizacionService {
             Date fec1 = format.parse(fecha1);
             Date fec2 = format.parse(fecha2);
             cotizacionReportDtoList = cotizacionReportRepository.filter(fec1, fec2, idCliente);
-        }catch (ParseException e){
+        } catch (ParseException e) {
             throw new RuntimeException(e);
         }
 
         Map<String, Object> params = new HashMap<>();
         params.put("dateRange", fecha1 + " al " + fecha2);
-        if (idCliente>0){
+        if (idCliente > 0) {
             params.put("clientName", clienteRepository.getName(idCliente));
-        }else{
+        } else {
             params.put("clientName", "TODOS");
         }
         params.put("printDate", format.format(new Date()));
