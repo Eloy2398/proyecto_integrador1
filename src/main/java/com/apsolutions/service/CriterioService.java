@@ -3,6 +3,7 @@ package com.apsolutions.service;
 import com.apsolutions.dto.CriterioDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.CriterioMapper;
+import com.apsolutions.mapper.CriterioopcionMapper;
 import com.apsolutions.model.Criterio;
 import com.apsolutions.model.Criterioopcion;
 import com.apsolutions.repository.CriterioRepository;
@@ -10,9 +11,9 @@ import com.apsolutions.repository.CriterioopcionRepository;
 import com.apsolutions.util.ApiResponse;
 import com.apsolutions.util.Global;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,8 @@ public class CriterioService {
     private final CriterioRepository criterioRepository;
     private final CriterioopcionRepository criterioopcionRepository;
     private final CriterioMapper criterioMapper;
+    @Autowired
+    private CriterioopcionMapper criterioopcionMapper;
 
     public CriterioService(CriterioRepository criterioRepository, CriterioopcionRepository criterioopcionRepository, CriterioMapper criterioMapper) {
         this.criterioRepository = criterioRepository;
@@ -66,13 +69,10 @@ public class CriterioService {
     }
 
     public ApiResponse<List<CriterioDto>> list() {
-        List<Criterio> criterioList = criterioRepository.findAll();
-        List<CriterioDto> criterioDtoList = new ArrayList<>();
+        List<CriterioDto> criterioDtoList = criterioMapper.toDto(criterioRepository.list());
 
-        criterioList.forEach(criterio -> {
-            CriterioDto criterioDto = criterioMapper.toDto(criterio);
-            criterioDto.setCriterioopcionList(criterioopcionRepository.listByIdCriterio(criterio.getId()));
-            criterioDtoList.add(criterioDto);
+        criterioDtoList.forEach(criterioDto -> {
+            criterioDto.setCriterioopcionList(criterioopcionMapper.toEntity(criterioopcionRepository.listByIdCriterio(criterioDto.getId())));
         });
 
         return new ApiResponse<>(true, "OK", criterioDtoList);
@@ -80,7 +80,7 @@ public class CriterioService {
 
     public ApiResponse<CriterioDto> read(Integer id) {
         CriterioDto criterioDto = criterioMapper.toDto(criterioRepository.findById(id).orElse(null));
-        criterioDto.setCriterioopcionList(criterioopcionRepository.findByIdCriterio(id));
+        criterioDto.setCriterioopcionList(criterioopcionMapper.toEntity(criterioopcionRepository.listByIdCriterio(id)));
 
         return new ApiResponse<>(true, "Ok", criterioDto);
     }

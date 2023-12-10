@@ -9,10 +9,7 @@ import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.CotizacionMapper;
 import com.apsolutions.model.Cotizacion;
 import com.apsolutions.model.Cotizaciondetalle;
-import com.apsolutions.repository.ClienteRepository;
-import com.apsolutions.repository.CotizacionRepository;
-import com.apsolutions.repository.CotizaciondetalleRepository;
-import com.apsolutions.repository.ProductoRepository;
+import com.apsolutions.repository.*;
 import com.apsolutions.repository.custom.CotizacionReportRepository;
 import com.apsolutions.util.ApiResponse;
 import com.apsolutions.util.Global;
@@ -46,6 +43,8 @@ public class CotizacionService {
 
     @Autowired
     private CotizaciondetalleRepository cotizaciondetalleRepository;
+    @Autowired
+    private CotizacionCriterioopcionRepository cotizacionCriterioopcionRepository;
 
     public CotizacionService(CotizacionRepository cotizacionRepository) {
         this.cotizacionRepository = cotizacionRepository;
@@ -63,6 +62,13 @@ public class CotizacionService {
             }
 
             Cotizacion cotizacionSaved = cotizacionRepository.save(cotizacion);
+
+            if (cotizacionDto.getCotizacionCriterioopcionList() != null) {
+                cotizacionDto.getCotizacionCriterioopcionList().forEach(cotizacionCriterioopcion -> {
+                    cotizacionCriterioopcion.setCotizacion(cotizacionSaved);
+                    cotizacionCriterioopcionRepository.save(cotizacionCriterioopcion);
+                });
+            }
 
             cotizacionDto.getCotizaciondetalleList().forEach(cotizaciondetalleDto -> {
                 Cotizaciondetalle cotizaciondetalle = new Cotizaciondetalle();

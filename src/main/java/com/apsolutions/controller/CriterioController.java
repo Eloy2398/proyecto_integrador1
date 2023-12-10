@@ -1,8 +1,6 @@
 package com.apsolutions.controller;
 
 import com.apsolutions.dto.CriterioDto;
-import com.apsolutions.dto.ProductoDto;
-import com.apsolutions.model.Criterio;
 import com.apsolutions.service.CriterioService;
 import com.apsolutions.util.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
