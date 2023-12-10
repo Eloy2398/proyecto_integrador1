@@ -4,6 +4,7 @@ import com.apsolutions.dto.*;
 import com.apsolutions.dto.query.ProductoQueryDto;
 import com.apsolutions.exception.CsException;
 import com.apsolutions.mapper.CriterioMapper;
+import com.apsolutions.mapper.CriterioopcionMapper;
 import com.apsolutions.mapper.ProductoMapper;
 import com.apsolutions.model.*;
 import com.apsolutions.repository.*;
@@ -32,6 +33,8 @@ public class ProductoService {
     private ProductoMapper productoMapper;
     @Autowired
     private CriterioMapper criterioMapper;
+    @Autowired
+    private CriterioopcionMapper criterioopcionMapper;
     @Autowired
     private CaracteristicaRepository caracteristicaRepository;
     @Autowired
@@ -187,7 +190,7 @@ public class ProductoService {
         data.put("marcaList", marcaRepository.list());
 
         List<CriterioDto> criterioDtoList = criterioMapper.toDto(criterioRepository.list());
-        criterioDtoList.forEach(criterioDto -> criterioDto.setCriterioopcionList(criterioopcionRepository.listByIdCriterio(criterioDto.getId())));
+        criterioDtoList.forEach(criterioDto -> criterioDto.setCriterioopcionList(criterioopcionMapper.toEntity(criterioopcionRepository.listByIdCriterio(criterioDto.getId()))));
 
         data.put("criterioopcionList", criterioDtoList);
 

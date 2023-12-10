@@ -1,7 +1,6 @@
 package com.apsolutions.dto;
 
-import com.apsolutions.model.Cliente;
-import com.apsolutions.model.Cotizaciondetalle;
+import com.apsolutions.model.CotizacionCriterioopcion;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,6 +17,7 @@ public class CotizacionDto {
     private String nombreCliente;
 
     private Byte origen;
+    private List<CotizacionCriterioopcion> cotizacionCriterioopcionList;
 
     private List<CotizaciondetalleDto> cotizaciondetalleList;
 
@@ -77,6 +77,14 @@ public class CotizacionDto {
 
     public void setOrigen(Byte origen) {
         this.origen = origen;
+    }
+
+    public List<CotizacionCriterioopcion> getCotizacionCriterioopcionList() {
+        return cotizacionCriterioopcionList;
+    }
+
+    public void setCotizacionCriterioopcionList(List<CotizacionCriterioopcion> cotizacionCriterioopcionList) {
+        this.cotizacionCriterioopcionList = cotizacionCriterioopcionList;
     }
 
     public List<CotizaciondetalleDto> getCotizaciondetalleList() {

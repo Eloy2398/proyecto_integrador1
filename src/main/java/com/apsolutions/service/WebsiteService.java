@@ -1,16 +1,21 @@
 package com.apsolutions.service;
 
+import com.apsolutions.dto.CotizacionDto;
+import com.apsolutions.dto.CotizaciondetalleDto;
 import com.apsolutions.dto.website.*;
 import com.apsolutions.model.Categoria;
+import com.apsolutions.model.CotizacionCriterioopcion;
 import com.apsolutions.repository.*;
 import com.apsolutions.repository.custom.ProductoWebsiteFilterRepository;
 import com.apsolutions.util.ApiResponse;
-import org.hibernate.query.spi.Limit;
+import com.apsolutions.util.HTMLTemplate;
+import com.apsolutions.util.MailGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +32,15 @@ public class WebsiteService {
     @Autowired
     private ProductoCaracteristicaRepository productoCaracteristicaRepository;
     @Autowired
+    private CriterioWebsiteRepository criterioWebsiteRepository;
+    @Autowired
     private MarcaRepository marcaRepository;
+    @Autowired
+    private CotizacionService cotizacionService;
+    @Autowired
+    private CriterioopcionRepository criterioopcionRepository;
+    @Autowired
+    private MailGenerator mailGenerator;
 
     public ApiResponse<List<ProductoWebsiteDto>> getProductsToBanner() {
         PageRequest pageRequest = PageRequest.of(0, 5, Sort.by("id").descending());
@@ -88,5 +101,49 @@ public class WebsiteService {
         Integer idCategory = productoWebsiteRepository.getIdCategoryByIdProduct(id);
         PageRequest pageRequest = PageRequest.of(0, 12);
         return new ApiResponse<>(true, "Ok", productoWebsiteRepository.getSimilarProducts(idCategory, id, pageRequest));
+    }
+
+    public ApiResponse<List<CriterioWebsiteDto>> getCriteria() {
+        List<CriterioWebsiteDto> criterioWebsiteDtoList = criterioWebsiteRepository.getAll();
+        criterioWebsiteDtoList.forEach(criterioWebsiteDto -> criterioWebsiteDto.setCriterioopcionDtoList(criterioWebsiteRepository.listByIdCriteria(criterioWebsiteDto.getId())));
+
+        return new ApiResponse<>(true, "Ok", criterioWebsiteDtoList);
+    }
+
+    public ApiResponse<List<ProductoWebsiteDto>> getProductsByCriteria(String idCriteriaValues) {
+        return new ApiResponse<>(true, "Ok", productoWebsiteFilterRepository.getByCriteria(idCriteriaValues));
+    }
+
+    public ApiResponse<String> generateQuotation(CotizacionWebsiteDto cotizacionWebsiteDto) {
+        CotizacionDto cotizacion = new CotizacionDto();
+        cotizacion.setOrigen((byte) 2);
+
+        String[] arrCriterioopcionList = cotizacionWebsiteDto.getCriterioopcionList().split(",");
+
+        List<CotizacionCriterioopcion> cotizacionCriterioopcionList = new ArrayList<>();
+        for (int i = 0; i < arrCriterioopcionList.length; i++) {
+            CotizacionCriterioopcion cotizacionCriterioopcion = new CotizacionCriterioopcion();
+            cotizacionCriterioopcion.setCriterioopcion(criterioopcionRepository.findById(Integer.parseInt(arrCriterioopcionList[i])).orElse(null));
+            cotizacionCriterioopcionList.add(cotizacionCriterioopcion);
+        }
+        cotizacion.setCotizacionCriterioopcionList(cotizacionCriterioopcionList);
+
+        String[] arrProductoList = cotizacionWebsiteDto.getProductoList().split(",");
+
+        List<CotizaciondetalleDto> cotizaciondetalleDtoList = new ArrayList<>();
+        for (int i = 0; i < arrProductoList.length; i++) {
+            CotizaciondetalleDto cotizaciondetalleDto = new CotizaciondetalleDto();
+            cotizaciondetalleDto.setIdProducto(Integer.parseInt(arrProductoList[i]));
+            cotizaciondetalleDto.setCantidad((short) 1);
+            cotizaciondetalleDto.setPrecio(productoWebsiteRepository.getPrice(cotizaciondetalleDto.getIdProducto()));
+            cotizaciondetalleDtoList.add(cotizaciondetalleDto);
+        }
+        cotizacion.setCotizaciondetalleList(cotizaciondetalleDtoList);
+
+        ApiResponse<String> apiResponse = cotizacionService.save(cotizacion);
+
+        mailGenerator.sendMessageHTML(cotizacionWebsiteDto.getEmail(), HTMLTemplate.MESSAGE01);
+
+        return apiResponse;
     }
 }

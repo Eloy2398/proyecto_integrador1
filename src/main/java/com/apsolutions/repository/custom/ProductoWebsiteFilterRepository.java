@@ -9,4 +9,6 @@ public interface ProductoWebsiteFilterRepository {
     List<ProductoWebsiteDto> getAll(int idCategory, String idBrands, String strPriceRange, int sortBy, int page);
 
     Long getTotalRecords(int idCategory, String idBrands, String strPriceRange);
+
+    List<ProductoWebsiteDto> getByCriteria(String idCriteriaValues);
 }

@@ -10,6 +10,9 @@ public class CriterioDto {
 
     private String nombre;
 
+    private Byte ordenMostrar;
+    private Byte nivelImportancia;
+
     private Boolean estado;
 
     private List<Criterioopcion> criterioopcionList;
@@ -28,6 +31,22 @@ public class CriterioDto {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public Byte getOrdenMostrar() {
+        return ordenMostrar;
+    }
+
+    public void setOrdenMostrar(Byte ordenMostrar) {
+        this.ordenMostrar = ordenMostrar;
+    }
+
+    public Byte getNivelImportancia() {
+        return nivelImportancia;
+    }
+
+    public void setNivelImportancia(Byte nivelImportancia) {
+        this.nivelImportancia = nivelImportancia;
     }
 
     public Boolean getEstado() {

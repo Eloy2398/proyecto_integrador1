@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,5 +30,8 @@ public interface ProductoWebsiteRepository extends JpaRepository<Producto, Integ
     List<ProductoWebsiteDto> getSimilarProducts(int idCategory, int idProduct, Pageable pageable);
 
     @Query("SELECT p.categoria.id FROM Producto p WHERE p.id = :id")
-    Integer getIdCategoryByIdProduct(Integer id);
+    Integer getIdCategoryByIdProduct(int id);
+
+    @Query("SELECT p.precio FROM Producto p WHERE p.id = :id")
+    BigDecimal getPrice(int id);
 }

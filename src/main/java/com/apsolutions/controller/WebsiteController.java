@@ -1,8 +1,6 @@
 package com.apsolutions.controller;
 
-import com.apsolutions.dto.website.CategoriaWebsiteDto;
-import com.apsolutions.dto.website.MarcaWebsiteDto;
-import com.apsolutions.dto.website.ProductoWebsiteDto;
+import com.apsolutions.dto.website.*;
 import com.apsolutions.model.Categoria;
 import com.apsolutions.service.WebsiteService;
 import com.apsolutions.util.ApiResponse;
@@ -80,5 +78,20 @@ public class WebsiteController {
     @GetMapping("/get-similar-products/{id}")
     public ApiResponse<List<ProductoWebsiteDto>> getSimilarProducts(@PathVariable("id") Integer id) {
         return websiteService.getSimilarProducts(id);
+    }
+
+    @GetMapping("/get-criteria")
+    public ApiResponse<List<CriterioWebsiteDto>> getCriteria() {
+        return websiteService.getCriteria();
+    }
+
+    @GetMapping("/get-products-by-criteria")
+    public ApiResponse<List<ProductoWebsiteDto>> getProductsByCriteria(@RequestParam("values") String idCriteriaValues) {
+        return websiteService.getProductsByCriteria(idCriteriaValues);
+    }
+
+    @PostMapping("/generate-quotation")
+    public ApiResponse<String> generateQuotation(@RequestBody CotizacionWebsiteDto cotizacionWebsiteDto) {
+        return websiteService.generateQuotation(cotizacionWebsiteDto);
     }
 }

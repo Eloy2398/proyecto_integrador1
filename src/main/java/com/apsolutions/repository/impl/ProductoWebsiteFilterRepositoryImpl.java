@@ -97,4 +97,15 @@ public class ProductoWebsiteFilterRepositoryImpl implements ProductoWebsiteFilte
 
         return new double[]{0, 0};
     }
+
+    @Override
+    public List<ProductoWebsiteDto> getByCriteria(String idCriteriaValues) {
+        String jpql = "SELECT new com.apsolutions.dto.website.ProductoWebsiteDto(p.id, p.nombre, p.nombreUrl, p.marca.nombre, p.precio, p.imagen) FROM ProductoCriterioopcion pc " +
+                "INNER JOIN pc.producto p INNER JOIN pc.criterioopcion co INNER JOIN co.criterio c WHERE pc.estado = true AND co.id IN (" + idCriteriaValues + ") " +
+                "GROUP BY p.id ORDER BY SUM(c.nivelImportancia) DESC";
+
+        TypedQuery<ProductoWebsiteDto> query = entityManager.createQuery(jpql, ProductoWebsiteDto.class);
+
+        return query.setMaxResults(3).getResultList();
+    }
 }
