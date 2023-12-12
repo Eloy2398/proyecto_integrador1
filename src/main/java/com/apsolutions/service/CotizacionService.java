@@ -2,6 +2,7 @@ package com.apsolutions.service;
 
 import com.apsolutions.dto.CotizacionDto;
 import com.apsolutions.dto.CotizacionListDto;
+import com.apsolutions.dto.CotizaciondetalleDto;
 import com.apsolutions.dto.JasperReportDto;
 import com.apsolutions.dto.query.CotizacionQueryDto;
 import com.apsolutions.dto.query.PersonaQueryDto;
@@ -63,7 +64,7 @@ public class CotizacionService {
     public ApiResponse<Integer> save(CotizacionDto cotizacionDto) {
         try {
             Cotizacion cotizacion = cotizacionMapper.toEntity(cotizacionDto);
-            cotizacion.setEstado(true);
+            cotizacion.setEstado((byte) 1);
             cotizacion.setFecha(new Date());
 
             if (cotizacionDto.getIdCliente() != null && cotizacionDto.getIdCliente() > 0) {
@@ -100,7 +101,7 @@ public class CotizacionService {
             throw new CsException(Global.REGISTER_NOT_FOUND);
         }
 
-        cotizacionRepository.updateStatus(false, id);
+        cotizacionRepository.updateStatus((byte) 2, id);
 
         return new ApiResponse<>(true, Global.SUCCESSFUL_DEREGISTER_MESSAGE);
     }
@@ -122,9 +123,9 @@ public class CotizacionService {
 
     public ApiResponse<List<CotizacionQueryDto>> search(String query) {
         if (Character.isDigit(query.charAt(0))) {
-            return new ApiResponse<>(true, "Ok", cotizacionRepository.search(Integer.parseInt(query)));
+            return new ApiResponse<>(true, "Ok", cotizacionRepository.searchById(Integer.parseInt(query)));
         } else {
-            return new ApiResponse<>(true, "Ok", cotizacionRepository.search(query + "%"));
+            return new ApiResponse<>(true, "Ok", cotizacionRepository.searchByName(query + "%"));
         }
     }
 
@@ -132,10 +133,7 @@ public class CotizacionService {
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         format.setLenient(true);
         try {
-            Date fec1 = format.parse(fecha1);
-            Date fec2 = format.parse(fecha2);
-
-            return new ApiResponse<>(true, "OK", cotizacionReportRepository.filter(fec1, fec2, idCliente));
+            return new ApiResponse<>(true, "OK", cotizacionReportRepository.filter(format.parse(fecha1), format.parse(fecha2), idCliente));
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -148,25 +146,23 @@ public class CotizacionService {
         List<CotizacionReportDto> cotizacionReportDtoList;
 
         try {
-            Date fec1 = format.parse(fecha1);
-            Date fec2 = format.parse(fecha2);
-            cotizacionReportDtoList = cotizacionReportRepository.filter(fec1, fec2, idCliente);
+            cotizacionReportDtoList = cotizacionReportRepository.filter(format.parse(fecha1), format.parse(fecha2), idCliente);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
 
         Map<String, Object> params = new HashMap<>();
         params.put("dateRange", fecha1 + " al " + fecha2);
-        if (idCliente > 0) {
-            params.put("clientName", clienteRepository.getName(idCliente));
-        } else {
-            params.put("clientName", "TODOS");
-        }
+        params.put("clientName", idCliente > 0 ? clienteRepository.getName(idCliente) : "TODOS");
         params.put("printDate", format.format(new Date()));
         params.put("dts", new JRBeanCollectionDataSource(cotizacionReportDtoList));
 
         JasperReportDto jasperReportDto = jasperReportGenerator.generateExcel("cotizacionReport", params);
 
         return ResponseEntity.ok().headers(jasperReportDto.getHeaders()).contentLength(jasperReportDto.getLength()).body(jasperReportDto.getResource());
+    }
+
+    public ApiResponse<List<CotizaciondetalleDto>> getDetails(Integer id) {
+        return new ApiResponse<>(true, "Ok", cotizaciondetalleRepository.listByIdCotizacionSimplifado(id));
     }
 }

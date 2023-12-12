@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface MovimientoRepository extends JpaRepository<Movimiento, Integer> {
 
-    @Query("SELECT new com.apsolutions.dto.MovimientoListDto(m.id, m.fecha, m.tipo, p.nombre, m.descripcion, m.estado) FROM Movimiento m LEFT JOIN m.persona p")
+    @Query("SELECT new com.apsolutions.dto.MovimientoListDto(m.id, m.fecha, m.tipo, p.nombre, m.descripcion, m.estado) FROM Movimiento m LEFT JOIN m.persona p ORDER BY m.id DESC")
     List<MovimientoListDto> list();
 
     @Modifying
@@ -26,7 +26,7 @@ public interface MovimientoRepository extends JpaRepository<Movimiento, Integer>
             "WHERE m.id = :id")
     MovimientoDto read(int id);
 
-    @Query("SELECT new com.apsolutions.dto.report.MovimientoReportDto(m.id, m.fecha, m.tipo, md.cantidad, md.precio) " +
+    @Query("SELECT new com.apsolutions.dto.report.MovimientoReportDto(m.id, m.fecha, CASE WHEN m.tipo = 1 THEN 'INGRESO' ELSE 'SALIDA' END, md.cantidad, md.precio) " +
             "FROM Movimientodetalle md INNER JOIN md.movimiento m WHERE md.movimiento.fecha BETWEEN :fec1 AND :fec2 " +
             "AND md.producto.id = :idProducto")
     List<MovimientoReportDto> filter(Date fec1, Date fec2, Integer idProducto);

@@ -14,6 +14,6 @@ public interface CotizaciondetalleRepository extends JpaRepository<Cotizaciondet
     @Query("SELECT c FROM Cotizaciondetalle c WHERE c.cotizacion.id = :idCotizacion")
     List<Cotizaciondetalle> listByIdCotizacion(Integer idCotizacion);
 
-    @Query("SELECT new com.apsolutions.dto.CotizaciondetalleDto(p.nombre, cd.cantidad, cd.precio) FROM Cotizaciondetalle cd INNER JOIN cd.producto p WHERE cd.cotizacion.id = :idCotizacion")
+    @Query("SELECT new com.apsolutions.dto.CotizaciondetalleDto(p.id, p.nombre, cd.cantidad, cd.precio) FROM Cotizaciondetalle cd INNER JOIN cd.producto p WHERE cd.cotizacion.id = :idCotizacion")
     List<CotizaciondetalleDto> listByIdCotizacionSimplifado(Integer idCotizacion);
 }

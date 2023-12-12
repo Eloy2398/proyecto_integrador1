@@ -11,7 +11,8 @@ public class CotizaciondetalleDto {
     public CotizaciondetalleDto() {
     }
 
-    public CotizaciondetalleDto(String nombreProducto, Short cantidad, BigDecimal precio) {
+    public CotizaciondetalleDto(Integer idProducto, String nombreProducto, Short cantidad, BigDecimal precio) {
+        this.idProducto = idProducto;
         this.nombreProducto = nombreProducto;
         this.cantidad = cantidad;
         this.precio = precio;

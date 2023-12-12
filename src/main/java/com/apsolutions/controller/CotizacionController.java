@@ -2,6 +2,7 @@ package com.apsolutions.controller;
 
 import com.apsolutions.dto.CotizacionDto;
 import com.apsolutions.dto.CotizacionListDto;
+import com.apsolutions.dto.CotizaciondetalleDto;
 import com.apsolutions.dto.query.CotizacionQueryDto;
 import com.apsolutions.dto.query.PersonaQueryDto;
 import com.apsolutions.dto.report.CotizacionReportDto;
@@ -52,13 +53,24 @@ public class CotizacionController {
         return cotizacionService.searchClient(query);
     }
 
+    @GetMapping("/obtenerDetalles/{id}")
+    public ApiResponse<List<CotizaciondetalleDto>> getDetails(@PathVariable("id") Integer id) {
+        return cotizacionService.getDetails(id);
+    }
+
     @GetMapping("/reporte")
-    public ApiResponse<List<CotizacionReportDto>> filter(@RequestParam(value = "fecha1", required = false) String fecha1, @RequestParam(value = "fecha2", required = false) String fecha2, @RequestParam(value = "idCliente", defaultValue = "0", required = false) Integer idCliente) {
+    public ApiResponse<List<CotizacionReportDto>> filter(
+            @RequestParam(value = "fecha1", required = false) String fecha1,
+            @RequestParam(value = "fecha2", required = false) String fecha2,
+            @RequestParam(value = "idCliente", defaultValue = "0", required = false) Integer idCliente) {
         return cotizacionService.filter(fecha1, fecha2, idCliente);
     }
 
     @GetMapping("/reporte/excel")
-    public ResponseEntity<Resource> excelReport(@RequestParam(value = "fecha1", required = false) String fecha1, @RequestParam(value = "fecha2", required = false) String fecha2, @RequestParam(value = "idCliente", defaultValue = "0", required = false) Integer idCliente) {
+    public ResponseEntity<Resource> excelReport(
+            @RequestParam(value = "fecha1", required = false) String fecha1,
+            @RequestParam(value = "fecha2", required = false) String fecha2,
+            @RequestParam(value = "idCliente", defaultValue = "0", required = false) Integer idCliente) {
         return cotizacionService.excelReport(fecha1, fecha2, idCliente);
     }
 }

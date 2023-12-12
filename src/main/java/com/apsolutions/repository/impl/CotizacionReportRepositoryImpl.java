@@ -18,8 +18,10 @@ public class CotizacionReportRepositoryImpl implements CotizacionReportRepositor
 
     @Override
     public List<CotizacionReportDto> filter(Date fec1, Date fec2, int idCliente) {
-        StringBuilder jpql = new StringBuilder("SELECT new com.apsolutions.dto.report.CotizacionReportDto(c.id, c.fecha, p.documento, p.nombre, c.estado, c.origen) " +
-                "FROM Cotizacion c INNER JOIN c.cliente cl INNER JOIN cl.persona p WHERE c.fecha BETWEEN :fec1 AND :fec2 ");
+        StringBuilder jpql = new StringBuilder("SELECT new com.apsolutions.dto.report.CotizacionReportDto(c.id, c.fecha, p.documento, p.nombre, " +
+                "CASE WHEN c.estado = 1 THEN 'REGISTRADO' WHEN c.estado = 2 THEN 'ANULADO' ELSE 'PROCESADO' END, " +
+                "CASE WHEN c.origen = 1 THEN 'SISTEMA' ELSE 'WEB' END) " +
+                "FROM Cotizacion c LEFT JOIN c.cliente cl LEFT JOIN cl.persona p WHERE c.fecha BETWEEN :fec1 AND :fec2 ");
 
         if (idCliente > 0) {
             jpql.append(" AND c.cliente.id = :idCliente ");

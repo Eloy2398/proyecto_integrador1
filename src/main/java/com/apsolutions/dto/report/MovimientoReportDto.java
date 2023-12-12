@@ -8,7 +8,7 @@ public class MovimientoReportDto {
 
     private Date fecha;
 
-    private Byte tipooperacion;
+    private String tipooperacion;
 
     private Short cantidad;
 
@@ -17,7 +17,7 @@ public class MovimientoReportDto {
     public MovimientoReportDto() {
     }
 
-    public MovimientoReportDto(Integer idMovimiento, Date fecha, Byte tipooperacion, Short cantidad, BigDecimal precio) {
+    public MovimientoReportDto(Integer idMovimiento, Date fecha, String tipooperacion, Short cantidad, BigDecimal precio) {
         this.idMovimiento = idMovimiento;
         this.fecha = fecha;
         this.tipooperacion = tipooperacion;
@@ -41,11 +41,11 @@ public class MovimientoReportDto {
         this.fecha = fecha;
     }
 
-    public Byte getTipooperacion() {
+    public String getTipooperacion() {
         return tipooperacion;
     }
 
-    public void setTipooperacion(Byte tipooperacion) {
+    public void setTipooperacion(String tipooperacion) {
         this.tipooperacion = tipooperacion;
     }
 

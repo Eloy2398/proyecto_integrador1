@@ -84,6 +84,10 @@ public class MovimientoService {
                 productoRepository.updateStock(stock, movimientodetalleDto.getIdProducto());
             });
 
+            if (movimientoDto.getIdCotizacion() != null && movimientoDto.getIdCotizacion() > 0) {
+                cotizacionRepository.updateStatus((byte) 3, movimientoDto.getId());
+            }
+
             return new ApiResponse<>(true, Global.SUCCESSFUL_INSERT_MESSAGE);
         } catch (DataIntegrityViolationException | JpaObjectRetrievalFailureException e) {
             throw new CsException(Global.DATA_INTEGRITY_ERROR + e.getMessage());
