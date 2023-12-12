@@ -11,6 +11,7 @@ public class Global {
     public final static String SUCCESSFUL_DEREGISTER_MESSAGE = "Se anuló correctamente";
     public final static String REGISTER_NOT_FOUND = "No se encontró registro";
     public final static String DATA_INTEGRITY_ERROR = "Error de integridad de datos";
+    public final static String NAME_COMPANY = "ApSolutions";
     public final static int INPUT_TYPE = 1;
     public final static int OUTPUT_TYPE = 2;
 }

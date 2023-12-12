@@ -1,7 +1,7 @@
 package com.apsolutions.util;
 
 public class HTMLTemplate {
-    public static final String MESSAGE01 = "<!DOCTYPE html>\n" +
+    private static final String TPL01 = "<!DOCTYPE html>\n" +
             "<html lang=\"es\">\n" +
             "\n" +
             "<head>\n" +
@@ -75,7 +75,7 @@ public class HTMLTemplate {
             "<body>\n" +
             "    <div class=\"container\">\n" +
             "        <h2>Confirmación de Cotización</h2>\n" +
-            "        <p>¡Hola [Nombre del Cliente]!</p>\n" +
+            "        <p>¡Hola Customer_Name!</p>\n" +
             "        <p>Tu cotización ha sido generada con éxito. A continuación, encontrarás un resumen de tus selecciones:</p>\n" +
             "\n" +
             "        <div class=\"details\">\n" +
@@ -83,15 +83,24 @@ public class HTMLTemplate {
             "            <p>Se ha adjuntado un archivo PDF con los detalles completos de tu cotización.</p>\n" +
             "        </div>\n" +
             "\n" +
-            "        <a href=\"url-a-tu-pdf\" class=\"download-link\" download>Descargar Cotización en PDF</a>\n" +
+            "        <a href=\"Pdf_Download_Link\" class=\"download-link\" download>Descargar Cotización en PDF</a>\n" +
             "\n" +
             "        <div class=\"footer\">\n" +
             "            <p>Gracias por elegir nuestro servicio. Si tienes alguna pregunta, no dudes en ponerte en contacto con nosotros.</p>\n" +
             "            <p>Equipo de Cotizaciones</p>\n" +
-            "            <p>[Nombre de tu Empresa]</p>\n" +
+            "            <p>" + Global.NAME_COMPANY + "</p>\n" +
             "        </div>\n" +
             "    </div>\n" +
             "</body>\n" +
             "\n" +
             "</html>";
+
+    public static String generate(String customerName, String pdfDownloadLink) {
+        String tplReturn = TPL01;
+
+        tplReturn = tplReturn.replaceAll("Customer_Name", customerName);
+        tplReturn = tplReturn.replaceAll("Pdf_Download_Link", pdfDownloadLink);
+
+        return tplReturn;
+    }
 }

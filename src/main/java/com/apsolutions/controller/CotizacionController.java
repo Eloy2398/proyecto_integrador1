@@ -23,7 +23,7 @@ public class CotizacionController {
     }
 
     @PostMapping("/guardar")
-    public ApiResponse<String> save(@RequestBody CotizacionDto cotizacionDto) {
+    public ApiResponse<Integer> save(@RequestBody CotizacionDto cotizacionDto) {
         return cotizacionService.save(cotizacionDto);
     }
 
@@ -53,18 +53,12 @@ public class CotizacionController {
     }
 
     @GetMapping("/reporte")
-    public ApiResponse<List<CotizacionReportDto>> filter(
-            @RequestParam(value = "fecha1", required = false) String fecha1,
-            @RequestParam(value = "fecha2", required = false) String fecha2,
-            @RequestParam(value = "idCliente", defaultValue = "0", required = false) Integer idCliente) {
+    public ApiResponse<List<CotizacionReportDto>> filter(@RequestParam(value = "fecha1", required = false) String fecha1, @RequestParam(value = "fecha2", required = false) String fecha2, @RequestParam(value = "idCliente", defaultValue = "0", required = false) Integer idCliente) {
         return cotizacionService.filter(fecha1, fecha2, idCliente);
     }
 
     @GetMapping("/reporte/excel")
-    public ResponseEntity<Resource> excelReport(
-            @RequestParam(value = "fecha1", required = false) String fecha1,
-            @RequestParam(value = "fecha2", required = false) String fecha2,
-            @RequestParam(value = "idCliente", defaultValue = "0", required = false) Integer idCliente) {
+    public ResponseEntity<Resource> excelReport(@RequestParam(value = "fecha1", required = false) String fecha1, @RequestParam(value = "fecha2", required = false) String fecha2, @RequestParam(value = "idCliente", defaultValue = "0", required = false) Integer idCliente) {
         return cotizacionService.excelReport(fecha1, fecha2, idCliente);
     }
 }

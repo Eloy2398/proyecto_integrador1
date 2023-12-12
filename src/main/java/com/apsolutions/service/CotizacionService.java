@@ -60,7 +60,7 @@ public class CotizacionService {
     }
 
     @Transactional
-    public ApiResponse<String> save(CotizacionDto cotizacionDto) {
+    public ApiResponse<Integer> save(CotizacionDto cotizacionDto) {
         try {
             Cotizacion cotizacion = cotizacionMapper.toEntity(cotizacionDto);
             cotizacion.setEstado(true);
@@ -70,25 +70,25 @@ public class CotizacionService {
                 cotizacion.setCliente(clienteRepository.findById(cotizacionDto.getIdCliente()).orElse(null));
             }
 
-            Cotizacion cotizacionSaved = cotizacionRepository.save(cotizacion);
+            Cotizacion quotationSaved = cotizacionRepository.save(cotizacion);
 
             if (cotizacionDto.getCotizacionCriterioopcionList() != null) {
                 cotizacionDto.getCotizacionCriterioopcionList().forEach(cotizacionCriterioopcion -> {
-                    cotizacionCriterioopcion.setCotizacion(cotizacionSaved);
+                    cotizacionCriterioopcion.setCotizacion(quotationSaved);
                     cotizacionCriterioopcionRepository.save(cotizacionCriterioopcion);
                 });
             }
 
             cotizacionDto.getCotizaciondetalleList().forEach(cotizaciondetalleDto -> {
                 Cotizaciondetalle cotizaciondetalle = new Cotizaciondetalle();
-                cotizaciondetalle.setCotizacion(cotizacionSaved);
+                cotizaciondetalle.setCotizacion(quotationSaved);
                 cotizaciondetalle.setProducto(productoRepository.findById(cotizaciondetalleDto.getIdProducto()).orElse(null));
                 cotizaciondetalle.setPrecio(cotizaciondetalleDto.getPrecio());
                 cotizaciondetalle.setCantidad(cotizaciondetalleDto.getCantidad());
                 cotizaciondetalleRepository.save(cotizaciondetalle);
             });
 
-            return new ApiResponse<>(true, Global.SUCCESSFUL_INSERT_MESSAGE);
+            return new ApiResponse<>(true, Global.SUCCESSFUL_INSERT_MESSAGE, quotationSaved.getId());
         } catch (DataIntegrityViolationException | JpaObjectRetrievalFailureException e) {
             throw new CsException(Global.DATA_INTEGRITY_ERROR + e.getMessage());
         }

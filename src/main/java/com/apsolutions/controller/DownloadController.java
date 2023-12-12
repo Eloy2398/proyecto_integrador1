@@ -15,7 +15,6 @@ public class DownloadController {
 
     private final DownloadService downloadService;
 
-
     public DownloadController(DownloadService downloadService) {
         this.downloadService = downloadService;
     }
@@ -33,5 +32,10 @@ public class DownloadController {
     @GetMapping("/marca/{filename}")
     public ResponseEntity<Resource> download_mar(@PathVariable("filename") String filename) {
         return downloadService.download(filename, Global.DIR_BRANDS);
+    }
+
+    @GetMapping("/cotizacion/{code}")
+    public ResponseEntity<Resource> download_pdf(@PathVariable("code") String code) {
+        return downloadService.downloadPdf(code);
     }
 }

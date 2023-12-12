@@ -1,5 +1,6 @@
 package com.apsolutions.service;
 
+import com.apsolutions.config.ServerProperties;
 import com.apsolutions.dto.CotizacionDto;
 import com.apsolutions.dto.CotizaciondetalleDto;
 import com.apsolutions.dto.website.*;
@@ -8,6 +9,7 @@ import com.apsolutions.model.CotizacionCriterioopcion;
 import com.apsolutions.repository.*;
 import com.apsolutions.repository.custom.ProductoWebsiteFilterRepository;
 import com.apsolutions.util.ApiResponse;
+import com.apsolutions.util.Encryptor;
 import com.apsolutions.util.HTMLTemplate;
 import com.apsolutions.util.MailGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,8 @@ public class WebsiteService {
     private CriterioopcionRepository criterioopcionRepository;
     @Autowired
     private MailGenerator mailGenerator;
+    @Autowired
+    private ServerProperties serverProperties;
 
     public ApiResponse<List<ProductoWebsiteDto>> getProductsToBanner() {
         PageRequest pageRequest = PageRequest.of(0, 5, Sort.by("id").descending());
@@ -140,10 +144,12 @@ public class WebsiteService {
         }
         cotizacion.setCotizaciondetalleList(cotizaciondetalleDtoList);
 
-        ApiResponse<String> apiResponse = cotizacionService.save(cotizacion);
+        ApiResponse<Integer> apiResponse = cotizacionService.save(cotizacion);
 
-        mailGenerator.sendMessageHTML(cotizacionWebsiteDto.getEmail(), HTMLTemplate.MESSAGE01);
+        String codeEncrypted = Encryptor.encryptToUri(apiResponse.getData());
+        String pdfDownloadLink = serverProperties.getAll() + "/api/download/cotizacion/" + codeEncrypted;
+        mailGenerator.sendMessageHTML(cotizacionWebsiteDto.getEmail(), HTMLTemplate.generate("Eloy Huallama", pdfDownloadLink));
 
-        return apiResponse;
+        return new ApiResponse<>(true, apiResponse.getMessage());
     }
 }

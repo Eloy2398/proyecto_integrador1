@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "storage.path")
 public class StoragePathProperties {
-
     private String imageUploadDir;
     private String fileUploadDir;
 
