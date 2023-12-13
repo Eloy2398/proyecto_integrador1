@@ -6,7 +6,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,9 +103,5 @@ public class FileStorage {
         }
 
         return true;
-    }
-
-    public String getFullFilePath(String filename, String dir) {
-        return ServletUriComponentsBuilder.fromCurrentContextPath().path(storagePathProperties.getImageUploadDir() + "//" + dir + "//").path(filename).toUriString();
     }
 }

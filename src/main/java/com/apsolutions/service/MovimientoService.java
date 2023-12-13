@@ -85,7 +85,7 @@ public class MovimientoService {
             });
 
             if (movimientoDto.getIdCotizacion() != null && movimientoDto.getIdCotizacion() > 0) {
-                cotizacionRepository.updateStatus((byte) 3, movimientoDto.getId());
+                cotizacionRepository.updateStatus((byte) 3, movimientoDto.getIdCotizacion());
             }
 
             return new ApiResponse<>(true, Global.SUCCESSFUL_INSERT_MESSAGE);
@@ -133,6 +133,10 @@ public class MovimientoService {
             });
 
             movimientoRepository.updateStatus(false, id);
+
+            if (movimiento.get().getCotizacion() != null) {
+                cotizacionRepository.updateStatus((byte) 1, movimiento.get().getCotizacion().getId());
+            }
 
             return new ApiResponse<>(true, Global.SUCCESSFUL_DEREGISTER_MESSAGE);
         } else {

@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -40,4 +41,7 @@ public interface CotizacionRepository extends JpaRepository<Cotizacion, Integer>
     @Query("SELECT new com.apsolutions.dto.query.CotizacionQueryDto(c.id, p.id, p.nombre) FROM Cotizacion c LEFT JOIN c.cliente cl LEFT JOIN cl.persona p " +
             "WHERE c.estado = 1 AND c.id = :query")
     List<CotizacionQueryDto> searchById(Integer query);
+
+    @Query("SELECT c.fecha FROM Cotizacion c WHERE c.id = :id")
+    Date getDate(int id);
 }

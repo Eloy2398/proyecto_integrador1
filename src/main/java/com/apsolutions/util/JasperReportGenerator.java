@@ -19,7 +19,7 @@ public class JasperReportGenerator {
     }
 
     public JasperReportDto generatePdf(String reportName, Map<String, Object> params) {
-        byte[] byteArray = jasperReportManager.generateExcel(reportName, params);
+        byte[] byteArray = jasperReportManager.generatePdf(reportName, params);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         headers.setContentDispositionFormData(reportName, reportName + ".pdf");

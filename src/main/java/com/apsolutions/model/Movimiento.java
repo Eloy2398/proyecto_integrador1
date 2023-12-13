@@ -23,7 +23,7 @@ public class Movimiento {
     private Persona persona;
     @Column(length = 150)
     private String descripcion;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "idcotizacion")
     private Cotizacion cotizacion;
     @Column(columnDefinition = "boolean default true", nullable = false)

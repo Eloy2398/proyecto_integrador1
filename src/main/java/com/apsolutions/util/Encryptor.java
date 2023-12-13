@@ -1,16 +1,17 @@
 package com.apsolutions.util;
 
 import javax.crypto.*;
-import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
+import java.util.Arrays;
+import java.util.Base64;
 
 public class Encryptor {
     private static final String NAME_SECRET_KEY = "@Ap-Solutions-Key";
+    private static final String ALGORITHM = "AES/ECB/PKCS5PADDING";
 
     public static String encrypt(String valueToEncrypt) {
         return execEncrypt(valueToEncrypt);
@@ -20,80 +21,46 @@ public class Encryptor {
         return execEncrypt(String.valueOf(valueToEncrypt));
     }
 
-    public static String encryptToUri(String valueToEncrypt) {
-        return execEncryptToUri(valueToEncrypt);
-    }
-
-    public static String encryptToUri(int valueToEncrypt) {
-        return execEncryptToUri(String.valueOf(valueToEncrypt));
-    }
-
     public static String decrypt(String valueEncrypted) {
         return execDecrypt(valueEncrypted);
     }
 
-    public static String decryptFromUri(String valueEncrypted) {
-        return execDecryptFromUri(valueEncrypted);
-    }
-
-    private static String execEncrypt(String value) {
+    private static String execEncrypt(String valueToEncrypt) {
         try {
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, generateSecretKey());
-            byte[] valueBytesEncrypted = cipher.doFinal(value.getBytes(StandardCharsets.UTF_8));
-            return new String(valueBytesEncrypted, StandardCharsets.UTF_8);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException |
-                 InvalidKeyException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
-    private static String execEncryptToUri(String value) {
-        try {
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, generateSecretKey());
-            byte[] valueBytesEncrypted = cipher.doFinal(value.getBytes(StandardCharsets.UTF_8));
-            return new String(valueBytesEncrypted, StandardCharsets.UTF_8);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException |
-                 InvalidKeyException e) {
+            byte[] valueEncrypted = cipher.doFinal(valueToEncrypt.getBytes(StandardCharsets.UTF_8));
+            return Base64.getEncoder().encodeToString(valueEncrypted);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException |
+                 BadPaddingException e) {
             throw new RuntimeException(e);
         }
     }
 
     private static String execDecrypt(String valueEncrypted) {
         try {
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, generateSecretKey());
-            byte[] valueBytesDecrypted = cipher.doFinal(valueEncrypted.getBytes(StandardCharsets.UTF_8));
-            return new String(valueBytesDecrypted, StandardCharsets.UTF_8);
+
+            byte[] valueDecrypted = cipher.doFinal(Base64.getDecoder().decode(valueEncrypted));
+            return new String(valueDecrypted);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException |
                  InvalidKeyException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static String execDecryptFromUri(String valueEncrypted) {
-        try {
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, generateSecretKey());
-            byte[] valueBytesDecrypted = cipher.doFinal(valueEncrypted.getBytes(StandardCharsets.UTF_8));
-            return new String(valueBytesDecrypted, StandardCharsets.UTF_8);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException |
-                 InvalidKeyException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private static SecretKeySpec generateSecretKey() {
+        byte[] keyEncrypted = NAME_SECRET_KEY.getBytes(StandardCharsets.UTF_8);
 
-    private static SecretKey generateSecretKey() {
         try {
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-            SecureRandom random = new SecureRandom();
-            byte[] salt = new byte[16];
-            random.nextBytes(salt);
+            MessageDigest sha = MessageDigest.getInstance("SHA-1");
+            keyEncrypted = sha.digest(keyEncrypted);
+            keyEncrypted = Arrays.copyOf(keyEncrypted, 16);
 
-            KeySpec spec = new PBEKeySpec(NAME_SECRET_KEY.toCharArray(), salt, 65536, 256);
-            return factory.generateSecret(spec);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            return new SecretKeySpec(keyEncrypted, "AES");
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }

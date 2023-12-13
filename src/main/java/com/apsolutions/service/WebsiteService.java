@@ -146,7 +146,7 @@ public class WebsiteService {
 
         ApiResponse<Integer> apiResponse = cotizacionService.save(cotizacion);
 
-        String codeEncrypted = Encryptor.encryptToUri(apiResponse.getData());
+        String codeEncrypted = Encryptor.encrypt(apiResponse.getData());
         String pdfDownloadLink = serverProperties.getAll() + "/api/download/cotizacion/" + codeEncrypted;
         mailGenerator.sendMessageHTML(cotizacionWebsiteDto.getEmail(), HTMLTemplate.generate("Eloy Huallama", pdfDownloadLink));
 
