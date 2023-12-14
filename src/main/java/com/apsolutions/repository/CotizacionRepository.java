@@ -1,5 +1,6 @@
 package com.apsolutions.repository;
 
+import com.apsolutions.dto.CotizacionCriterioDto;
 import com.apsolutions.dto.CotizacionDto;
 import com.apsolutions.dto.CotizacionListDto;
 import com.apsolutions.dto.indicator.CotizacionIndicatorDto;
@@ -19,6 +20,11 @@ public interface CotizacionRepository extends JpaRepository<Cotizacion, Integer>
             "FROM Cotizacion c INNER JOIN c.cliente cl INNER JOIN cl.persona p WHERE c.origen = 1 ORDER BY c.id DESC")
     List<CotizacionListDto> list();
 
+
+    @Query("SELECT new com.apsolutions.dto.CotizacionListDto(c.id, c.fecha, c.estado, cl.id, p.documento, p.nombre) " +
+            "FROM Cotizacion c INNER JOIN c.cliente cl INNER JOIN cl.persona p WHERE c.origen = 2 ORDER BY c.id DESC")
+    List<CotizacionListDto> listWeb();
+
     @Modifying
     @Query("UPDATE Cotizacion c SET c.estado = :estado WHERE c.id = :id")
     void updateStatus(Byte estado, Integer id);
@@ -26,6 +32,10 @@ public interface CotizacionRepository extends JpaRepository<Cotizacion, Integer>
     @Query("SELECT new com.apsolutions.dto.CotizacionDto(c.fecha, cl.id, p.nombre) FROM Cotizacion c INNER JOIN c.cliente cl INNER JOIN cl.persona p " +
             "WHERE c.id = :id")
     CotizacionDto read(int id);
+
+    @Query("SELECT new com.apsolutions.dto.CotizacionCriterioDto(c.fecha, cl.id, p.nombre) FROM Cotizacion c INNER JOIN c.cliente cl INNER JOIN cl.persona p " +
+            "WHERE c.id = :id")
+    CotizacionCriterioDto read_cri(int id);
 
     @Query("SELECT new com.apsolutions.dto.indicator.CotizacionIndicatorDto(MONTHNAME(c.fecha) AS m, COUNT(c.id) AS num) FROM Cotizacion c " +
             "WHERE YEAR(c.fecha) = :anio GROUP BY MONTHNAME(c.fecha)")

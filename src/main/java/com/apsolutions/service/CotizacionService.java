@@ -1,9 +1,6 @@
 package com.apsolutions.service;
 
-import com.apsolutions.dto.CotizacionDto;
-import com.apsolutions.dto.CotizacionListDto;
-import com.apsolutions.dto.CotizaciondetalleDto;
-import com.apsolutions.dto.JasperReportDto;
+import com.apsolutions.dto.*;
 import com.apsolutions.dto.query.CotizacionQueryDto;
 import com.apsolutions.dto.query.PersonaQueryDto;
 import com.apsolutions.dto.report.CotizacionReportDto;
@@ -113,8 +110,20 @@ public class CotizacionService {
         return new ApiResponse<>(true, "OK", cotizacionDto);
     }
 
+    public ApiResponse<CotizacionCriterioDto> read_cri(Integer id) {
+        CotizacionCriterioDto cotizacionCriterioDto = cotizacionRepository.read_cri(id);
+        cotizacionCriterioDto.setCotizaciondetalleList(cotizaciondetalleRepository.listByIdCotizacionSimplifado(id));
+        cotizacionCriterioDto.setCotizacionCriterioOpcionDtoList(cotizacionCriterioopcionRepository.listByIdCotizacionCriterio(id));
+
+        return new ApiResponse<>(true, "OK", cotizacionCriterioDto);
+    }
+
     public ApiResponse<List<CotizacionListDto>> list() {
         return new ApiResponse<>(true, "OK", cotizacionRepository.list());
+    }
+
+    public ApiResponse<List<CotizacionListDto>> listWeb() {
+        return new ApiResponse<>(true, "OK", cotizacionRepository.listWeb());
     }
 
     public ApiResponse<List<PersonaQueryDto>> searchClient(String query) {

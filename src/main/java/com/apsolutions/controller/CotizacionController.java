@@ -1,5 +1,6 @@
 package com.apsolutions.controller;
 
+import com.apsolutions.dto.CotizacionCriterioDto;
 import com.apsolutions.dto.CotizacionDto;
 import com.apsolutions.dto.CotizacionListDto;
 import com.apsolutions.dto.CotizaciondetalleDto;
@@ -33,6 +34,11 @@ public class CotizacionController {
         return cotizacionService.list();
     }
 
+    @GetMapping("/listarWeb")
+    public ApiResponse<List<CotizacionListDto>> listWeb() {
+        return cotizacionService.listWeb();
+    }
+
     @PutMapping("/anular/{id}")
     public ApiResponse<String> delete(@PathVariable("id") Integer id) {
         return cotizacionService.anular(id);
@@ -41,6 +47,11 @@ public class CotizacionController {
     @GetMapping("/leer/{id}")
     public ApiResponse<CotizacionDto> read(@PathVariable("id") Integer id) {
         return cotizacionService.read(id);
+    }
+
+    @GetMapping("/criterioopcion/leer/{id}")
+    public ApiResponse<CotizacionCriterioDto> read_cri(@PathVariable("id") Integer id) {
+        return cotizacionService.read_cri(id);
     }
 
     @GetMapping("/buscar")
