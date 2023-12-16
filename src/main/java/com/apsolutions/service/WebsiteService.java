@@ -17,10 +17,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class WebsiteService {
@@ -92,6 +90,8 @@ public class WebsiteService {
 
     public ApiResponse<Map<String, Object>> getProductsCategory(Integer idCategory, String brand, String strPriceRange, Integer sortBy, Integer page, Integer inf) {
         Map<String, Object> objectMap = new HashMap<>();
+
+        objectMap.put("categoryName", categoriaRepository.getName(idCategory));
         objectMap.put("records", productoWebsiteFilterRepository.getAll(idCategory, brand, strPriceRange, sortBy, page));
 
         if (inf == 1) {
@@ -121,6 +121,7 @@ public class WebsiteService {
     public ApiResponse<String> generateQuotation(CotizacionWebsiteDto cotizacionWebsiteDto) {
         CotizacionDto cotizacion = new CotizacionDto();
         cotizacion.setOrigen((byte) 2);
+        cotizacion.setIdCliente(1);
 
         String[] arrCriterioopcionList = cotizacionWebsiteDto.getCriterioopcionList().split(",");
 
@@ -148,8 +149,25 @@ public class WebsiteService {
 
         String codeEncrypted = Encryptor.encrypt(apiResponse.getData());
         String pdfDownloadLink = serverProperties.getAll() + "/api/download/cotizacion/" + codeEncrypted;
-        mailGenerator.sendMessageHTML(cotizacionWebsiteDto.getEmail(), HTMLTemplate.generate("Eloy Huallama", pdfDownloadLink));
+        mailGenerator.sendMessageHTML(cotizacionWebsiteDto.getEmail(), HTMLTemplate.generate(cotizacionWebsiteDto.getNombre(), pdfDownloadLink));
 
         return new ApiResponse<>(true, apiResponse.getMessage());
+    }
+
+    public ApiResponse<Map<String, Object>> compare(String strIdProducts) {
+        List<Integer> idProducts = Arrays.stream(strIdProducts.split(","))
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+
+        List<ProductoWebsiteDto> productoWebsiteDtoList = productoWebsiteRepository.getProductsCompare(idProducts);
+        productoWebsiteDtoList.forEach(productoWebsiteDto -> {
+            productoWebsiteDto.setProductoCaracteristicaList(productoCaracteristicaRepository.getByIdProduct(productoWebsiteDto.getId()));
+        });
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("products", productoWebsiteDtoList);
+        map.put("specifications", productoCaracteristicaRepository.getOnlyCharacteristicsByIdProducts(idProducts));
+
+        return new ApiResponse<>(true, "Ok", map);
     }
 }

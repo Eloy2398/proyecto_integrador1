@@ -94,4 +94,9 @@ public class WebsiteController {
     public ApiResponse<String> generateQuotation(@RequestBody CotizacionWebsiteDto cotizacionWebsiteDto) {
         return websiteService.generateQuotation(cotizacionWebsiteDto);
     }
+
+    @GetMapping("/compare-products")
+    public ApiResponse<Map<String, Object>> compare(@RequestParam("idProducts") String idProducts) {
+        return websiteService.compare(idProducts);
+    }
 }

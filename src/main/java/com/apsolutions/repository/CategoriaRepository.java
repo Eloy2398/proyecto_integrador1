@@ -26,6 +26,9 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
     @Query("SELECT c.imagen FROM Categoria c WHERE c.id = :id")
     String getImage(Integer id);
 
+    @Query("SELECT c.nombre FROM Categoria c WHERE c.id = :id")
+    String getName(Integer id);
+
     @Query("SELECT new com.apsolutions.dto.website.CategoriaWebsiteDto(c.id, c.nombre, c.nombreUrl, c.imagen) FROM Categoria c WHERE c.estado = true AND c.mostrarweb = 1 AND c.mostrardestacado = 1")
     List<CategoriaWebsiteDto> getCategoriesMain();
 

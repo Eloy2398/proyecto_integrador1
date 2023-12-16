@@ -19,12 +19,13 @@ public class ProductoWebsiteDto {
     private String imagen;
     private List<ProductoCaracteristicaDto> productoCaracteristicaList;
 
-    public ProductoWebsiteDto(Integer id, String nombre, String nombreUrl, String descripcion, String imagen) {
+    public ProductoWebsiteDto(Integer id, String nombre, String nombreUrl, String descripcion, String imagen, BigDecimal precio) {
         this.id = id;
         this.nombre = nombre;
         this.nombreUrl = nombreUrl;
         this.descripcion = descripcion;
         this.imagen = imagen;
+        this.precio = precio;
     }
 
     public ProductoWebsiteDto(Integer id, String nombre, String nombreUrl, String marcaNombre, BigDecimal precio, String imagen) {

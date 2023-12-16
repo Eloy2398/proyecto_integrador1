@@ -15,4 +15,10 @@ public interface ProductoCaracteristicaRepository extends JpaRepository<Producto
 
     @Query("SELECT new com.apsolutions.dto.ProductoCaracteristicaDto(c.nombre, pc.valor) FROM ProductoCaracteristica pc INNER JOIN pc.caracteristica c WHERE pc.producto.id = :idProducto")
     List<ProductoCaracteristicaDto> findByIdProducto(Integer idProducto);
+
+    @Query("SELECT new com.apsolutions.dto.ProductoCaracteristicaDto(c.id, pc.valor) FROM ProductoCaracteristica pc INNER JOIN pc.caracteristica c WHERE pc.producto.id = :idProduct")
+    List<ProductoCaracteristicaDto> getByIdProduct(Integer idProduct);
+
+    @Query("SELECT new com.apsolutions.dto.ProductoCaracteristicaDto(c.id, c.nombre) FROM ProductoCaracteristica pc INNER JOIN pc.caracteristica c WHERE pc.producto.id IN (:idProducts) GROUP BY c.id")
+    List<ProductoCaracteristicaDto> getOnlyCharacteristicsByIdProducts(List<Integer> idProducts);
 }

@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface ProductoWebsiteRepository extends JpaRepository<Producto, Integer> {
-    @Query("SELECT new com.apsolutions.dto.website.ProductoWebsiteDto(p.id, p.nombre, p.nombreUrl, p.descripcion, p.imagen) FROM Producto p " +
+    @Query("SELECT new com.apsolutions.dto.website.ProductoWebsiteDto(p.id, p.nombre, p.nombreUrl, p.descripcion, p.imagen, p.precio) FROM Producto p " +
             "INNER JOIN p.marca m INNER JOIN p.categoria c WHERE p.estado = true AND c.mostrarweb = 1 AND m.mostrarweb = 1")
     List<ProductoWebsiteDto> getProductsToBanner(Pageable pageable);
 
@@ -34,4 +34,8 @@ public interface ProductoWebsiteRepository extends JpaRepository<Producto, Integ
 
     @Query("SELECT p.precio FROM Producto p WHERE p.id = :id")
     BigDecimal getPrice(int id);
+
+    @Query("SELECT new com.apsolutions.dto.website.ProductoWebsiteDto(p.id, p.nombre, p.nombreUrl, m.nombre, p.precio, p.imagen) FROM Producto p " +
+            "INNER JOIN p.marca m INNER JOIN p.categoria c WHERE p.estado = true AND c.mostrarweb = 1 AND m.mostrarweb = 1 AND p.id IN (:idProducts)")
+    List<ProductoWebsiteDto> getProductsCompare(List<Integer> idProducts);
 }

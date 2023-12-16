@@ -36,6 +36,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     @Query("SELECT COUNT(c.id) FROM Cliente c WHERE c.estado = true")
     Integer getTotalRegistros();
 
-    @Query("SELECT new com.apsolutions.dto.query.PersonaQueryDto(c.id, p.documento, p.nombre) FROM Cliente c INNER JOIN c.persona p WHERE p.nombre LIKE :query")
+    @Query("SELECT new com.apsolutions.dto.query.PersonaQueryDto(c.id, p.documento, p.nombre) FROM Cliente c INNER JOIN c.persona p WHERE c.id > 1 AND p.nombre LIKE :query")
     List<PersonaQueryDto> search(String query);
 }
