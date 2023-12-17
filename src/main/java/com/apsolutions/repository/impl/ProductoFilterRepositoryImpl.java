@@ -21,9 +21,9 @@ public class ProductoFilterRepositoryImpl implements ProductoFilterRepository {
 
         if (!nombre.isEmpty()) {
             if (tipo == 1) {
-                jpql.append(" AND p.codigo = :nombre");
+                jpql.append(" AND p.codigo LIKE :nombre");
             } else {
-                jpql.append(" AND p.nombre = :nombre");
+                jpql.append(" AND p.nombre LIKE :nombre");
             }
         }
 
@@ -38,7 +38,7 @@ public class ProductoFilterRepositoryImpl implements ProductoFilterRepository {
         TypedQuery<ProductoListDto> query = entityManager.createQuery(jpql.toString(), ProductoListDto.class);
 
         if (!nombre.isEmpty()) {
-            query.setParameter("nombre", nombre);
+            query.setParameter("nombre", nombre + "%");
         }
 
         if (idCategory > 0) {

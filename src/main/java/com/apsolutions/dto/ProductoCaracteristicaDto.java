@@ -6,6 +6,9 @@ public class ProductoCaracteristicaDto {
     private String nombre;
     private String valor;
 
+    public ProductoCaracteristicaDto() {
+    }
+
     public ProductoCaracteristicaDto(String nombre, String valor) {
         this.nombre = nombre;
         this.valor = valor;

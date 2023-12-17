@@ -179,7 +179,6 @@ public class ProductoService {
     }
 
     public ApiResponse<List<ProductoListDto>> list(int tipo, String nombre, int idCategory, int idBrand) {
-        // return new ApiResponse<>(true, "OK", productoRepository.list());
         List<ProductoListDto> productoListDtos = productoFilterRepository.filter(tipo, nombre, idCategory, idBrand);
         return new ApiResponse<>(true, "OK", productoListDtos);
     }
